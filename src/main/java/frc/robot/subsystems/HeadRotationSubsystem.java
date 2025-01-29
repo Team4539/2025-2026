@@ -1,24 +1,25 @@
 package frc.robot.subsystems;
 
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class HeadRotationSubsystem extends SubsystemBase {
     
-    private Spark headEncoder;
+    private SparkMax headEncoder;
     private TalonFX head;
 
 
 
     public HeadRotationSubsystem() {
-        headEncoder = new Spark(Constants.HeadRotator.HeadRotatorEncoderID);
+        headEncoder = new SparkMax(Constants.HeadRotator.HeadRotatorEncoderID, MotorType.kBrushless);
         head = new TalonFX(Constants.HeadRotator.HeadRotatorMotorID);
         head.setNeutralMode(NeutralModeValue.Brake);
         
@@ -26,7 +27,7 @@ public class HeadRotationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Head Rotation", headEncoder.get());
+        SmartDashboard.putNumber("Head Rotation", headEncoder.getAbsoluteEncoder().getPosition());
         
     }
 
@@ -34,6 +35,6 @@ public class HeadRotationSubsystem extends SubsystemBase {
         
     }
     public double GetHeadEncodor() {
-        return headEncoder.get();
+        return headEncoder.getAbsoluteEncoder().getPosition();
     }
 }
