@@ -19,7 +19,7 @@ public class HeadRotationSubsystem extends SubsystemBase {
 
 
     public HeadRotationSubsystem() {
-        headEncoder = new SparkMax(Constants.HeadRotator.HeadRotatorEncoderID, MotorType.kBrushless);
+        headEncoder = new SparkMax(Constants.HeadRotator.HeadRotatorEncoderID, MotorType.kBrushed);
         head = new TalonFX(Constants.HeadRotator.HeadRotatorMotorID);
         head.setNeutralMode(NeutralModeValue.Brake);
         
