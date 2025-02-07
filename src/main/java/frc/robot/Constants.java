@@ -4,20 +4,21 @@ public class Constants {
     
     //TODO: Fill in the placeholder values with the actual values
 
-    public static final double joyDeadband = 0.1; // Placeholder value
+    public static final double joyDeadband = 0; 
 
     public static final class Elevator {
-        public static final int ElevatorMotorID = 0; // Placeholder value
-        public static final int ElevatorEncoderID = 0; // Placeholder value
-        public static final double ElevatorMaxHeight = 0; // Placeholder value
-        public static final double ElevatorMinHeight = 0; // Placeholder value
+        public static final int ElevatorMotorID = 24; // motor value
+        public static final int ElevatorEncoderAID = 0; // DIO Port 0 
+        public static final int ElevatorEncoderBID = 1; // DIO Port 1
+        public static final double ElevatorMaxHeight = 0; // Will also be 0
+        public static final double ElevatorMinHeight = 30000; // Tuned for our robot
 
         /*Elevator heights */
         public static final double HomePosition = 0; // Placeholder value
         public static final double coralL1Position = 0; // Placeholder value
-        public static final double coralL2Position = 0; // Placeholder value
-        public static final double coralL3Position = 0; // Placeholder value
-        public static final double coralL4Position = 0; // Placeholder value
+        public static final double coralL2Position = 12000; // Placeholder value
+        public static final double coralL3Position = 17000; // Placeholder value
+        public static final double coralL4Position = 30000; // Placeholder value
         public static final double alageL1Position = 0; // Placeholder value
         public static final double alageL2Position = 0; // Placeholder value
     }

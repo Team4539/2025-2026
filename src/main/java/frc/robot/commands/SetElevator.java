@@ -13,6 +13,7 @@ public class SetElevator extends Command{
 
     public SetElevator(DoubleSupplier speed, ElevatorSubsystem subsystem) 
     {
+        addRequirements(subsystem);
         m_speed = speed;
         m_ElevatorSubsystem = subsystem;
     }
@@ -23,12 +24,12 @@ public class SetElevator extends Command{
     @Override
     public void execute() 
     {
-        m_ElevatorSubsystem.SetElevator(m_speed.getAsDouble());
+        m_ElevatorSubsystem.SetElevator(m_speed.getAsDouble(), "Manual control");
     }
     @Override
     public void end(boolean interrupted) 
     {
-        m_ElevatorSubsystem.SetElevator(0.0);
+        m_ElevatorSubsystem.SetElevator(0.0, "No command");
     }
     
     @Override

@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.SetElevator;
+import frc.robot.commands.SetElevatorTo;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -36,6 +38,12 @@ public class RobotContainer {
 
     // driver buttons
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
+    // co-driver buttons
+    private final JoystickButton coralL4 = new JoystickButton(coDriver, XboxController.Button.kY.value);
+    private final JoystickButton coralL3 = new JoystickButton(coDriver, XboxController.Button.kX.value);
+    private final JoystickButton coralL2 = new JoystickButton(coDriver, XboxController.Button.kB.value);
+    private final JoystickButton home = new JoystickButton(coDriver, XboxController.Button.kA.value);
     //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -59,6 +67,7 @@ public class RobotContainer {
                     .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+        
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
@@ -76,6 +85,11 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        coralL4.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4"));
+        coralL3.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "Coral L3"));
+        coralL2.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2"));
+        home.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home"));
     }
 
     public Command getAutonomousCommand() {
