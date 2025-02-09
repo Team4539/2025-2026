@@ -28,12 +28,12 @@ public class SetHeadRotation extends Command {
     @Override
     public void execute() {
         SpeedAxis = MathUtil.applyDeadband(m_speed.getAsDouble(), Constants.joyDeadband);
-        m_headRotate.SetHeadRotation(SpeedAxis);
+        m_headRotate.SetHeadRotation(SpeedAxis, "Manual Control");
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_headRotate.SetHeadRotation(0.0);
+        m_headRotate.SetHeadRotation(0.0, "Disabled");
     }
 
     @Override

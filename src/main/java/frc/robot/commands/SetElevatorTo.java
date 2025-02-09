@@ -19,13 +19,13 @@ public class SetElevatorTo extends Command{
         addRequirements(subsystem);
         m_elevator = subsystem;
         if (command == null) {
-            m_command = "no command";
+            m_command = "Disabled";
         }
         else {
             m_command = command;
         }
         m_setpoint = setpoint;
-        pidController = new PIDController(.2, 0.0, 0.0);
+        pidController = new PIDController(.1, 10, 0.02);
     }
     
 
@@ -46,10 +46,10 @@ public class SetElevatorTo extends Command{
             m_elevator.SetElevator(-fixedOutput, m_command);
         }
         else{
-            m_elevator.SetElevator(0, "No command");
+            m_elevator.SetElevator(0, m_command+" At Setpoint");
         }
     }
     public void end(boolean interrupted) {
-        m_elevator.SetElevator(0, "No command");
+        m_elevator.SetElevator(0, "Disabled");
     }
 }

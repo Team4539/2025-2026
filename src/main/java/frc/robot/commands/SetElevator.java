@@ -16,6 +16,7 @@ public class SetElevator extends Command{
         addRequirements(subsystem);
         m_speed = speed;
         m_ElevatorSubsystem = subsystem;
+        
     }
 
     @Override
@@ -29,7 +30,7 @@ public class SetElevator extends Command{
     @Override
     public void end(boolean interrupted) 
     {
-        m_ElevatorSubsystem.SetElevator(0.0, "No command");
+        m_ElevatorSubsystem.SetElevator(0.0, "Disabled");
     }
     
     @Override

@@ -22,15 +22,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
 
+
     @Override
     public void periodic() {
         elevatorHeight = elevatorEncoder.getRaw();
         SmartDashboard.putNumber("Elevator Height", elevatorEncoder.getRaw());
-        SmartDashboard.putString("Command", "No command");
+        SmartDashboard.putString("Command", "Disabled");
     }
 
     public void SetElevator(double speed, String comand) {
-        SmartDashboard.putString("Command", comand);
+        SmartDashboard.putString("Elevator Command", comand);
         if (speed != 0) {
             if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
                 elevator.set(speed);

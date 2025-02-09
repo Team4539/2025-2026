@@ -21,10 +21,13 @@ public class Constants {
         public static final double coralL4Position = 30000; // Placeholder value
         public static final double alageL1Position = 0; // Placeholder value
         public static final double alageL2Position = 0; // Placeholder value
+        public static final double alageGroundPosition = 0; // Placeholder value
+        public static final double alageProcessorsPosition = 0; // Placeholder value
+        public static final double coaralStationPosition = 9449; // Placeholder value
     }
     public static final class HeadRotator {
         public static final int HeadRotatorMotorID = 0; // Placeholder value
-        public static final int HeadRotatorEncoderID = 0; // Placeholder value
+        public static final int HeadRotatorEncoderID = 3; // DIO Port 3
         public static final double HeadRotatorMaxAngle = 0; // Placeholder value
         public static final double HeadRotatorMinAngle = 0; // Placeholder value
 
@@ -36,6 +39,7 @@ public class Constants {
         public static final double algaeBargeRotation = 0; // Placeholder value
         public static final double coralReefAngledRotation = 0; // Placeholder value
         public static final double coralL4Rotation = 0; // Placeholder value
+        public static final double coralStationRotation = 49.6; // Placeholder value
 
     }
     public static final class HeadMechanisms {

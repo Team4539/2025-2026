@@ -13,14 +13,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.SetElevator;
 import frc.robot.commands.SetElevatorTo;
+import frc.robot.commands.SetHeadTo;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HeadRotationSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -48,6 +51,7 @@ public class RobotContainer {
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    private final HeadRotationSubsystem m_HeadRotationSubsystem = new HeadRotationSubsystem();
 
 
     public RobotContainer() {
@@ -86,10 +90,10 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        coralL4.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4"));
-        coralL3.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "Coral L3"));
-        coralL2.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2"));
-        home.whileTrue(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home"));
+        coralL4.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralL4Rotation, "Coral L4")));
+        coralL3.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "Coral L3"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L3")));
+        coralL2.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L2")));
+        home.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home")));
     }
 
     public Command getAutonomousCommand() {
