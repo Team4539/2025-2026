@@ -27,7 +27,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         elevatorHeight = elevatorEncoder.getRaw();
         SmartDashboard.putNumber("Elevator Height", elevatorEncoder.getRaw());
-        SmartDashboard.putString("Command", "Disabled");
+        SmartDashboard.putString("Elevator Command", "disabled");
     }
 
     public void SetElevator(double speed, String comand) {

@@ -17,7 +17,6 @@ public class HeadRotationSubsystem extends SubsystemBase {
     private DutyCycleEncoder headEncoder;
     private TalonFX head;
     private double headEncoderVal;
-    private String command ="Disabled";
 
 
     public HeadRotationSubsystem() {
@@ -31,7 +30,7 @@ public class HeadRotationSubsystem extends SubsystemBase {
     public void periodic() {
         headEncoderVal = headEncoder.get()*100;
         SmartDashboard.putNumber("Head Rotation", headEncoderVal);
-        SmartDashboard.putString("Head Command", command);
+        SmartDashboard.putString("Head Command", "disabled");
         
     }
 

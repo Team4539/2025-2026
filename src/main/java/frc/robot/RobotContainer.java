@@ -7,10 +7,14 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -19,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.SetElevator;
 import frc.robot.commands.SetElevatorTo;
+import frc.robot.commands.SetHeadRotation;
 import frc.robot.commands.SetHeadTo;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -30,6 +35,7 @@ public class RobotContainer {
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
+    private final SendableChooser<Command> m_chooser;
 
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final XboxController Driver = new XboxController(0);
@@ -52,17 +58,17 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     private final HeadRotationSubsystem m_HeadRotationSubsystem = new HeadRotationSubsystem();
+    NamedCommands commands = new NamedCommands();
 
 
-    public RobotContainer() {
-        configureBindings();
-    }
+    
 
     private void configureBindings() {
        
         m_ElevatorSubsystem.setDefaultCommand(
             new SetElevator(() -> coDriver.getRawAxis(XboxController.Axis.kLeftY.value), m_ElevatorSubsystem));
-
+        m_HeadRotationSubsystem.setDefaultCommand(
+            new SetHeadRotation(() -> coDriver.getRawAxis(XboxController.Axis.kRightX.value), m_HeadRotationSubsystem));
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
@@ -94,9 +100,17 @@ public class RobotContainer {
         coralL3.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "Coral L3"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L3")));
         coralL2.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L2")));
         home.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home")));
-    }
+        }
+        
+        
+        public RobotContainer() {
+            m_chooser = AutoBuilder.buildAutoChooser("default");
+            SmartDashboard.putData("Auto mode", m_chooser);
 
+            NamedCommands.registerCommand("GoL4", new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4"), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralL4Rotation, "Coral L4").withTimeout(3)));
+            configureBindings();
+        }
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+        return m_chooser.getSelected();
     }
 }
