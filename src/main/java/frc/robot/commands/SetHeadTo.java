@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.HeadManipulatorSubsystem;
 import frc.robot.subsystems.HeadRotationSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;

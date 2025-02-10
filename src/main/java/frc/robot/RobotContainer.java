@@ -53,7 +53,7 @@ public class RobotContainer {
     private final JoystickButton coralL3 = new JoystickButton(coDriver, XboxController.Button.kX.value);
     private final JoystickButton coralL2 = new JoystickButton(coDriver, XboxController.Button.kB.value);
     private final JoystickButton home = new JoystickButton(coDriver, XboxController.Button.kA.value);
-    //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
