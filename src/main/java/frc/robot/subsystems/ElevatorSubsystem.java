@@ -15,8 +15,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private  TalonFX elevator;
     private Encoder elevatorEncoder;
     private double elevatorHeight;
+    private String comand = "disabled";
+    private boolean isSAFE;
+    private HeadRotationSubsystem m_HeadRotationSubsystem;
 
-    public ElevatorSubsystem() {
+    public ElevatorSubsystem(HeadRotationSubsystem headRotationSubsystem) {
         elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
         elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
         elevator.getConfigurator().apply(new TalonFXConfiguration());
@@ -25,31 +28,44 @@ public class ElevatorSubsystem extends SubsystemBase {
         currentLimits.SupplyCurrentLimitEnable = true;
         elevator.getConfigurator().apply(currentLimits);
         elevator.setNeutralMode(NeutralModeValue.Brake);
+        m_HeadRotationSubsystem = headRotationSubsystem;
+        isSAFE = m_HeadRotationSubsystem.isSafe();
+
 
     }
 
-
+    public void SetStatus(String command) {
+        comand = command;
+    }
 
     @Override
     public void periodic() {
         elevatorHeight = elevatorEncoder.getRaw();
         SmartDashboard.putNumber("Elevator Height", elevatorEncoder.getRaw());
-        SmartDashboard.putString("Elevator Command", "disabled");
+        SmartDashboard.putString("Elevator Command", comand);
+        isSAFE = m_HeadRotationSubsystem.isSafe();
+
     }
 
     public void SetElevator(double speed, String comand) {
         SmartDashboard.putString("Elevator Command", comand);
         if (speed != 0) {
-            if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
-                elevator.set(speed);
+            if (isSAFE || isSAFE == false && elevatorHeight <= Constants.Elevator.ElevatorSAFE) {
+                if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
+                    elevator.set(speed);
+                }
+                else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight){
+                    elevator.set(-.1);
+                    DriverStation.reportError("YOU ARE TO LOW", false);
+                }
+                else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight){
+                    elevator.set(.1);
+                    DriverStation.reportError("YOU ARE TO HIGH", false);
+                }
             }
-            else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight){
-                elevator.set(-.1);
-                DriverStation.reportError("YOU ARE TO LOW", false);
-            }
-            else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight){
-                elevator.set(.1);
-                DriverStation.reportError("YOU ARE TO HIGH", false);
+            else {
+                elevator.set(0);
+                DriverStation.reportError("YOU ARE NOT SAFE", false);
             }
         } 
         else {

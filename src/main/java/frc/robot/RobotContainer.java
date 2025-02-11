@@ -19,16 +19,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.RunAlgae;
 import frc.robot.commands.SetElevator;
 import frc.robot.commands.SetElevatorTo;
 import frc.robot.commands.SetHeadRotation;
 import frc.robot.commands.SetHeadTo;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AlgaeManipulaotrSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoralManipulatorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadRotationSubsystem;
+import frc.robot.subsystems.headIntakeSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -55,6 +55,8 @@ public class RobotContainer {
     private final JoystickButton coralL3 = new JoystickButton(Operator, XboxController.Button.kX.value);
     private final JoystickButton coralL2 = new JoystickButton(Operator, XboxController.Button.kB.value);
     private final JoystickButton home = new JoystickButton(Operator, XboxController.Button.kA.value);
+    private final JoystickButton IntakeAlgae = new JoystickButton(Operator, XboxController.Button.kRightBumper.value);
+    private final JoystickButton OutTakeAlgae = new JoystickButton(Operator, XboxController.Button.kLeftBumper.value);
 
     //Test Joystick Buttons
     private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
@@ -62,10 +64,9 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     private final HeadRotationSubsystem m_HeadRotationSubsystem = new HeadRotationSubsystem();
-    private final AlgaeManipulaotrSubsystem m_AlgeaManipulatorSubsystem = new AlgaeManipulaotrSubsystem();
-    private final CoralManipulatorSubsystem m_CoralManipulatorSubsystem = new CoralManipulatorSubsystem();
+    private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem();
+    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(m_HeadRotationSubsystem);
     NamedCommands commands = new NamedCommands();
 
 
@@ -109,6 +110,7 @@ public class RobotContainer {
         coralL2.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2", false), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L2", false)));
         home.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)));
         selectElecatorCommand.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Coral L4", true ), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralL4Rotation, "Coral L4", true)));
+        IntakeAlgae.whileTrue(new ParallelCommandGroup( new RunAlgae(Constants.HeadMechanisms.AlgaeIntakeSpeed, "Intake Algae", m_HeadIntakeSubsystem)));
         }{}
         
         
