@@ -26,8 +26,8 @@ public class Constants {
         public static final double coaralStationPosition = 9449; // Placeholder value
     }
     public static final class HeadRotator {
-        public static final int HeadRotatorMotorID = 0; // Placeholder value
-        public static final int HeadRotatorEncoderID = 3; // DIO Port 3
+        public static final int HeadRotatorMotorID = 23; // Placeholder value
+        public static final int HeadRotatorEncoderID = 2; // DIO Port 2
         public static final double HeadRotatorMaxAngle = 0; // Placeholder value
         public static final double HeadRotatorMinAngle = 0; // Placeholder value
 
@@ -39,14 +39,15 @@ public class Constants {
         public static final double algaeBargeRotation = 0; // Placeholder value
         public static final double coralReefAngledRotation = 0; // Placeholder value
         public static final double coralL4Rotation = 0; // Placeholder value
-        public static final double coralStationRotation = 49.6; // Placeholder value
+        public static final double coralStationRotation = 49.6; // Coral Instake Station Value
 
     }
     public static final class HeadMechanisms {
-        public static final int CoralManipulatorMotorID = 0; // Placeholder value
-        public static final int AlageManipulatorMotorID = 0; // Placeholder value
-        public static final double CoralManipulatorMaxSpeed = 0; // Placeholder value
-        public static final double AlageManipulatorMaxSpeed = 0; // Placeholder value 
-
+        public static final int CoralManipulatorMotorID = 4; // Placeholder value
+        public static final int AlageManipulatorMotorID = 3; // Placeholder value
+    }
+    public static final class Climber {
+        public static final int ClimberMotorID = 0; // Placeholder value
+        public static final double ClimberMaxSpeed = 0; // Placeholder value
     }
 }

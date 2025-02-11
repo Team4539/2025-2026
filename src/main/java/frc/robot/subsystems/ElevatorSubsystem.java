@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,6 +19,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
         elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
+        elevator.getConfigurator().apply(new TalonFXConfiguration());
+        var currentLimits = new CurrentLimitsConfigs();
+        currentLimits.SupplyCurrentLimit = 20;
+        currentLimits.SupplyCurrentLimitEnable = true;
+        elevator.getConfigurator().apply(currentLimits);
         elevator.setNeutralMode(NeutralModeValue.Brake);
 
     }
