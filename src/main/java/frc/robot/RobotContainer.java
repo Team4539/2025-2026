@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
@@ -80,7 +76,7 @@ public class RobotContainer {
         m_ElevatorSubsystem.setDefaultCommand(
             new SetElevator(() -> Operator.getRawAxis(XboxController.Axis.kLeftY.value), m_ElevatorSubsystem));
         m_HeadRotationSubsystem.setDefaultCommand(
-            new SetHeadRotation(() -> Operator.getRawAxis(XboxController.Axis.kRightX.value), m_HeadRotationSubsystem));
+            new SetHeadRotation(() -> Operator.getRawAxis(XboxController.Axis.kRightY.value), m_HeadRotationSubsystem));
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->

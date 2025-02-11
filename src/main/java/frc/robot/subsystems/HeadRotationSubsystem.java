@@ -17,53 +17,58 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.Elastic;
+import frc.robot.util.Elastic.Notification;
 
 public class HeadRotationSubsystem extends SubsystemBase {
     
+    private  TalonFX head;
     private DutyCycleEncoder headEncoder;
-    private TalonFX head;
-    private double headEncoderVal;
-
+    private double HeadRotation;
 
     public HeadRotationSubsystem() {
-        headEncoder = new DutyCycleEncoder(Constants.HeadRotator.HeadRotatorEncoderID);
         head = new TalonFX(Constants.HeadRotator.HeadRotatorMotorID);
+        headEncoder = new DutyCycleEncoder(Constants.HeadRotator.HeadRotatorEncoderID); 
         head.getConfigurator().apply(new TalonFXConfiguration());
         var currentLimits = new CurrentLimitsConfigs();
-        currentLimits.SupplyCurrentLimit = 20;
+        currentLimits.SupplyCurrentLimit = 40;
         currentLimits.SupplyCurrentLimitEnable = true;
         head.getConfigurator().apply(currentLimits);
         head.setNeutralMode(NeutralModeValue.Brake);
-        headEncoder.isConnected();
-        
+        Elastic.Notification notification = new Elastic.Notification();
     }
+
+
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Head Rotation", headEncoderVal);
+        HeadRotation = headEncoder.get()*100;
+        SmartDashboard.putNumber("Head Rotation", HeadRotation);
         SmartDashboard.putString("Head Command", "disabled");
-        headEncoderVal = headEncoder.get();
         
     }
 
-    public void SetHeadRotation(double speed, String command) {
-       SmartDashboard.putString("Head Command", command);
+    public void SetHeadRotation(double speed, String comand) {
+        SmartDashboard.putData("Run Head Motor", head);
+        SmartDashboard.putString("Head Command", comand);
         if (speed != 0) {
-            if ((headEncoderVal >= Constants.HeadRotator.HeadRotatorMaxAngle && headEncoder.get() <= Constants.HeadRotator.HeadRotatorMinAngle)) {
+            if ((HeadRotation >= Constants.HeadRotator.HeadRotatorMaxAngleOnGround && HeadRotation <= Constants.HeadRotator.HeadRotatorMinAngleOnGround)) {
                 head.set(speed);
             }
-            else if (headEncoderVal < Constants.HeadRotator.HeadRotatorMinAngle){
-                head.set(-.1);
-            }
-            else if (headEncoderVal > Constants.HeadRotator.HeadRotatorMaxAngle){
+            else if (HeadRotation < Constants.HeadRotator.HeadRotatorMinAngleOnGround){
                 head.set(.1);
+                DriverStation.reportError("Trying to rotate to far back", false);
             }
-            else 
-                head.set(0);
+            else if (HeadRotation > Constants.HeadRotator.HeadRotatorMaxAngleOnGround){
+                head.set(-.1);
+                DriverStation.reportError("Tryign to rotate to far forward", false);
             }
-            
+        } 
+        else {
+            head.set(0);
+        }
     }
     public double GetHeadEncodor() {
-        return headEncoder.get();
+        return HeadRotation;
     }
 }

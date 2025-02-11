@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.Elastic;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -16,6 +20,8 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
   }
+  public void Robotinit() {
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());  }
 
   @Override
   public void robotPeriodic() {
@@ -34,7 +40,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    Shuffleboard.startRecording();
+    Elastic.selectTab("Autonomous");
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -44,24 +51,31 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    Shuffleboard.stopRecording();
+  }
 
   @Override
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    Shuffleboard.startRecording();
+    Elastic.selectTab("Teleop");
   }
 
   @Override
   public void teleopPeriodic() {}
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+    Shuffleboard.stopRecording();
+  }
 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    Elastic.selectTab("DEBUG");
   }
 
   @Override
