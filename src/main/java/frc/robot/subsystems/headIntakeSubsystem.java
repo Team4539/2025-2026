@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,9 +18,13 @@ public class headIntakeSubsystem extends SubsystemBase {
     private double AlgaeCurrentDraw;
     private SparkMax coralMotor;
     private String Command;
+    private ElevatorSubsystem m_ElevatorSubsystem;
+    private HeadRotationSubsystem m_HeadRotationSubsystem;
 
     @SuppressWarnings("deprecation")
-    public headIntakeSubsystem() {
+    public headIntakeSubsystem(ElevatorSubsystem elevatorSubsystem, HeadRotationSubsystem headRotationSubsystem) {
+        m_ElevatorSubsystem = elevatorSubsystem;
+        m_HeadRotationSubsystem = headRotationSubsystem;
         algaeMotor = new SparkMax(Constants.HeadMechanisms.AlageManipulatorMotorID, MotorType.kBrushless);
         coralMotor = new SparkMax(Constants.HeadMechanisms.CoralManipulatorMotorID, MotorType.kBrushless);
         SparkMaxConfig config = new SparkMaxConfig();
@@ -56,13 +61,20 @@ public class headIntakeSubsystem extends SubsystemBase {
         }
     }
     public void SetCoral(double speed, String command) {
-        SmartDashboard.putString("CoralMotor Command", command);
-        if (speed != 0) {
-            coralMotor.set(speed);
+        if (m_ElevatorSubsystem.GetElevatorHeight() > Constants.Elevator.ElevatorAboveGround || m_HeadRotationSubsystem.GetHeadEncodor() <= Constants.HeadRotator.HeadPastSAFE) {
+            SmartDashboard.putString("CoralMotor Command", command);
+            if (speed != 0) {
+                coralMotor.set(speed);
+            }
+            else {
+                coralMotor.set(0);
+            }
         }
         else {
+            DriverStation.reportError("Coral motor not moving, elevator is too low", true);
             coralMotor.set(0);
         }
+        
     }
     
     public void SetStatus(String command) {

@@ -65,8 +65,8 @@ public class RobotContainer {
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final HeadRotationSubsystem m_HeadRotationSubsystem = new HeadRotationSubsystem();
-    private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(m_HeadRotationSubsystem);
+    private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem(m_ElevatorSubsystem, m_HeadRotationSubsystem);
     NamedCommands commands = new NamedCommands();
 
 

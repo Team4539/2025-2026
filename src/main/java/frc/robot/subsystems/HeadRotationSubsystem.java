@@ -59,12 +59,12 @@ public class HeadRotationSubsystem extends SubsystemBase {
         SmartDashboard.putString("Head Command", comand);
         
         if (speed != 0) {
-            if (HeadRotation >= Constants.HeadRotator.HeadRotatorMaxAngleOnGround && HeadRotation < Constants.HeadRotator.HeadRotatorMinAngleOnGround) {
+            if (HeadRotation <= Constants.HeadRotator.HeadRotatorMaxAngle && HeadRotation > Constants.HeadRotator.HeadRotatorMinAngle) {
                 head.set(speed);
-            } else if (HeadRotation < Constants.HeadRotator.HeadRotatorMinAngleOnGround) {
+            } else if (HeadRotation <= Constants.HeadRotator.HeadRotatorMinAngle) {
                 head.set(.1);
                 DriverStation.reportError("To far back", false);
-            } else if (HeadRotation > Constants.HeadRotator.HeadRotatorMaxAngleOnGround) {
+            } else if (HeadRotation >= Constants.HeadRotator.HeadRotatorMaxAngle) {
                 head.set(-.1);
                 DriverStation.reportError("To far forward", false);
             }
@@ -73,7 +73,6 @@ public class HeadRotationSubsystem extends SubsystemBase {
             }
         } else {
             head.set(0);
-            DriverStation.reportError("no speed set", false);
         }
     }
     public double GetHeadEncodor() {
