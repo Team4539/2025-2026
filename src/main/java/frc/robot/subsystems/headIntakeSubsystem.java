@@ -45,15 +45,15 @@ public class headIntakeSubsystem extends SubsystemBase {
     public void SetAlgae(double speed, String command) {
         SmartDashboard.putString("AlgaeMotor Command", command);
         if (speed != 0) {
-            if (AlgaeCurrentDraw > 5) {
+            //if (AlgaeCurrentDraw > 5) {
                 algaeMotor.set(speed);
                 coralMotor.set(speed);}
-            else{ 
-                algaeMotor.set(Constants.HeadMechanisms.AlgaeHoldSpeed);
-                coralMotor.set(Constants.HeadMechanisms.AlgaeHoldSpeed);
-            }
+            // else{ 
+            //     algaeMotor.set(Constants.HeadMechanisms.AlgaeHoldSpeed);
+            //     coralMotor.set(Constants.HeadMechanisms.AlgaeHoldSpeed);
+            // }
             
-        }
+        
         else {
             algaeMotor.set(0);
             coralMotor.set(0);

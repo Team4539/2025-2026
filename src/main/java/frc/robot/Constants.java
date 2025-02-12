@@ -17,14 +17,14 @@ public class Constants {
         /*Elevator heights */
         public static final double HomePosition = 0; // Placeholder value
         public static final double coralL1Position = 0; // Placeholder value
-        public static final double coralL2Position = 12000; // Placeholder value
+        public static final double coralL2Position = 8700; // Placeholder value
         public static final double coralL3Position = 17000; // Placeholder value
         public static final double coralL4Position = 30000; // Placeholder value
         public static final double alageL1Position = 0; // Placeholder value
         public static final double alageL2Position = 0; // Placeholder value
         public static final double alageGroundPosition = 0; // Placeholder value
         public static final double alageProcessorsPosition = 0; // Placeholder value
-        public static final double coaralStationPosition = 9449; // Placeholder value
+        public static final double coaralStationPosition = 8000; // Placeholder value
         public static final double ElevatorSAFE = 8500; // Head will not hit the elevator at this height
         public static final double ElevatornotTouching = 400;
     }
@@ -33,27 +33,28 @@ public class Constants {
         public static final int HeadRotatorEncoderID = 2; // DIO Port 2
         public static final double HeadRotatorMaxAngle = 98; // Placeholder value
         public static final double HeadRotatorMinAngle = 72; // Placeholder value
-        public static final double HeadSAFE = 75.8; // THIS IS CLEAR OF THE ELEVATOR
+        public static final double HeadSAFE = 70.0; // THIS IS CLEAR OF THE ELEVATOR
         public static final double HeadPastSAFE = 90; // this is where wheel can hit swerve module
 
         /*Rotation positions*/
-        public static final double HomeRotation = 70; // Placeholder value
+        public static final double HomeRotation = 75; // Placeholder value
         public static final double algaeGroundRotation = 0; // Placeholder value
-        public static final double algaeProcessorsRotation = 0; // Placeholder value
+        public static final double algaeProcessorsRotation = 73
+        ; // Placeholder value
         public static final double algaeReefRotation = 0; // Placeholder value
         public static final double algaeBargeRotation = 0; // Placeholder value
-        public static final double coralReefAngledRotation = 0; // Placeholder value
+        public static final double coralReefAngledRotation = 84; // Placeholder value
         public static final double coralL4Rotation = 90; // Placeholder value
-        public static final double coralStationRotation = 49.6; // Coral Instake Station Value
+        public static final double coralStationRotation = 73; // Coral Instake Station Value
 
     }
     public static final class HeadMechanisms {
         public static final int CoralManipulatorMotorID = 16; // Placeholder value
         public static final int AlageManipulatorMotorID = 17; // Placeholder value
         public static final double AlgaeIntakeSpeed = 1; // Placeholder value
-        public static final double CoralIntakeSpeed = 1; // Placeholder value
-        public static final double CoralOuttakeSpeed = .5; // Placeholder value
-        public static final double AlgaeOuttakeSpeed = .5; // Placeholder value
+        public static final double CoralIntakeSpeed = -.5; // Placeholder value
+        public static final double CoralOuttakeSpeed = 1; // Placeholder value
+        public static final double AlgaeOuttakeSpeed = -1; // Placeholder value
         public static final double AlgaeHoldSpeed = .2; // Placeholder value
     }
     public static final class Climber {

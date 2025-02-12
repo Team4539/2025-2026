@@ -17,14 +17,14 @@ public class RunAlgae  extends Command {
             m_Command = command;
     }
     public void execute() {
-        if (m_HeadIntakeSubsystem.GetAlgaeCurrentDraw() < 10) {
+        // if (m_HeadIntakeSubsystem.GetAlgaeCurrentDraw() < 10) {
             m_HeadIntakeSubsystem.SetAlgae(m_speed, m_Command);
             m_HeadIntakeSubsystem.SetCoral(m_speed, m_Command);}
-            else {
-                m_HeadIntakeSubsystem.SetAlgae(Constants.HeadMechanisms.AlgaeHoldSpeed, "Algae Hold");
-                m_HeadIntakeSubsystem.SetCoral(Constants.HeadMechanisms.AlgaeHoldSpeed, "Algae Hold");
-            }
-        }
+        //     else {
+        //         m_HeadIntakeSubsystem.SetAlgae(Constants.HeadMechanisms.AlgaeHoldSpeed, "Algae Hold");
+        //         m_HeadIntakeSubsystem.SetCoral(Constants.HeadMechanisms.AlgaeHoldSpeed, "Algae Hold");
+        //     }
+        // }
     public void end (boolean interrupted) {
         m_HeadIntakeSubsystem.SetAlgae(0.0, "Disabled");
         m_HeadIntakeSubsystem.SetCoral(0.0, "Disabled");

@@ -34,7 +34,7 @@ public class SetElevatorTo extends Command{
                 m_command = command;
             }
             m_setpoint = setpoint;
-            pidController = new PIDController(.1, 10, 0.02);
+            pidController = new PIDController(.6, 10, 0.02);
             m_needSelection = needSelection;
         }
         
