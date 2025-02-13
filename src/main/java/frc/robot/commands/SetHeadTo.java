@@ -13,6 +13,7 @@ import frc.robot.Constants;
 public class SetHeadTo extends Command {
     private final HeadRotationSubsystem m_head;
     private final PIDController pidController;
+    private final PIDController HomePidController;
     private String m_command;
     private double m_setpoint;
     private double m_fixedOutput;
@@ -33,6 +34,7 @@ public class SetHeadTo extends Command {
         }
         m_setpoint = setpoint;
         pidController = new PIDController(1, 0 , 0.02);
+        HomePidController = new PIDController(.1, 0 , 0.02);
         m_needSelection = needSelection;
     }
 
@@ -40,7 +42,12 @@ public class SetHeadTo extends Command {
     public void execute() {
        // if (!m_needSelection) {
             double Rotation = m_head.GetHeadEncodor();
-            double output = pidController.calculate(Rotation, m_setpoint);
+            double output;
+            if (m_command != "Home" || m_command != "Coral Station") {
+                output = pidController.calculate(Rotation, m_setpoint);
+            } else {
+                output = HomePidController.calculate(Rotation, m_setpoint);
+            }
             if (output > 1) {
                 m_fixedOutput = 1;
             } else {
