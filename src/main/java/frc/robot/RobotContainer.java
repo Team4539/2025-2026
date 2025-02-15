@@ -83,7 +83,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -165,16 +165,25 @@ public class RobotContainer {
             new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
             new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
         ));
-        CoralStation.whileTrue(new ParallelCommandGroup(
+        CoralStation.whileTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral Station", false),
+                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
+            ).withTimeout(.5),
+            new ParallelCommandGroup(
             new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral Station", false),
             new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralStationRotation, "Coral Station", false),
             new RunAlgae(Constants.HeadMechanisms.CoralIntakeSpeed, "CoralStation", m_HeadIntakeSubsystem)
+            )
         ));
         CoralStation.onFalse(
-            new ParallelCommandGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
-            ).withTimeout(2)
+            new SequentialCommandGroup(
+                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(.5),
+                new ParallelCommandGroup(
+                    new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
+                    new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
+                ).withTimeout(2)
+            )
         );
         selectElecatorCommand.whileTrue(new ParallelCommandGroup(
             new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral L4", true),
