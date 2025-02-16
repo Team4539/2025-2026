@@ -29,6 +29,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadRotationSubsystem;
 import frc.robot.subsystems.headIntakeSubsystem;
+import frc.robot.subsystems.PDPSubsytem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -40,8 +41,8 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final XboxController Driver = new XboxController(0);
     private final XboxController Operator = new XboxController(1);
-    private final Joystick testJoystick = new Joystick(2);
-    private final POVButton pov = new POVButton(testJoystick, 0);
+    //private final Joystick testJoystick = new Joystick(2);
+    //private final POVButton pov = new POVButton(testJoystick, 0);
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -60,8 +61,10 @@ public class RobotContainer {
     private final JoystickButton CoralStation = new JoystickButton(Operator, XboxController.Button.kStart.value);
 
     // Test Joystick Buttons
-    private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
-    private final JoystickButton outTakeCoral = new JoystickButton(testJoystick, 1); // 2 is the thumb button
+    // private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
+    // private final JoystickButton outTakeCoral = new JoystickButton(testJoystick, 1); // 2 is the thumb button
+    
+    
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     /* Subsystems */
@@ -69,6 +72,7 @@ public class RobotContainer {
     private final HeadRotationSubsystem m_HeadRotationSubsystem = new HeadRotationSubsystem();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(m_HeadRotationSubsystem);
     private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem(m_ElevatorSubsystem, m_HeadRotationSubsystem);
+    private final PDPSubsytem m_PdpSubsytem = new PDPSubsytem();
     NamedCommands commands = new NamedCommands();
 
     private void configureBindings() {
@@ -173,7 +177,7 @@ public class RobotContainer {
             new ParallelCommandGroup(
             new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral Station", false),
             new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralStationRotation, "Coral Station", false),
-            new RunAlgae(Constants.HeadMechanisms.CoralIntakeSpeed, "CoralStation", m_HeadIntakeSubsystem)
+            new RunAlgae(Constants.HeadMechanisms.CoralIntakeSpeed, "Coral Station", m_HeadIntakeSubsystem)
             )
         ));
         CoralStation.onFalse(
@@ -185,10 +189,10 @@ public class RobotContainer {
                 ).withTimeout(2)
             )
         );
-        selectElecatorCommand.whileTrue(new ParallelCommandGroup(
-            new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral L4", true),
-            new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralStationRotation, "Coral L4", true)
-        ));
+        // selectElecatorCommand.whileTrue(new ParallelCommandGroup(
+        //     new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral L4", true),
+        //     new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralStationRotation, "Coral L4", true)
+        // ));
         IntakeAlgae.whileTrue(new ParallelCommandGroup(
             new RunAlgae(Constants.HeadMechanisms.AlgaeIntakeSpeed, "Intake Algae", m_HeadIntakeSubsystem)
         ));

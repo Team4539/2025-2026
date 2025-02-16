@@ -34,7 +34,7 @@ public class SetHeadTo extends Command {
         }
         m_setpoint = setpoint;
         pidController = new PIDController(1, 0 , 0.02);
-        HomePidController = new PIDController(.1, 0 , 0.02);
+        HomePidController = new PIDController(.001, 0 , 0.002);
         m_needSelection = needSelection;
     }
 

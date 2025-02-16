@@ -9,7 +9,7 @@
         "containers": [
           {
             "title": "limelight-fronapr",
-            "x": 384.0,
+            "x": 1024.0,
             "y": 0.0,
             "width": 512.0,
             "height": 512.0,
@@ -21,9 +21,9 @@
           },
           {
             "title": "Pose",
-            "x": 896.0,
+            "x": 0.0,
             "y": 0.0,
-            "width": 512.0,
+            "width": 1024.0,
             "height": 384.0,
             "type": "Field",
             "properties": {
@@ -38,6 +38,19 @@
               "robot_color": 4294198070,
               "trajectory_color": 4294967295
             }
+          },
+          {
+            "title": "Auto mode",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto mode",
+              "period": 0.06,
+              "sort_options": false
+            }
           }
         ]
       }
@@ -48,92 +61,11 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Auto mode",
-            "x": 128.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/SmartDashboard/Auto mode",
-              "period": 0.06,
-              "sort_options": false
-            }
-          },
-          {
-            "title": "Run Head Motor",
-            "x": 256.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Motor Controller",
-            "properties": {
-              "topic": "/SmartDashboard/Run Head Motor",
-              "period": 0.06
-            }
-          },
-          {
-            "title": "Algae Current Draw",
-            "x": 0.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Algae Current Draw",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "AlgaeMotor Command",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/AlgaeMotor Command",
-              "period": 0.06,
-              "data_type": "string",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Elevator Height",
-            "x": 0.0,
-            "y": 384.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Elevator Height",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Head Rotation",
-            "x": 128.0,
-            "y": 384.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Head Rotation",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
             "title": "Pose",
-            "x": 640.0,
-            "y": 128.0,
-            "width": 640.0,
-            "height": 512.0,
+            "x": 0.0,
+            "y": 0.0,
+            "width": 1536.0,
+            "height": 768.0,
             "type": "Field",
             "properties": {
               "topic": "/Pose",
@@ -155,25 +87,145 @@
       "name": "DEBUG",
       "grid_layout": {
         "layouts": [],
-        "containers": []
-      }
-    },
-    {
-      "name": "Selections",
-      "grid_layout": {
-        "layouts": [],
         "containers": [
           {
-            "title": "Auto mode",
-            "x": 512.0,
-            "y": 128.0,
+            "title": "Head Rotation",
+            "x": 1152.0,
+            "y": 0.0,
             "width": 384.0,
             "height": 128.0,
-            "type": "ComboBox Chooser",
+            "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Auto mode",
+              "topic": "/SmartDashboard/Head Rotation",
               "period": 0.06,
-              "sort_options": false
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Elevator Height",
+            "x": 1152.0,
+            "y": 256.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Elevator Height",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Elevator Command",
+            "x": 1408.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Elevator Command",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Head Command",
+            "x": 1280.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Head Command",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "limelight-fronapr_Interface",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/limelight-fronapr_Interface",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "limelight-fronapr_PipelineName",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/limelight-fronapr_PipelineName",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "botpose_orb",
+            "x": 640.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-fronapr/botpose_orb",
+              "period": 0.06,
+              "data_type": "double[]",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "botpose_targetspace",
+            "x": 896.0,
+            "y": 512.0,
+            "width": 640.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-fronapr/botpose_targetspace",
+              "period": 0.06,
+              "data_type": "double[]",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "tl",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-fronapr/tl",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "tid",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/limelight-fronapr/tid",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]
