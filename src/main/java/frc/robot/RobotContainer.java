@@ -28,6 +28,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadRotationSubsystem;
+import frc.robot.subsystems.MotionMagicElevatorTestSubsystem;
+import frc.robot.subsystems.MotionMagicHeadTestSubsystem;
 import frc.robot.subsystems.headIntakeSubsystem;
 import frc.robot.subsystems.PDPSubsytem;
 
@@ -73,6 +75,8 @@ public class RobotContainer {
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(m_HeadRotationSubsystem);
     private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem(m_ElevatorSubsystem, m_HeadRotationSubsystem);
     private final PDPSubsytem m_PdpSubsytem = new PDPSubsytem();
+    private final MotionMagicElevatorTestSubsystem m_MotionMagicElevatorTestSubsystem = new MotionMagicElevatorTestSubsystem();
+    private final MotionMagicHeadTestSubsystem m_MotionMagicHeadTestSubsystem = new MotionMagicHeadTestSubsystem();
     NamedCommands commands = new NamedCommands();
 
     private void configureBindings() {
