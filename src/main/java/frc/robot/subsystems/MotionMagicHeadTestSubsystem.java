@@ -4,17 +4,23 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.AbsoluteEncoder;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class MotionMagicHeadTestSubsystem extends SubsystemBase {
     TalonFX head = new TalonFX(Constants.HeadRotator.HeadRotatorMotorID);
+    DutyCycleEncoder headEncoder = new DutyCycleEncoder(4);
 
     public MotionMagicHeadTestSubsystem() {
         var talonFXconfigs = new TalonFXConfiguration();
+        talonFXconfigs.Feedback.FeedbackRemoteSensorID = (int) headEncoder.get();
 
         var slot0configs = talonFXconfigs.Slot0;
         slot0configs.kS = Constants.HeadRotator.kS; // Voltage to Overcome Static Friction

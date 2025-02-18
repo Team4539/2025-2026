@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.RunAlgae;
+import frc.robot.commands.AlignReef;
 import frc.robot.commands.SetElevator;
 import frc.robot.commands.SetElevatorTo;
 import frc.robot.commands.SetHeadRotation;
@@ -61,6 +62,7 @@ public class RobotContainer {
     private final JoystickButton IntakeAlgae = new JoystickButton(Operator, XboxController.Button.kRightBumper.value);
     private final JoystickButton OutTakeAlgae = new JoystickButton(Operator, XboxController.Button.kLeftBumper.value);
     private final JoystickButton CoralStation = new JoystickButton(Operator, XboxController.Button.kStart.value);
+    private final JoystickButton AlignReef = new JoystickButton(Operator, XboxController.Button.kBack.value);
 
     // Test Joystick Buttons
     // private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
@@ -112,6 +114,8 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
         resetGyro.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        AlignReef.whileTrue(new AlignReef(5, drivetrain));
 
         coralL4.onTrue(new SequentialCommandGroup(
             new ParallelRaceGroup(

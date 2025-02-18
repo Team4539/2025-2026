@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    WebServer.start(5803, Filesystem.getDeployDirectory().getPath());
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     Elastic.selectTab("Teleop");
   }
 
@@ -41,7 +41,9 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    WebServer.stop(5800);
+  }
 
   @Override
   public void autonomousInit() {

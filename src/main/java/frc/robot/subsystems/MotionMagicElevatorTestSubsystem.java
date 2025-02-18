@@ -6,15 +6,20 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class MotionMagicElevatorTestSubsystem extends SubsystemBase {
     TalonFX elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
+    Encoder encoder = new Encoder(5, 6);
 
     public MotionMagicElevatorTestSubsystem() {
         var talonFXconfigs = new TalonFXConfiguration();
+        talonFXconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        talonFXconfigs.Feedback.FeedbackRemoteSensorID = encoder.get();
+        
 
         var slot0configs = talonFXconfigs.Slot0;
         slot0configs.kS = Constants.Elevator.kS; // Voltage to Overcome Static Friction
@@ -28,6 +33,7 @@ public class MotionMagicElevatorTestSubsystem extends SubsystemBase {
         motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.CruiseVelocity; //velocity in units/100ms
         motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.Acceleration; // acceleration in units/100ms^2
         motionMagicConfigs.MotionMagicJerk = Constants.Elevator.Jerk; // Jerk in units/100ms^3
+    
 
         // apply configs
         elevator.getConfigurator().apply(talonFXconfigs);
