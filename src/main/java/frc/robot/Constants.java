@@ -10,8 +10,8 @@ public class Constants {
         public static final int ElevatorMotorID = 14; // motor value
         public static final int ElevatorEncoderAID = 0; // DIO Port 0 
         public static final int ElevatorEncoderBID = 1; // DIO Port 1
-        public static final double ElevatorMaxHeight = -5; // Will also be 0
-        public static final double ElevatorMinHeight = 30000; // Tuned for our robot
+        public static final double ElevatorMaxHeight = -999999; // Will also be 0
+        public static final double ElevatorMinHeight = 9999999; // Tuned for our robot
         public static final double ElevatorAboveGround = 4103; // Placeholder value
 
         /*Elevator heights */
@@ -43,8 +43,8 @@ public class Constants {
     public static final class HeadRotator {
         public static final int HeadRotatorMotorID = 15; // Placeholder value
         public static final int HeadRotatorEncoderID = 2; // DIO Port 2
-        public static final double HeadRotatorMaxAngle = 70; // Placeholder value
-        public static final double HeadRotatorMinAngle = 37; // Placeholder value
+        public static final double HeadRotatorMaxAngle = 99; // Placeholder value
+        public static final double HeadRotatorMinAngle = 0; // Placeholder value
         public static final double HeadSAFE = 44; // THIS IS CLEAR OF THE ELEVATOR
         public static final double HeadPastSAFE = 92; // this is where wheel can hit swerve module
         public static final double RotationPerDegree = 20.25; // it takes this many rotation to move 1 degree

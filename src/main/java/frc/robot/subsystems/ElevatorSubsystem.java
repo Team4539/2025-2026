@@ -22,6 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean isSAFE;
     private HeadRotationSubsystem m_HeadRotationSubsystem;
 
+    @SuppressWarnings("removal")
     public ElevatorSubsystem(HeadRotationSubsystem headRotationSubsystem) {
         elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
         elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
@@ -30,6 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         currentLimits.SupplyCurrentLimit = 20;
         currentLimits.SupplyCurrentLimitEnable = true;
         elevator.getConfigurator().apply(currentLimits);
+        elevator.setInverted(true);
         elevator.setNeutralMode(NeutralModeValue.Brake);
         m_HeadRotationSubsystem = headRotationSubsystem;
         isSAFE = m_HeadRotationSubsystem.isSafe();
