@@ -66,7 +66,7 @@ public class AlignReef extends Command {
 
             m_drive.setControl(forwardStraight
                 .withRotationalRate(yawAdjustment)
-                .withVelocityY(strafeVelocity) // Adjusted strafe velocity
+                .withVelocityY(strafeVelocity * -1) // Adjusted strafe velocity
                 .withVelocityX(forwardVelocity)); // Adjusted forward velocity
         } else {
             m_drive.setControl(forwardStraight
