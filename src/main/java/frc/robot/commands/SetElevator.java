@@ -25,7 +25,7 @@ public class SetElevator extends Command{
     @Override
     public void execute() 
     {
-        m_ElevatorSubsystem.SetElevator(m_speed.getAsDouble(), "Manual control");
+        m_ElevatorSubsystem.SetElevator(m_speed.getAsDouble()*-1, "Manual control");
     }
     @Override
     public void end(boolean interrupted) 

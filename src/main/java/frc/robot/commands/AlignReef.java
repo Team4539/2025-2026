@@ -1,92 +1,92 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.LimeLightHelpers;
-import edu.wpi.first.math.geometry.Pose3d;
 
 public class AlignReef extends Command {
-    private final com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric forwardStraight = new com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric()
-        .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.OpenLoopVoltage);
-        
-    private final CommandSwerveDrivetrain m_drive;
+    private final SwerveRequest.RobotCentric drive =
+            new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private CommandSwerveDrivetrain m_drive;
     private int m_tag;
-    private boolean isAligned = false;
+    
+    // PID Controllers for alignment
+    private final PIDController rotationPID;
+    private final PIDController strafePID;
+    private final PIDController distancePID;
 
     public AlignReef(int tag, CommandSwerveDrivetrain drive_subsystem) {
         addRequirements(drive_subsystem);
         m_tag = tag;
         m_drive = drive_subsystem;
+
+        // Configure PID controllers with gains
+        rotationPID = new PIDController(0.015, 0, 0);
+        strafePID = new PIDController(0.015, 0, 0);
+        distancePID = new PIDController(0.1, 0, 0);
+
+        // Set tolerances for when we consider ourselves "aligned"
+        rotationPID.setTolerance(1.0);
+        strafePID.setTolerance(1.0);
+        distancePID.setTolerance(0.5);
     }
 
     @Override
     public void initialize() {
-        isAligned = false;
+        rotationPID.reset();
+        strafePID.reset();
+        distancePID.reset();
     }
 
     @Override
     public void execute() {
+        double tx = LimeLightHelpers.getTX("limelight-fronapr");
+        double ty = LimeLightHelpers.getTY("limelight-fronapr");
         double id = LimeLightHelpers.getFiducialID("limelight-fronapr");
 
         if (id == m_tag) {
-            Pose3d botPose = LimeLightHelpers.getBotPose3d("limelight-fronapr");
-            double tx = botPose.getX(); // Get the X position of the robot
-            double ty = botPose.getY(); // Get the Y position of the robot
-            double tz = botPose.getZ(); // Get the Z position of the robot
-            double yaw = botPose.getRotation().getZ(); // Get the current yaw of the robot
+            // Calculate control outputs
+            double rotationOutput = rotationPID.calculate(tx, 0) * 1.5 * Math.PI;
+            double strafeOutput = strafePID.calculate(tx, 0);
+            double forwardOutput = distancePID.calculate(ty, 0);
 
-            double kPStrafe = 0.05; // Sensitivity for strafe adjustment
-            double strafeVelocity = tx * kPStrafe;
-
-            double kPForward = 0.1; // Sensitivity for forward movement
-            double forwardVelocity = tz * kPForward;
-
-            double kPYaw = 0.05; // Sensitivity for yaw adjustment
-            double yawAdjustment = -yaw * kPYaw;
-
-            // Deadband to prevent small corrections
-            if (Math.abs(tx) < 0.1) {
-                strafeVelocity = 0.0;
-            }
-            if (Math.abs(tz) < 0.1) {
-                forwardVelocity = 0.0;
-            }
-
-            // Adjust yaw to be parallel to the April tag
-            if (Math.abs(yaw) < Math.toRadians(1.0)) {
-                yawAdjustment = 0.0;
-            }
-
-            // Check if the robot is aligned
-            if (Math.abs(tx) < 0.1 && Math.abs(tz) < 0.1 && Math.abs(yaw) < Math.toRadians(1.0)) {
-                isAligned = true;
-            } else {
-                isAligned = false;
-            }
-
-            m_drive.setControl(forwardStraight
-                .withRotationalRate(yawAdjustment)
-                .withVelocityY(strafeVelocity * -1) // Adjusted strafe velocity
-                .withVelocityX(forwardVelocity)); // Adjusted forward velocity
+            // Apply combined movement
+            m_drive.setControl(drive
+                .withVelocityX(forwardOutput)  // Forward/backward
+                .withVelocityY(strafeOutput)   // Left/right
+                .withRotationalRate(rotationOutput*-1)); // Rotation
         } else {
-            m_drive.setControl(forwardStraight
-                .withRotationalRate(0.0)
-                .withVelocityY(0.0)
-                .withVelocityX(0.0)); // Stop if tag is not detected
+            // If we don't see the correct tag, stop moving
+            m_drive.setControl(drive
+                .withVelocityX(0)
+                .withVelocityY(0)
+                .withRotationalRate(0));
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_drive.setControl(forwardStraight
-            .withRotationalRate(0)
+        m_drive.setControl(drive
+            .withVelocityX(0)
             .withVelocityY(0)
-            .withVelocityX(0));
+            .withRotationalRate(0));
     }
 
     @Override
-    public boolean isFinished() { return isAligned; }
+    public boolean isFinished() {
+        // Command finishes when we're aligned with the target
+        return rotationPID.atSetpoint() && 
+               strafePID.atSetpoint() && 
+               distancePID.atSetpoint();
+    }
 
     @Override
-    public boolean runsWhenDisabled() { return false; }
+    public boolean runsWhenDisabled() {
+        return false;
+    }
 }
