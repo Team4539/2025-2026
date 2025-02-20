@@ -26,7 +26,7 @@ public class ArmRotationSubsytem extends SubsystemBase {
             isSafe = false;
     }
 
-    public void SetArmRotation(double speed, String command) {
+    public void SetArm(double speed, String command) {
             m_armMotor.set(speed);
     }
     public double GetArmEncodor() {

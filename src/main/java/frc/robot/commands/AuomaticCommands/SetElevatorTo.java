@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.AuomaticCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +12,6 @@ public class SetElevatorTo extends Command {
     private String m_command;
     private double m_setpoint;
     private double fixedOutput;
-    private final boolean m_needSelection;
 
     public SetElevatorTo(ElevatorSubsystem subsystem, double setpoint, String command, boolean needSelection) {
         addRequirements(subsystem);
@@ -24,12 +23,11 @@ public class SetElevatorTo extends Command {
         }
         m_setpoint = setpoint;
         pidController = new PIDController(.6, 10, 0.02);
-        m_needSelection = needSelection;
     }
 
     @Override
     public void execute() {
-        double Height = m_elevator.GetElevatorHeight();
+        double Height = m_elevator.getElevatorHeight();
         double output = pidController.calculate(Height, m_setpoint) / 1000;
         if (output > 1) {
             fixedOutput = 1;
@@ -38,16 +36,16 @@ public class SetElevatorTo extends Command {
         }
 
         if (Height > m_setpoint) {
-            m_elevator.SetElevator(-fixedOutput, m_command);
+            m_elevator.setElevator(-fixedOutput, m_command);
         } else if (Height < m_setpoint) {
-            m_elevator.SetElevator(-fixedOutput, m_command);
+            m_elevator.setElevator(-fixedOutput, m_command);
         } else {
-            m_elevator.SetElevator(0, m_command + " At Setpoint");
+            m_elevator.setElevator(0, m_command + " At Setpoint");
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_elevator.SetElevator(0, "Disabled");
+        m_elevator.setElevator(0, "Disabled");
     }
 }

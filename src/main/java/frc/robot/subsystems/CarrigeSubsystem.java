@@ -17,7 +17,6 @@ public class CarrigeSubsystem extends SubsystemBase {
     private double carrigeHeight;
     private String command = "disabled";
 
-    @SuppressWarnings("removal")
     public CarrigeSubsystem() {
         carrige = new TalonFX(Constants.Carrige.CarrigeMotorID);
         carrigeEncoder = new Encoder(Constants.Carrige.CarrigeEncoderAID, Constants.Carrige.CarrigeEncoderBID);
