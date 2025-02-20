@@ -19,14 +19,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.RunAlgae;
 import frc.robot.commands.AlignReef;
 import frc.robot.commands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.HeadRotationSubsystem;
-import frc.robot.subsystems.headIntakeSubsystem;
 import frc.robot.subsystems.PDPSubsytem;
 
 public class RobotContainer {
@@ -68,9 +65,7 @@ public class RobotContainer {
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final HeadRotationSubsystem m_HeadRotationSubsystem = new HeadRotationSubsystem();
-    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(m_HeadRotationSubsystem);
-    private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem(m_ElevatorSubsystem, m_HeadRotationSubsystem);
+    private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     private final PDPSubsytem m_PdpSubsytem = new PDPSubsytem();
     NamedCommands commands = new NamedCommands();
 
