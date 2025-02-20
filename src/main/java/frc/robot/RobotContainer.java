@@ -22,15 +22,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.RunAlgae;
 import frc.robot.commands.AlignReef;
 import frc.robot.commands.SetElevator;
-import frc.robot.commands.SetElevatorTo;
-import frc.robot.commands.SetHeadRotation;
-import frc.robot.commands.SetHeadTo;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadRotationSubsystem;
-import frc.robot.subsystems.MotionMagicElevatorTestSubsystem;
-import frc.robot.subsystems.MotionMagicHeadTestSubsystem;
 import frc.robot.subsystems.headIntakeSubsystem;
 import frc.robot.subsystems.PDPSubsytem;
 
@@ -77,17 +72,13 @@ public class RobotContainer {
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(m_HeadRotationSubsystem);
     private final headIntakeSubsystem m_HeadIntakeSubsystem = new headIntakeSubsystem(m_ElevatorSubsystem, m_HeadRotationSubsystem);
     private final PDPSubsytem m_PdpSubsytem = new PDPSubsytem();
-    private final MotionMagicElevatorTestSubsystem m_MotionMagicElevatorTestSubsystem = new MotionMagicElevatorTestSubsystem();
-    private final MotionMagicHeadTestSubsystem m_MotionMagicHeadTestSubsystem = new MotionMagicHeadTestSubsystem();
     NamedCommands commands = new NamedCommands();
 
     private void configureBindings() {
         m_ElevatorSubsystem.setDefaultCommand(
             new SetElevator(() -> Operator.getRawAxis(XboxController.Axis.kLeftY.value), m_ElevatorSubsystem)
         );
-        m_HeadRotationSubsystem.setDefaultCommand(
-            new SetHeadRotation(() -> Operator.getRawAxis(XboxController.Axis.kRightY.value), m_HeadRotationSubsystem)
-        );
+
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
@@ -116,104 +107,14 @@ public class RobotContainer {
         resetGyro.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         AlignReef.whileTrue(new AlignReef(5, drivetrain));
-
-        coralL4.onTrue(new SequentialCommandGroup(
-            new ParallelRaceGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4 Prep", false).withTimeout(1.3),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Coral L4 Prep", false).withTimeout(1.3)
-            ),
-            new ParallelCommandGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralL4Rotation, "Coral L4", false)
-            ).withTimeout(.8),
-            new ParallelRaceGroup(
-                new RunAlgae(Constants.HeadMechanisms.AlgaeIntakeSpeed, "Coral L4", m_HeadIntakeSubsystem),
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralL4Rotation, "Coral L4", false)
-            ).withTimeout(.5),
-            new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "StartHome", false).withTimeout(.5),
-            new ParallelRaceGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(2)
-            )
-        ));
-        coralL3.onTrue(new SequentialCommandGroup(
-            new ParallelRaceGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "coral L3 Prep", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L3 Prep", false)
-            ).withTimeout(1.3),
-            new ParallelRaceGroup(
-                new RunAlgae(Constants.HeadMechanisms.AlgaeIntakeSpeed, "Coral L3", m_HeadIntakeSubsystem),
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "Coral L3", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L3", false)
-            ).withTimeout(.5),
-            new ParallelRaceGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(2)
-            )
-        ));
-        // coralL3.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL3Position, "Coral L3", false), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L3", false)));
-        // coralL3.onFalse(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(2)));
-        coralL2.onTrue(
-            new SequentialCommandGroup(
-                new ParallelRaceGroup(
-                    new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2 Prep", false).withTimeout(.8),
-                    new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L2 Prep", false).withTimeout(.8)
-                ),
-                new ParallelRaceGroup(
-                    new RunAlgae(Constants.HeadMechanisms.AlgaeIntakeSpeed, "Coral L2", m_HeadIntakeSubsystem),
-                    new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2", false),
-                    new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L2", false)
-                ).withTimeout(.5),
-                new ParallelRaceGroup(
-                    new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
-                    new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(2)
-                )
-            )
-        );
-        // coralL2.whileTrue(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL2Position, "Coral L2", false), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralReefAngledRotation, "Coral L2", false)));
-        // coralL2.onFalse(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false), new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(2)));
-        home.whileTrue(new ParallelCommandGroup(
-            new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
-            new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
-        ));
-        CoralStation.whileTrue(new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral Station", false),
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
-            ).withTimeout(.5),
-            new ParallelCommandGroup(
-            new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral Station", false),
-            new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralStationRotation, "Coral Station", false),
-            new RunAlgae(Constants.HeadMechanisms.CoralIntakeSpeed, "Coral Station", m_HeadIntakeSubsystem)
-            )
-        ));
-        CoralStation.onFalse(
-            new SequentialCommandGroup(
-                new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false).withTimeout(.5),
-                new ParallelCommandGroup(
-                    new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.HomePosition, "Home", false),
-                    new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.HomeRotation, "Home", false)
-                ).withTimeout(2)
-            )
-        );
-        // selectElecatorCommand.whileTrue(new ParallelCommandGroup(
-        //     new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coaralStationPosition, "Coral L4", true),
-        //     new SetHeadTo(m_HeadRotationSubsystem, Constants.HeadRotator.coralStationRotation, "Coral L4", true)
-        // ));
-        IntakeAlgae.whileTrue(new ParallelCommandGroup(
-            new RunAlgae(Constants.HeadMechanisms.AlgaeIntakeSpeed, "Intake Algae", m_HeadIntakeSubsystem)
-        ));
-        OutTakeAlgae.whileTrue(new ParallelCommandGroup(
-            new RunAlgae(Constants.HeadMechanisms.AlgaeOuttakeSpeed, "Outtake Algae", m_HeadIntakeSubsystem)
-        ));
     }
+
+        
 
     public RobotContainer() {
         m_chooser = AutoBuilder.buildAutoChooser("default");
         SmartDashboard.putData("Auto mode", m_chooser);
 
-        NamedCommands.registerCommand("GoL4", new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.coralL4Position, "Coral L4", false).withTimeout(3));
         configureBindings();
     }
 

@@ -34,14 +34,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevator.setInverted(true);
         elevator.setNeutralMode(NeutralModeValue.Brake);
         m_HeadRotationSubsystem = headRotationSubsystem;
-        isSAFE = m_HeadRotationSubsystem.isSafe();
+            isSAFE = m_HeadRotationSubsystem.isSafe();
+        }
 
 
-    }
 
-    public void SetStatus(String command) {
-        comand = command;
-    }
+    
 
     @Override
     public void periodic() {
@@ -54,30 +52,32 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void SetElevator(double speed, String comand) {
         SmartDashboard.putString("Elevator Command", comand);
+
+
+        
         if (speed != 0) {
-            if (isSAFE || isSAFE == false && elevatorHeight <= Constants.Elevator.ElevatorSAFE) {
-                if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
-                    elevator.set(speed);
-                }
-                else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight){
-                    elevator.set(-.1);
-                    DriverStation.reportError("YOU ARE TO LOW", false);
-                }
-                else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight){
-                    elevator.set(.1);
-                    DriverStation.reportError("YOU ARE TO HIGH", false);
-                }
+            
+            if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
+                elevator.set(speed);
+            }
+            else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight){
+                elevator.set(-.1);
+                DriverStation.reportError("YOU ARE TO LOW", false);
+            }
+            else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight){
+                elevator.set(.1);
+                DriverStation.reportError("YOU ARE TO HIGH", false);
+            }
             }
             else {
                 elevator.set(0);
-                DriverStation.reportError("YOU ARE NOT SAFE", false);
             }
-        } 
-        else {
-            elevator.set(0);
         }
-    }
+    
     public double GetElevatorHeight() {
         return elevatorHeight;
     }
 }
+    
+
+
