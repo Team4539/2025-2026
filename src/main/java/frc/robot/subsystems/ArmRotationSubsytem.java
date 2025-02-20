@@ -29,7 +29,7 @@ public class ArmRotationSubsytem extends SubsystemBase {
     public void SetArm(double speed, String command) {
             m_armMotor.set(speed);
     }
-    public double GetArmEncodor() {
+    public double GetArmRotation() {
         return armRotation;
     }
     public Boolean isSafe() {
