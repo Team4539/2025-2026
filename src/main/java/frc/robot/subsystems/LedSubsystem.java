@@ -12,6 +12,7 @@ public class LedSubsystem extends SubsystemBase {
     private boolean isAutonomous = false;
     private boolean isTeleop = false;
     private boolean isTest = false;
+    private boolean isEstopped = false;
 
     public LedSubsystem() {
         // Set the default state of the LEDs
@@ -21,6 +22,7 @@ public class LedSubsystem extends SubsystemBase {
         isAutonomous = false;
         isTeleop = false;
         isTest = false;
+        isEstopped = false;
     }
     public void periodic() {
         isFMSCONNECTED = DriverStation.isFMSAttached();
@@ -29,5 +31,6 @@ public class LedSubsystem extends SubsystemBase {
         isAutonomous = DriverStation.isAutonomous();
         isTeleop = DriverStation.isTeleop();
         isTest = DriverStation.isTest();
+        isEstopped = DriverStation.isEStopped();
     }
 }
