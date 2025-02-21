@@ -24,7 +24,6 @@ import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.PDPSubsytem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -66,7 +65,6 @@ public class RobotContainer {
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-    private final PDPSubsytem m_PdpSubsytem = new PDPSubsytem();
     NamedCommands commands = new NamedCommands();
 
     private void configureBindings() {

@@ -33,4 +33,22 @@ public class LedSubsystem extends SubsystemBase {
         isTest = DriverStation.isTest();
         isEstopped = DriverStation.isEStopped();
     }
+    public void setLEDs() {
+        
+        if (isRobotEnabled) {
+            if (isAutonomous) {
+                // Set LEDs to Blue
+            } else if (isTeleop) {
+                // Set LEDs to Green
+            } else if (isTest) {
+                // Set LEDs to Yellow
+            }
+        } else if (isRobotDisabled) {
+            // Set LEDs to Red
+        } else if (isEstopped) {
+            // Set LEDs to Flashing Red
+        } else {
+            // Set LEDs to White
+        }
+    }
 }
