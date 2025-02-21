@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -8,16 +11,15 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor;
-    private final TalonFX intakeRotatorMotor;
+    private final SparkMax intakeRotatorMotor;
     private final DutyCycleEncoder intakeRotatorEncoder;
     private double intakeRotatorPosition;
     private String intakeRotatorCommand;
     private String intakeCommand;
 
-
     public IntakeSubsystem() {
         intakeMotor = new TalonFX(Constants.Intake.IntakeMotorID);
-        intakeRotatorMotor = new TalonFX(Constants.Intake.IntakeRotatorMotorID);
+        intakeRotatorMotor = new SparkMax(Constants.Intake.IntakeRotatorMotorID, MotorType.kBrushless);
         intakeRotatorEncoder = new DutyCycleEncoder(Constants.Intake.IntakeRotatorEncoderID);
         intakeRotatorCommand = "Disabled";
         intakeCommand = "Disabled";
@@ -44,8 +46,8 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeRotatorCommand = command;
         double currentAngle = intakeRotatorEncoder.get();
         if (currentAngle >= Constants.Intake.IntakeRotatorMinAngle && currentAngle <= Constants.Intake.IntakeRotatorMaxAngle) {
-            intakeRotatorMotor.set(speed);}
-        else if (currentAngle < Constants.Intake.IntakeRotatorMinAngle) {
+            intakeRotatorMotor.set(speed);
+        } else if (currentAngle < Constants.Intake.IntakeRotatorMinAngle) {
             intakeRotatorMotor.set(-0.1);
         } else if (currentAngle > Constants.Intake.IntakeRotatorMaxAngle) {
             intakeRotatorMotor.set(0.1);
@@ -61,5 +63,4 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getRotatorPosition() {
         return intakeRotatorEncoder.get();
     }
-
 }
