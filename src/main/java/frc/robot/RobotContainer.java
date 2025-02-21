@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -24,6 +25,7 @@ import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.util.Elastic;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -99,7 +101,10 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
         resetGyro.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+        
         AlignReef.whileTrue(new AlignReef(5, drivetrain));
+
+        coralL4.onTrue(new RunCommand(() -> Elastic.selectTab("Coral L4")));
     }
 
         

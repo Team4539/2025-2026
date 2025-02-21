@@ -16,6 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private double intakeRotatorPosition;
     private String intakeRotatorCommand;
     private String intakeCommand;
+    private boolean isintakeSafe;
 
     public IntakeSubsystem() {
         intakeMotor = new TalonFX(Constants.Intake.IntakeMotorID);
@@ -30,6 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Intake Rotator Position", intakeRotatorPosition);
         SmartDashboard.putString("Intake Rotator Command", intakeRotatorCommand);
         SmartDashboard.putString("Intake Command", intakeCommand);
+        
     }
 
     public void runIntake(double speed, String command) {

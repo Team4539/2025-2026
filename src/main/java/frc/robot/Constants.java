@@ -43,6 +43,8 @@ public class Constants {
         public static final double alageGroundPosition = 0; // Placeholder value
         public static final double alageProcessorsPosition = 0; // Placeholder value
         public static final double CarrigeSAFE = 0; // Placeholder value
+        public static final double CarriageUpHeight = 0; // Placeholder value
+        public static final double ArmUnsafeMinHeight = 0; // Placeholder value
     }
        
         public static final class ArmRotator {
@@ -63,6 +65,7 @@ public class Constants {
         public static final double coralReefAngledRotation = 48.0; // Placeholder value
         public static final double coralL4Rotation = 68.1; // Placeholder value
         public static final double coralStationRotation = 48.1 ; // Coral Instake Station Value
+        public static final double HeadOutside = 0;
 
 
     }
