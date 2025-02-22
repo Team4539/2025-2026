@@ -20,7 +20,7 @@ public class CarrigeSubsystem extends SubsystemBase {
 
     public CarrigeSubsystem() {
         carrige = new TalonFX(Constants.Carrige.CarrigeMotorID);
-        //carrigeEncoder = new Encoder(Constants.Carrige.CarrigeEncoderAID, Constants.Carrige.CarrigeEncoderBID);
+        carrigeEncoder = new Encoder(Constants.Carrige.CarrigeEncoderAID, Constants.Carrige.CarrigeEncoderBID);
         carrige.getConfigurator().apply(new TalonFXConfiguration());
         var currentLimits = new CurrentLimitsConfigs();
         currentLimits.SupplyCurrentLimit = 20;
@@ -33,49 +33,45 @@ public class CarrigeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // carrigeHeight = carrigeEncoder.getRaw();
-        // if (carrigeHeight >= Constants.Carrige.CarriageUpHeight) {
-        //     isCarrigeUp = true;
-        // } else {
-        //     isCarrigeUp = false;
-        // }
-        //SmartDashboard.putNumber("Carrige Height", carrigeEncoder.getRaw());
+        carrigeHeight = carrigeEncoder.getRaw();
+        if (carrigeHeight >= Constants.Carrige.CarriageUpHeight) {
+            isCarrigeUp = true;
+        } else {
+            isCarrigeUp = false;
+        }
+        SmartDashboard.putNumber("Carrige Height", carrigeEncoder.getRaw());
         SmartDashboard.putString("Carrige Command", command);
         //SmartDashboard.putBoolean("Is Carrige Up", isCarrigeUp);
     }
 
     public void SetCarrige(double speed, String command) {
         SmartDashboard.putString("Carrige Command", command);
+        carrigeHeight = carrigeEncoder.getRaw();
 
         if (speed != 0) {
-            carrige.set(speed);}
-        //     if (isArmSafe){
-        //         if ((carrigeHeight >= Constants.Carrige.CarrigeMaxHeight && carrigeHeight <= Constants.Carrige.CarrigeMinHeight)) {
-        //             carrige.set(speed);
-        //         } else if (carrigeHeight < Constants.Carrige.CarrigeMinHeight) {
-        //             carrige.set(-.1);
-        //             DriverStation.reportError("Arm To low", false);
-        //         } else if (carrigeHeight > Constants.Carrige.CarrigeMaxHeight) {
-        //             carrige.set(.1);
-        //             DriverStation.reportError("YOU ARE TOO HIGH", false);
-        //         }}
-        //     else {
-        //         if (carrigeHeight >= Constants.Carrige.ArmUnsafeMinHeight) {
-        //             carrige.set(speed);
-        //         } else {
-        //             carrige.set(-.1);
-        //             DriverStation.reportError("ARM UNSAFE DONT CANNOT GO DOWN MORE", false);
-        //         }}
-        // }
-         else {
-            carrige.set(0);
-        }
+            if (carrigeHeight <= Constants.Carrige.CarrigeMaxHeight && carrigeHeight >= Constants.Carrige.CarrigeMinHeight) {
+                carrige.set(speed);
+            } else if (carrigeHeight < Constants.Carrige.CarrigeMinHeight) {
+                carrige.set(-.1);
+                DriverStation.reportError("Carrige To low", false);
+            } else if (carrigeHeight > Constants.Carrige.CarrigeMaxHeight) {
+                carrige.set(.1);
+                DriverStation.reportError("YOU ARE TOO HIGH", false);
+            }
+            else {
+                carrige.set(0);
+            }
+        
+         
     }
-
-    // public double GetCarrigeHeight() {
-    //     return carrigeHeight;
-    // }
-    // public boolean IsCarrigeUp() {
-    //     return isCarrigeUp;
-    // }
+    }
+    public void StopCarrige() {
+        carrige.set(0);
+    }
+    public double GetCarrigeHeight() {
+        return carrigeHeight;
+    }
+    public boolean IsCarrigeUp() {
+        return isCarrigeUp;
+    }
 }

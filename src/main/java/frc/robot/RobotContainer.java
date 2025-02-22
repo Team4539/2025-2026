@@ -12,12 +12,18 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.Elevator;
 import frc.robot.commands.AuomaticCommands.AlignReef;
+import frc.robot.commands.AuomaticCommands.SetArmTo;
+import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
+import frc.robot.commands.AuomaticCommands.SetElevatorTo;
 import frc.robot.commands.BaseCommands.RotateIntake;
+import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.commands.BaseCommands.RunIntake;
 import frc.robot.commands.BaseCommands.SetArm;
 import frc.robot.commands.BaseCommands.SetCarrige;
@@ -28,6 +34,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmRotationSubsytem;
+import frc.robot.subsystems.HeadintakeManipulator;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -68,8 +75,8 @@ public class RobotContainer {
     private final JoystickButton ElevatorDown = new JoystickButton(ButtonBox, 2);
     private final JoystickButton CarrigeUp = new JoystickButton(ButtonBox, 3);
     private final JoystickButton CarrigeDown = new JoystickButton(ButtonBox, 4);
-    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 5);
-    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 6);
+    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 6);
+    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 5);
     private final JoystickButton HeadIntake = new JoystickButton(ButtonBox, 7);
     private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8);
     private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9);
@@ -90,6 +97,7 @@ public class RobotContainer {
     private final CarrigeSubsystem m_CarrigeSubsystem = new CarrigeSubsystem();
     private final ArmRotationSubsytem m_ArmRotationSubsystem = new ArmRotationSubsytem();
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
+    private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
     NamedCommands commands = new NamedCommands();
     
     private void configureBindings() {
@@ -128,18 +136,18 @@ public class RobotContainer {
         AlignReef.whileTrue(new AlignReef(5, drivetrain));
 
         /*Joystick Buttons */
-        ElevatorUp.whileTrue(new SetElevator(0.1, m_ElevatorSubsystem));
-        ElevatorDown.whileTrue(new SetElevator(-0.1, m_ElevatorSubsystem));
-        CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.1, "Button"));
-        CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.1, "Button"));
-        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, 0.1, "Button"));
-        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -0.1, "Button"));
-        HeadIntake.whileTrue(new RunIntake(m_intakeSubsytem, 0.1, "Button"));
-        HeadOuttake.whileTrue(new RunIntake(m_intakeSubsytem, -0.1, "Button"));
-        IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.1, "Button"));
-        IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.1, "Button"));
-        IntakeIn.whileTrue(new RunIntake(m_intakeSubsytem, 0.1, "Button"));
-        IntakeOut.whileTrue(new RunIntake(m_intakeSubsytem, -0.1, "Button"));
+        ElevatorUp.whileTrue(new SetElevator(0.4, m_ElevatorSubsystem));
+        ElevatorDown.whileTrue(new SetElevator(-0.4, m_ElevatorSubsystem));
+        CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
+        CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.4, "Button"));
+        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, 0.7, "Button"));
+        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -0.7, "Button"));
+        HeadIntake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, -0.5), new RunIntake(m_intakeSubsytem, -1, "Button")));
+        HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 10, "button")));
+        IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));
+        IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.4, "Button"));
+        IntakeIn.whileTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.ElevatorPickup, "Pickup", false), new SetCarrigeTo(m_CarrigeSubsystem, Constants.Carrige.CarrigePickup, "Pickup", false)).withTimeout(5), new SetArmTo(m_ArmRotationSubsystem, Constants.ArmRotator.ArmPickup, "pickup", false)));
+        IntakeOut.whileTrue(new RunIntake(m_intakeSubsytem, -0.4, "Button"));
         
 
 

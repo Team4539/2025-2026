@@ -10,8 +10,8 @@ public class Constants {
         public static final int ElevatorMotorID = 14; // motor value
         public static final int ElevatorEncoderAID = 0; // DIO Port 0 
         public static final int ElevatorEncoderBID = 1; // DIO Port 1
-        public static final double ElevatorMaxHeight = -999999; // Will also be 0
-        public static final double ElevatorMinHeight = 9999999; // Tuned for our robot
+        public static final double ElevatorMaxHeight = -38413; // Will also be 0
+        public static final double ElevatorMinHeight = 0; // Tuned for our robot
 
         /*Elevator heights */
         public static final double HomePosition = -5; // Placeholder value
@@ -24,14 +24,15 @@ public class Constants {
         public static final double alageGroundPosition = 0; // Placeholder value
         public static final double alageProcessorsPosition = 0; // Placeholder value
         public static final double ElevatorSAFE = 8500; // Head will not hit the Elevator at this height
+        public static final double ElevatorPickup = -25562;
         
     }
     public static final class Carrige {
         public static final int CarrigeMotorID = 13; // Placeholder value
-        public static final int CarrigeEncoderAID = 10; // DIO Port 3
+        public static final int CarrigeEncoderAID = 3; // DIO Port 3
         public static final int CarrigeEncoderBID = 4; // DIO Port 4
-        public static final double CarrigeMaxHeight = 999999; // Placeholder value
-        public static final double CarrigeMinHeight = -999999; // Placeholder value
+        public static final double CarrigeMaxHeight = 0; // Placeholder value
+        public static final double CarrigeMinHeight = -34996; // Placeholder value
 
         /*Carrige heights */
         public static final double HomePosition = 0; // Placeholder value
@@ -46,13 +47,14 @@ public class Constants {
         public static final double CarrigeSAFE = 0; // Placeholder value
         public static final double CarriageUpHeight = 0; // Placeholder value
         public static final double ArmUnsafeMinHeight = 0; // Placeholder value
+        public static final double CarrigePickup = -19091; // Placeholder value
     }
        
         public static final class ArmRotator {
         public static final int ArmRotatorMotorID = 15; // Placeholder value
         public static final int ArmRotatorEncoderID = 2; // DIO Port 2
-        public static final double ArmRotatorMaxAngle = 99; // Placeholder value
-        public static final double ArmRotatorMinAngle = 0; // Placeholder value
+        public static final double ArmRotatorMaxAngle = 60; // Placeholder value
+        public static final double ArmRotatorMinAngle = 14; // Placeholder value
         public static final double HeadSAFE = 44; // THIS IS CLEAR OF THE Elevator
         public static final double HeadPastSAFE = 92; // this is where wheel can hit swerve module
         public static final double RotationPerDegree = 20.25; // it takes this many rotation to move 1 degree
@@ -67,6 +69,7 @@ public class Constants {
         public static final double coralL4Rotation = 68.1; // Placeholder value
         public static final double coralStationRotation = 48.1 ; // Coral Instake Station Value
         public static final double HeadOutside = 0;
+        public static final double ArmPickup = 14; // Placeholder value
 
 
     }
@@ -77,10 +80,10 @@ public class Constants {
         public static final int AlgaeHoldSpeed = 0; // Placeholder value
     }
     public static final class Intake {
-        public static final int IntakeMotorID = 0; // Placeholder value
-        public static final int IntakeRotatorMotorID = 7; // Placeholder value
-        public static final int IntakeRotatorEncoderID = 4; // Placeholder value
-        public static final double IntakeRotatorMaxAngle = 0; // Placeholder value
+        public static final int IntakeMotorID = 24; // Placeholder value
+        public static final int IntakeRotatorMotorID = 6; // Placeholder value
+        public static final int IntakeRotatorEncoderID = 5; // Placeholder value
+        public static final double IntakeRotatorMaxAngle = -2175; // Placeholder value
         public static final double IntakeRotatorMinAngle = 0; // Placeholder value
         public static final double InsideRotation = 0; // Placeholder value
         public static final double OutsideRotation = 0; // Placeholder value

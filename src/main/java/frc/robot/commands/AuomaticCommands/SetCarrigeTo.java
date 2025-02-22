@@ -27,21 +27,21 @@ public class SetCarrigeTo extends Command {
 
     @Override
     public void execute() {
-        //double Height = m_carrige.GetCarrigeHeight();
-        // //double output = pidController.calculate(Height, m_setpoint) / 1000;
-        // if (output > 1) {
-        //     fixedOutput = 1;
-        // } else {
-        //     fixedOutput = output;
-        // }
+        double Height = m_carrige.GetCarrigeHeight();
+        double output = pidController.calculate(Height, m_setpoint) / 1000;
+        if (output > 1) {
+            fixedOutput = 1;
+        } else {
+            fixedOutput = output;
+        }
 
-        // if (Height > m_setpoint) {
-        //     m_carrige.SetCarrige(-fixedOutput, m_command);
-        // } else if (Height < m_setpoint) {
-        //     m_carrige.SetCarrige(-fixedOutput, m_command);
-        // } else {
-        //     m_carrige.SetCarrige(0, m_command + " At Setpoint");
-        // }
+        if (Height > m_setpoint) {
+            m_carrige.SetCarrige(-fixedOutput, m_command);
+        } else if (Height < m_setpoint) {
+            m_carrige.SetCarrige(-fixedOutput, m_command);
+        } else {
+            m_carrige.SetCarrige(0, m_command + " At Setpoint");
+        }
     }
 
     @Override

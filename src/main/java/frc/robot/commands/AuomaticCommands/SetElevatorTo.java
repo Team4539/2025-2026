@@ -36,7 +36,7 @@ public class SetElevatorTo extends Command {
         }
 
         if (Height > m_setpoint) {
-            m_elevator.setElevator(-fixedOutput, m_command, false);
+            m_elevator.setElevator(fixedOutput, m_command, false);
         } else if (Height < m_setpoint) {
             m_elevator.setElevator(-fixedOutput, m_command, false);
         } else {

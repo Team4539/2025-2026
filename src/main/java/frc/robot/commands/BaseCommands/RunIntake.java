@@ -20,4 +20,7 @@ public class RunIntake extends Command {
     public void execute () {
         m_intakeSubsystem.runIntake(m_speed, m_command);
     }
+    public void end(boolean interrupted) {
+        m_intakeSubsystem.stopIntake();
+    }
 }

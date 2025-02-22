@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
+import org.opencv.video.SparsePyrLKOpticalFlow;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,7 +16,7 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor;
     private final TalonFX intakeRotatorMotor;
-    private final DutyCycleEncoder intakeRotatorEncoder;
+    private final Encoder intakeRotatorEncoder;
     private double intakeRotatorPosition;
     private String intakeRotatorCommand;
     private String intakeCommand;
@@ -22,7 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         intakeMotor = new TalonFX(Constants.Intake.IntakeMotorID);
         intakeRotatorMotor = new TalonFX(Constants.Intake.IntakeRotatorMotorID);
-        intakeRotatorEncoder = new DutyCycleEncoder(Constants.Intake.IntakeRotatorEncoderID);
+        intakeRotatorEncoder = new Encoder(Constants.Intake.IntakeRotatorEncoderID, 6);
         intakeRotatorCommand = "Disabled";
         intakeCommand = "Disabled";
         isIntakeMoving = false;
@@ -54,11 +57,16 @@ public class IntakeSubsystem extends SubsystemBase {
     public void rotateIntake(double speed, String command) {
         intakeRotatorCommand = command;
         double currentAngle = intakeRotatorEncoder.get();
-        if (currentAngle >= Constants.Intake.IntakeRotatorMinAngle && currentAngle <= Constants.Intake.IntakeRotatorMaxAngle) {
+        if (currentAngle <= Constants.Intake.IntakeRotatorMinAngle && currentAngle >= Constants.Intake.IntakeRotatorMaxAngle) {
+            intakeRotatorMotor.set(speed);}
+         else if (currentAngle > Constants.Intake.IntakeRotatorMinAngle & speed < 0)
             intakeRotatorMotor.set(speed);
-        } else if (currentAngle < Constants.Intake.IntakeRotatorMinAngle) {
+         else if (currentAngle > Constants.Intake.IntakeRotatorMinAngle) {
             intakeRotatorMotor.set(-0.1);
-        } else if (currentAngle > Constants.Intake.IntakeRotatorMaxAngle) {
+        } else if (currentAngle < Constants.Intake.IntakeRotatorMaxAngle & speed > 0) {
+            intakeRotatorMotor.set(speed);
+        }
+        else if (currentAngle < Constants.Intake.IntakeRotatorMaxAngle) {
             intakeRotatorMotor.set(0.1);
         // } else {
             stopRotator();

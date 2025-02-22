@@ -18,9 +18,6 @@ public class SetElevator extends Command{
     }
 
     @Override
-    public void initialize() {}
-
-    @Override
     public void execute() 
     {
         m_ElevatorSubsystem.setElevator(m_speed * -1.0, "Manual control", false);
@@ -30,10 +27,4 @@ public class SetElevator extends Command{
     {
         m_ElevatorSubsystem.setElevator(0.0, "Disabled", false);
     }
-    
-    @Override
-    public boolean isFinished() { return false; }
-
-    @Override
-    public boolean runsWhenDisabled() { return false; }
 }

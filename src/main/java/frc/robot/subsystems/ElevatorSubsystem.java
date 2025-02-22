@@ -40,44 +40,59 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setElevator(double speed, String command, Boolean NeedDown) {
 
-        SmartDashboard.putString("Elevator Command", command);
+        SmartDashboard.putString("Carrige Command", command);
+        elevatorHeight = elevatorEncoder.getRaw();
 
         if (speed != 0) {
-            if (NeedDown = true) {
-                if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
-                    elevator.set(speed); // I am in the range
-                }
-                else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0){
-                    elevator.set(speed); // I am below but I want to go up
-                    System.out.println("I'll allow you to get me up");
-                }
-                } else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0) {
-                    elevator.set(-.1); // I am below and wanna go down (I am too low)
-                    DriverStation.reportError("YOU ARE TOO LOW", false);}
-                else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
-                    elevator.set(speed); // I am above but i wanna go down
-                    System.out.println("I'll allow you to get me down");
-                } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight) {
-                    elevator.set(.1); // I am above and wanna go up (I am too high)
-                    DriverStation.reportError("YOU ARE TOO HIGH", false);
-                }
-            else {
-                if (elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorSAFE) {
-                    elevator.set(speed);} // I am in the range
-                else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
-                    elevator.set(speed); // I am below but I want to go up
-                    System.out.println("I'll allow you to get me up");
-                } else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
-                    elevator.set(-.1); // I am below and wanna go down (I am too low)
-                    DriverStation.reportError("YOU ARE TOO LOW", false);}
-                else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
-                    elevator.set(speed); // I am above but i wanna go down
-                    System.out.println("I'll allow you to get me down");
-                } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
-                    elevator.set(.1);// I am above and wanna go up (I am too high)
-                    DriverStation.reportError("YOU ARE TOO HIGH", false);
-                }
+            if (elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight) {
+                elevator.set(speed);
+            } else if (elevatorHeight > Constants.Elevator.ElevatorMinHeight) {
+                elevator.set(-.1);
+                DriverStation.reportError("Carrige To low", false);
+            } else if (elevatorHeight < Constants.Elevator.ElevatorMaxHeight) {
+                elevator.set(.1);
+                DriverStation.reportError("YOU ARE TOO HIGH", false);
             }
+            else {
+                elevator.set(0);
+            }
+
+
+            // if (NeedDown = true) {
+            //     if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
+            //         elevator.set(speed); // I am in the range
+            //     }
+            //     else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0){
+            //         elevator.set(speed); // I am below but I want to go up
+            //         System.out.println("I'll allow you to get me up");
+            //     }
+            //     } else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0) {
+            //         elevator.set(-.1); // I am below and wanna go down (I am too low)
+            //         DriverStation.reportError("YOU ARE TOO LOW", false);}
+            //     else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
+            //         elevator.set(speed); // I am above but i wanna go down
+            //         System.out.println("I'll allow you to get me down");
+            //     } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight) {
+            //         elevator.set(.1); // I am above and wanna go up (I am too high)
+            //         DriverStation.reportError("YOU ARE TOO HIGH", false);
+            //     }
+            // else {
+            //     if (elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorSAFE) {
+            //         elevator.set(speed);} // I am in the range
+            //     else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
+            //         elevator.set(speed); // I am below but I want to go up
+            //         System.out.println("I'll allow you to get me up");
+            //     } else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
+            //         elevator.set(-.1); // I am below and wanna go down (I am too low)
+            //         DriverStation.reportError("YOU ARE TOO LOW", false);}
+            //     else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
+            //         elevator.set(speed); // I am above but i wanna go down
+            //         System.out.println("I'll allow you to get me down");
+            //     } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
+            //         elevator.set(.1);// I am above and wanna go up (I am too high)
+            //         DriverStation.reportError("YOU ARE TOO HIGH", false);
+            //     }
+            // }
         } else {
             elevator.set(0);
         }

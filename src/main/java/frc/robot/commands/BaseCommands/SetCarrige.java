@@ -22,6 +22,6 @@ public class SetCarrige extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_carrige.SetCarrige(0, "Disabled");
+        m_carrige.StopCarrige();
     }
 }
