@@ -5,25 +5,27 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor;
-    private final SparkMax intakeRotatorMotor;
+    private final TalonFX intakeRotatorMotor;
     private final DutyCycleEncoder intakeRotatorEncoder;
     private double intakeRotatorPosition;
     private String intakeRotatorCommand;
     private String intakeCommand;
-    private boolean isintakeSafe;
+    private boolean isIntakeMoving;
 
     public IntakeSubsystem() {
         intakeMotor = new TalonFX(Constants.Intake.IntakeMotorID);
-        intakeRotatorMotor = new SparkMax(Constants.Intake.IntakeRotatorMotorID, MotorType.kBrushless);
+        intakeRotatorMotor = new TalonFX(Constants.Intake.IntakeRotatorMotorID);
         intakeRotatorEncoder = new DutyCycleEncoder(Constants.Intake.IntakeRotatorEncoderID);
         intakeRotatorCommand = "Disabled";
         intakeCommand = "Disabled";
+        isIntakeMoving = false;
     }
 
     public void periodic() {
@@ -31,6 +33,11 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Intake Rotator Position", intakeRotatorPosition);
         SmartDashboard.putString("Intake Rotator Command", intakeRotatorCommand);
         SmartDashboard.putString("Intake Command", intakeCommand);
+        if (intakeCommand != "Disabled" || intakeRotatorCommand != "Disabled") {
+            isIntakeMoving = true;
+        } else {
+            isIntakeMoving = false;
+        }
         
     }
 
@@ -53,7 +60,7 @@ public class IntakeSubsystem extends SubsystemBase {
             intakeRotatorMotor.set(-0.1);
         } else if (currentAngle > Constants.Intake.IntakeRotatorMaxAngle) {
             intakeRotatorMotor.set(0.1);
-        } else {
+        // } else {
             stopRotator();
         }
     }
@@ -64,5 +71,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getRotatorPosition() {
         return intakeRotatorEncoder.get();
+    }
+    public boolean isIntakeMoving() {
+        return isIntakeMoving;
     }
 }

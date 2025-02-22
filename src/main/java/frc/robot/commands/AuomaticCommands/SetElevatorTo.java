@@ -36,16 +36,16 @@ public class SetElevatorTo extends Command {
         }
 
         if (Height > m_setpoint) {
-            m_elevator.setElevator(-fixedOutput, m_command);
+            m_elevator.setElevator(-fixedOutput, m_command, false);
         } else if (Height < m_setpoint) {
-            m_elevator.setElevator(-fixedOutput, m_command);
+            m_elevator.setElevator(-fixedOutput, m_command, false);
         } else {
-            m_elevator.setElevator(0, m_command + " At Setpoint");
+            m_elevator.setElevator(0, m_command + " At Setpoint", false);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_elevator.setElevator(0, "Disabled");
+        m_elevator.setElevator(0, "Disabled", false);
     }
 }

@@ -23,11 +23,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
         elevator.getConfigurator().apply(new TalonFXConfiguration());
         var currentLimits = new CurrentLimitsConfigs();
-        currentLimits.SupplyCurrentLimit = 20;
+        currentLimits.SupplyCurrentLimit = 40;
         currentLimits.SupplyCurrentLimitEnable = true;
         elevator.getConfigurator().apply(currentLimits);
         elevator.setInverted(true);
         elevator.setNeutralMode(NeutralModeValue.Brake);
+        
     }
 
     @Override
@@ -37,23 +38,51 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putString("Elevator Command", command);
     }
 
-    public void setElevator(double speed, String command) {
+    public void setElevator(double speed, String command, Boolean NeedDown) {
+
         SmartDashboard.putString("Elevator Command", command);
 
         if (speed != 0) {
-            if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
-                elevator.set(speed);
-            } else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight) {
-                elevator.set(-.1);
-                DriverStation.reportError("YOU ARE TOO LOW", false);
-            } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight) {
-                elevator.set(.1);
-                DriverStation.reportError("YOU ARE TOO HIGH", false);
+            if (NeedDown = true) {
+                if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
+                    elevator.set(speed); // I am in the range
+                }
+                else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0){
+                    elevator.set(speed); // I am below but I want to go up
+                    System.out.println("I'll allow you to get me up");
+                }
+                } else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0) {
+                    elevator.set(-.1); // I am below and wanna go down (I am too low)
+                    DriverStation.reportError("YOU ARE TOO LOW", false);}
+                else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
+                    elevator.set(speed); // I am above but i wanna go down
+                    System.out.println("I'll allow you to get me down");
+                } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight) {
+                    elevator.set(.1); // I am above and wanna go up (I am too high)
+                    DriverStation.reportError("YOU ARE TOO HIGH", false);
+                }
+            else {
+                if (elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorSAFE) {
+                    elevator.set(speed);} // I am in the range
+                else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
+                    elevator.set(speed); // I am below but I want to go up
+                    System.out.println("I'll allow you to get me up");
+                } else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
+                    elevator.set(-.1); // I am below and wanna go down (I am too low)
+                    DriverStation.reportError("YOU ARE TOO LOW", false);}
+                else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
+                    elevator.set(speed); // I am above but i wanna go down
+                    System.out.println("I'll allow you to get me down");
+                } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
+                    elevator.set(.1);// I am above and wanna go up (I am too high)
+                    DriverStation.reportError("YOU ARE TOO HIGH", false);
+                }
             }
         } else {
             elevator.set(0);
         }
     }
+    
 
     public double getElevatorHeight() {
         return elevatorHeight;

@@ -7,9 +7,9 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class SetElevator extends Command{ 
     private final ElevatorSubsystem m_ElevatorSubsystem;
-    private final DoubleSupplier m_speed;
+    private final Double m_speed;
 
-    public SetElevator(DoubleSupplier speed, ElevatorSubsystem subsystem) 
+    public SetElevator(Double speed, ElevatorSubsystem subsystem) 
     {
         addRequirements(subsystem);
         m_speed = speed;
@@ -23,12 +23,12 @@ public class SetElevator extends Command{
     @Override
     public void execute() 
     {
-        m_ElevatorSubsystem.setElevator(m_speed.getAsDouble()*-1, "Manual control");
+        m_ElevatorSubsystem.setElevator(m_speed * -1.0, "Manual control", false);
     }
     @Override
     public void end(boolean interrupted) 
     {
-        m_ElevatorSubsystem.setElevator(0.0, "Disabled");
+        m_ElevatorSubsystem.setElevator(0.0, "Disabled", false);
     }
     
     @Override

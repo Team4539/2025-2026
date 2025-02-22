@@ -15,11 +15,11 @@ public class ArmRotationSubsytem extends SubsystemBase {
 
 
     public ArmRotationSubsytem() {
-        CarrigeSubsystem carrigeSubsystem = new CarrigeSubsystem();
+        //CarrigeSubsystem carrigeSubsystem = new CarrigeSubsystem();
         m_armMotor = new TalonFX(0);
-        m_armEncoder = new DutyCycleEncoder(0);
+        m_armEncoder = new DutyCycleEncoder(8);
         isoutside = false;
-        isCarrigeUp = carrigeSubsystem.IsCarrigeUp();
+        //isCarrigeUp = carrigeSubsystem.IsCarrigeUp();
     }
 
     public void periodic() {
@@ -32,18 +32,22 @@ public class ArmRotationSubsytem extends SubsystemBase {
 
     public void SetArm(double speed, String command) {
         if (speed != 0) {
-            if (isCarrigeUp) {
-                if (isoutside) {
-                    m_armMotor.set(speed);
-                } else {
-                    m_armMotor.set(-.1);
-                }
-            } else {
-                m_armMotor.set(0);
-            }
-        } else {
+            m_armMotor.set(speed);}
+        else {
             m_armMotor.set(0);
         }
+        //     if (isCarrigeUp) {
+        //         if (isoutside) {
+        //             m_armMotor.set(speed);
+        //         } else {
+        //             m_armMotor.set(-.1);
+        //         }
+        //     } else {
+        //         m_armMotor.set(0);
+        //     }
+        // } else {
+        //     m_armMotor.set(0);
+        // }
     }
     public double GetArmRotation() {
         return armRotation;

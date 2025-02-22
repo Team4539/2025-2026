@@ -24,10 +24,11 @@ public class Constants {
         public static final double alageGroundPosition = 0; // Placeholder value
         public static final double alageProcessorsPosition = 0; // Placeholder value
         public static final double ElevatorSAFE = 8500; // Head will not hit the Elevator at this height
+        
     }
     public static final class Carrige {
         public static final int CarrigeMotorID = 13; // Placeholder value
-        public static final int CarrigeEncoderAID = 3; // DIO Port 3
+        public static final int CarrigeEncoderAID = 10; // DIO Port 3
         public static final int CarrigeEncoderBID = 4; // DIO Port 4
         public static final double CarrigeMaxHeight = 999999; // Placeholder value
         public static final double CarrigeMinHeight = -999999; // Placeholder value
@@ -77,8 +78,8 @@ public class Constants {
     }
     public static final class Intake {
         public static final int IntakeMotorID = 0; // Placeholder value
-        public static final int IntakeRotatorMotorID = 0; // Placeholder value
-        public static final int IntakeRotatorEncoderID = 0; // Placeholder value
+        public static final int IntakeRotatorMotorID = 7; // Placeholder value
+        public static final int IntakeRotatorEncoderID = 4; // Placeholder value
         public static final double IntakeRotatorMaxAngle = 0; // Placeholder value
         public static final double IntakeRotatorMinAngle = 0; // Placeholder value
         public static final double InsideRotation = 0; // Placeholder value

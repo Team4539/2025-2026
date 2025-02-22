@@ -12,20 +12,22 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.Elevator;
 import frc.robot.commands.AuomaticCommands.AlignReef;
+import frc.robot.commands.BaseCommands.RotateIntake;
+import frc.robot.commands.BaseCommands.RunIntake;
+import frc.robot.commands.BaseCommands.SetArm;
+import frc.robot.commands.BaseCommands.SetCarrige;
 import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CarrigeSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.util.Elastic;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ArmRotationSubsytem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -37,6 +39,8 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final XboxController Driver = new XboxController(0);
     private final XboxController Operator = new XboxController(1);
+    private final Joystick ButtonBox = new Joystick(3);
+
     //private final Joystick testJoystick = new Joystick(2);
     //private final POVButton pov = new POVButton(testJoystick, 0);
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -57,6 +61,22 @@ public class RobotContainer {
     private final JoystickButton CoralStation = new JoystickButton(Operator, XboxController.Button.kStart.value);
     private final JoystickButton AlignReef = new JoystickButton(Operator, XboxController.Button.kBack.value);
 
+
+    /*Button Box Buttons */
+
+    private final JoystickButton ElevatorUp = new JoystickButton(ButtonBox, 1);
+    private final JoystickButton ElevatorDown = new JoystickButton(ButtonBox, 2);
+    private final JoystickButton CarrigeUp = new JoystickButton(ButtonBox, 3);
+    private final JoystickButton CarrigeDown = new JoystickButton(ButtonBox, 4);
+    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 5);
+    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 6);
+    private final JoystickButton HeadIntake = new JoystickButton(ButtonBox, 7);
+    private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8);
+    private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9);
+    private final JoystickButton IntakeRotateOut = new JoystickButton(ButtonBox, 10);
+    private final JoystickButton IntakeIn = new JoystickButton(ButtonBox, 11);
+    private final JoystickButton IntakeOut = new JoystickButton(ButtonBox, 12);
+    
     // Test Joystick Buttons
     // private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
     // private final JoystickButton outTakeCoral = new JoystickButton(testJoystick, 1); // 2 is the thumb button
@@ -65,14 +85,17 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     /* Subsystems */
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private final CarrigeSubsystem m_CarrigeSubsystem = new CarrigeSubsystem();
+    private final ArmRotationSubsytem m_ArmRotationSubsystem = new ArmRotationSubsytem();
+    private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     NamedCommands commands = new NamedCommands();
-
+    
     private void configureBindings() {
-        m_ElevatorSubsystem.setDefaultCommand(
-            new SetElevator(() -> Operator.getRawAxis(XboxController.Axis.kLeftY.value), m_ElevatorSubsystem)
-        );
+        // m_ElevatorSubsystem.setDefaultCommand(
+        //     new SetElevator(() -> Operator.getRawAxis(XboxController.Axis.kLeftY.value), m_ElevatorSubsystem)
+        // );
 
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
@@ -104,7 +127,22 @@ public class RobotContainer {
         
         AlignReef.whileTrue(new AlignReef(5, drivetrain));
 
-        coralL4.onTrue(new RunCommand(() -> Elastic.selectTab("Coral L4")));
+        /*Joystick Buttons */
+        ElevatorUp.whileTrue(new SetElevator(0.1, m_ElevatorSubsystem));
+        ElevatorDown.whileTrue(new SetElevator(-0.1, m_ElevatorSubsystem));
+        CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.1, "Button"));
+        CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.1, "Button"));
+        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, 0.1, "Button"));
+        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -0.1, "Button"));
+        HeadIntake.whileTrue(new RunIntake(m_intakeSubsytem, 0.1, "Button"));
+        HeadOuttake.whileTrue(new RunIntake(m_intakeSubsytem, -0.1, "Button"));
+        IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.1, "Button"));
+        IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.1, "Button"));
+        IntakeIn.whileTrue(new RunIntake(m_intakeSubsytem, 0.1, "Button"));
+        IntakeOut.whileTrue(new RunIntake(m_intakeSubsytem, -0.1, "Button"));
+        
+
+
     }
 
         
