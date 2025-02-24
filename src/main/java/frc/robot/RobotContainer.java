@@ -140,13 +140,13 @@ public class RobotContainer {
         ElevatorDown.whileTrue(new SetElevator(-0.4, m_ElevatorSubsystem));
         CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
         CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.4, "Button"));
-        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, 0.7, "Button"));
-        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -0.7, "Button"));
+        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, 1, "Button"));
+        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -1, "Button"));
         HeadIntake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, -0.5), new RunIntake(m_intakeSubsytem, -1, "Button")));
         HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 10, "button")));
         IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));
         IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.4, "Button"));
-        IntakeIn.whileTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetElevatorTo(m_ElevatorSubsystem, Constants.Elevator.ElevatorPickup, "Pickup", false), new SetCarrigeTo(m_CarrigeSubsystem, Constants.Carrige.CarrigePickup, "Pickup", false)).withTimeout(5), new SetArmTo(m_ArmRotationSubsystem, Constants.ArmRotator.ArmPickup, "pickup", false)));
+        IntakeIn.whileTrue(new SetArmTo(m_ArmRotationSubsystem, 50, "yes", false));
         IntakeOut.whileTrue(new RunIntake(m_intakeSubsytem, -0.4, "Button"));
         
 

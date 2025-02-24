@@ -1,103 +1,98 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import static edu.wpi.first.units.Units.*;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private TalonFX elevator;
-    private Encoder elevatorEncoder;
+    private final TalonFX elevator;
+    private final Encoder elevatorEncoder;
+    private final MotionMagicVoltage m_motionMagicRequest;
     private double elevatorHeight;
     private String command = "disabled";
 
-    @SuppressWarnings("removal")
     public ElevatorSubsystem() {
         elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
         elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
-        elevator.getConfigurator().apply(new TalonFXConfiguration());
-        var currentLimits = new CurrentLimitsConfigs();
-        currentLimits.SupplyCurrentLimit = 40;
-        currentLimits.SupplyCurrentLimitEnable = true;
-        elevator.getConfigurator().apply(currentLimits);
-        elevator.setInverted(true);
-        elevator.setNeutralMode(NeutralModeValue.Brake);
-        
+        m_motionMagicRequest = new MotionMagicVoltage(0);
+
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        // Configure feedback settings
+        FeedbackConfigs feedback = config.Feedback;
+        feedback.SensorToMechanismRatio = 1.0;
+
+        // Configure Motion Magic parameters
+        MotionMagicConfigs mm = config.MotionMagic;
+        mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(50))
+          .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(100))
+          .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(1000));
+
+        // Configure PID and feedforward gains
+        Slot0Configs slot0 = config.Slot0;
+        slot0.kS = 0.25;
+        slot0.kV = 0.12;
+        slot0.kA = 0.01;
+        slot0.kP = 60.0;
+        slot0.kI = 0.0;
+        slot0.kD = 0.5;
+
+        // Configure current limits
+        config.CurrentLimits.SupplyCurrentLimit = 40;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+        // Apply configuration with retry
+        StatusCode status = StatusCode.StatusCodeNotInitialized;
+        for (int i = 0; i < 5; ++i) {
+            status = elevator.getConfigurator().apply(config);
+            if (status.isOK()) break;
+        }
+        if (!status.isOK()) {
+            DriverStation.reportError("Failed to configure elevator motor: " + status.toString(), false);
+        }
     }
 
     @Override
     public void periodic() {
         elevatorHeight = elevatorEncoder.getRaw();
-        SmartDashboard.putNumber("Elevator Height", elevatorEncoder.getRaw());
+        SmartDashboard.putNumber("Elevator Height", elevatorHeight);
         SmartDashboard.putString("Elevator Command", command);
     }
 
+    public void setPosition(double targetPosition) {
+        double clampedTarget = Math.min(Math.max(targetPosition, 
+                                    Constants.Elevator.ElevatorMinHeight),
+                                    Constants.Elevator.ElevatorMaxHeight);
+        
+        elevator.setControl(m_motionMagicRequest.withPosition(clampedTarget).withSlot(0));
+    }
+
     public void setElevator(double speed, String command, Boolean NeedDown) {
-
-        SmartDashboard.putString("Carrige Command", command);
-        elevatorHeight = elevatorEncoder.getRaw();
-
+        this.command = command;
         if (speed != 0) {
-            if (elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight) {
-                elevator.set(speed);
-            } else if (elevatorHeight > Constants.Elevator.ElevatorMinHeight) {
-                elevator.set(-.1);
-                DriverStation.reportError("Carrige To low", false);
-            } else if (elevatorHeight < Constants.Elevator.ElevatorMaxHeight) {
-                elevator.set(.1);
-                DriverStation.reportError("YOU ARE TOO HIGH", false);
-            }
-            else {
-                elevator.set(0);
-            }
-
-
-            // if (NeedDown = true) {
-            //     if ((elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorMinHeight)) {
-            //         elevator.set(speed); // I am in the range
-            //     }
-            //     else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0){
-            //         elevator.set(speed); // I am below but I want to go up
-            //         System.out.println("I'll allow you to get me up");
-            //     }
-            //     } else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight && speed >= 0) {
-            //         elevator.set(-.1); // I am below and wanna go down (I am too low)
-            //         DriverStation.reportError("YOU ARE TOO LOW", false);}
-            //     else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
-            //         elevator.set(speed); // I am above but i wanna go down
-            //         System.out.println("I'll allow you to get me down");
-            //     } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight) {
-            //         elevator.set(.1); // I am above and wanna go up (I am too high)
-            //         DriverStation.reportError("YOU ARE TOO HIGH", false);
-            //     }
-            // else {
-            //     if (elevatorHeight >= Constants.Elevator.ElevatorMaxHeight && elevatorHeight <= Constants.Elevator.ElevatorSAFE) {
-            //         elevator.set(speed);} // I am in the range
-            //     else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
-            //         elevator.set(speed); // I am below but I want to go up
-            //         System.out.println("I'll allow you to get me up");
-            //     } else if (elevatorHeight < Constants.Elevator.ElevatorSAFE && speed >= 0) {
-            //         elevator.set(-.1); // I am below and wanna go down (I am too low)
-            //         DriverStation.reportError("YOU ARE TOO LOW", false);}
-            //     else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
-            //         elevator.set(speed); // I am above but i wanna go down
-            //         System.out.println("I'll allow you to get me down");
-            //     } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight && speed <= 0) {
-            //         elevator.set(.1);// I am above and wanna go up (I am too high)
-            //         DriverStation.reportError("YOU ARE TOO HIGH", false);
-            //     }
-            // }
+            elevator.set(speed);
         } else {
             elevator.set(0);
         }
     }
-    
+
+    public void stopElevator() {
+        elevator.set(0);
+    }
 
     public double getElevatorHeight() {
         return elevatorHeight;
