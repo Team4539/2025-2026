@@ -25,6 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public ElevatorSubsystem() {
         elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
+        elevator.getConfigurator().apply(new TalonFXConfiguration());
         elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
         m_motionMagicRequest = new MotionMagicVoltage(0);
 
@@ -32,7 +33,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         // Configure feedback settings
         FeedbackConfigs feedback = config.Feedback;
-        feedback.SensorToMechanismRatio = 1.0;
+        feedback.SensorToMechanismRatio = 45.0;
 
         // Configure Motion Magic parameters
         MotionMagicConfigs mm = config.MotionMagic;
@@ -42,12 +43,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         // Configure PID and feedforward gains
         Slot0Configs slot0 = config.Slot0;
-        slot0.kS = 0.25;
-        slot0.kV = 0.12;
-        slot0.kA = 0.01;
-        slot0.kP = 60.0;
-        slot0.kI = 0.0;
-        slot0.kD = 0.5;
+        slot0.kS = 0.25; // Static friction compensation
+        slot0.kV = 0.12; // Velocity feedforward
+        slot0.kA = 0.01; // Acceleration feedforward
+        slot0.kP = 60.0; // Position proportion gain
+        slot0.kI = 0.0; // Integral gain
+        slot0.kD = 0.5; // Derivative gain
 
         // Configure current limits
         config.CurrentLimits.SupplyCurrentLimit = 40;
@@ -68,7 +69,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        elevatorHeight = elevatorEncoder.getRaw();
+        elevatorHeight = elevator.getPosition().getValueAsDouble();
         SmartDashboard.putNumber("Elevator Height", elevatorHeight);
         SmartDashboard.putString("Elevator Command", command);
     }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     Elastic.selectTab("Teleop");
+    SignalLogger.stop();
   }
 
   @Override
@@ -83,7 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    //Elastic.selectTab("DEBUG");
+    Elastic.selectTab("DEBUG");
   }
 
   @Override

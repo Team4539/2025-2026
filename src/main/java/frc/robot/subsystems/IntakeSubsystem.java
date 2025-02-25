@@ -2,12 +2,14 @@ package frc.robot.subsystems;
 
 import org.opencv.video.SparsePyrLKOpticalFlow;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,25 +19,34 @@ public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor;
     private final TalonFX intakeRotatorMotor;
     private final Encoder intakeRotatorEncoder;
+    private final Ultrasonic intakeUltrasonic;
     private double intakeRotatorPosition;
     private String intakeRotatorCommand;
     private String intakeCommand;
     private boolean isIntakeMoving;
+    private double IntakeDistance;
 
     public IntakeSubsystem() {
         intakeMotor = new TalonFX(Constants.Intake.IntakeMotorID);
+        intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
         intakeRotatorMotor = new TalonFX(Constants.Intake.IntakeRotatorMotorID);
+        intakeRotatorMotor.getConfigurator().apply(new TalonFXConfiguration());
         intakeRotatorEncoder = new Encoder(Constants.Intake.IntakeRotatorEncoderID, 6);
         intakeRotatorCommand = "Disabled";
         intakeCommand = "Disabled";
         isIntakeMoving = false;
+        intakeUltrasonic = new Ultrasonic(9, 8); 
+        intakeUltrasonic.setAutomaticMode(true);
     }
 
     public void periodic() {
         intakeRotatorPosition = intakeRotatorEncoder.get();
+        IntakeDistance = intakeUltrasonic.getRangeInches();
         SmartDashboard.putNumber("Intake Rotator Position", intakeRotatorPosition);
         SmartDashboard.putString("Intake Rotator Command", intakeRotatorCommand);
         SmartDashboard.putString("Intake Command", intakeCommand);
+        SmartDashboard.putNumber("intakeDistance", IntakeDistance);
+        
         if (intakeCommand != "Disabled" || intakeRotatorCommand != "Disabled") {
             isIntakeMoving = true;
         } else {

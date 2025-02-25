@@ -27,6 +27,7 @@ public class CarrigeSubsystem extends SubsystemBase {
 
     public CarrigeSubsystem() {
         carrige = new TalonFX(Constants.Carrige.CarrigeMotorID);
+        carrige.getConfigurator().apply(new TalonFXConfiguration());
         carrigeEncoder = new Encoder(Constants.Carrige.CarrigeEncoderAID, Constants.Carrige.CarrigeEncoderBID);
         m_motionMagicRequest = new MotionMagicVoltage(0);
 
@@ -35,7 +36,7 @@ public class CarrigeSubsystem extends SubsystemBase {
         
         // Configure feedback settings
         FeedbackConfigs feedback = config.Feedback;
-        feedback.SensorToMechanismRatio = 1.0; // Adjust if needed for your gear ratio
+        feedback.SensorToMechanismRatio = 45.0; // Adjust if needed for your gear ratio
 
         // Configure Motion Magic parameters
         MotionMagicConfigs mm = config.MotionMagic;
@@ -63,11 +64,14 @@ public class CarrigeSubsystem extends SubsystemBase {
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i) {
             status = carrige.getConfigurator().apply(config);
+            
             if (status.isOK()) break;
         }
         if (!status.isOK()) {
             DriverStation.reportError("Failed to configure carriage motor: " + status.toString(), false);
+
         }
+        SmartDashboard.putBoolean("Carrige initialized", status.isOK());
     }
 
     @Override

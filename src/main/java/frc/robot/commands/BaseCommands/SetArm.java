@@ -17,11 +17,11 @@ public class SetArm extends Command {
 
     @Override
     public void execute() {
-        m_arm.ManArm(m_speed);
+        m_arm.SetArm(m_speed, m_command);
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_arm.ManArm(0);
+        m_arm.STOPARM();
     }
 }

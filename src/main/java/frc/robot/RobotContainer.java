@@ -45,7 +45,7 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final XboxController Driver = new XboxController(0);
-    private final XboxController Operator = new XboxController(1);
+    //private final XboxController Operator = new XboxController(1);
     private final Joystick ButtonBox = new Joystick(3);
 
     //private final Joystick testJoystick = new Joystick(2);
@@ -59,14 +59,14 @@ public class RobotContainer {
     private final JoystickButton resetGyro = new JoystickButton(Driver, XboxController.Button.kY.value);
 
     // co-driver buttons
-    private final JoystickButton coralL4 = new JoystickButton(Operator, XboxController.Button.kY.value);
-    private final JoystickButton coralL3 = new JoystickButton(Operator, XboxController.Button.kX.value);
-    private final JoystickButton coralL2 = new JoystickButton(Operator, XboxController.Button.kB.value);
-    private final JoystickButton home = new JoystickButton(Operator, XboxController.Button.kA.value);
-    private final JoystickButton IntakeAlgae = new JoystickButton(Operator, XboxController.Button.kRightBumper.value);
-    private final JoystickButton OutTakeAlgae = new JoystickButton(Operator, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton CoralStation = new JoystickButton(Operator, XboxController.Button.kStart.value);
-    private final JoystickButton AlignReef = new JoystickButton(Operator, XboxController.Button.kBack.value);
+    // private final JoystickButton coralL4 = new JoystickButton(Operator, XboxController.Button.kY.value);
+    // private final JoystickButton coralL3 = new JoystickButton(Operator, XboxController.Button.kX.value);
+    // private final JoystickButton coralL2 = new JoystickButton(Operator, XboxController.Button.kB.value);
+    // private final JoystickButton home = new JoystickButton(Operator, XboxController.Button.kA.value);
+    // private final JoystickButton IntakeAlgae = new JoystickButton(Operator, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton OutTakeAlgae = new JoystickButton(Operator, XboxController.Button.kLeftBumper.value);
+    // private final JoystickButton CoralStation = new JoystickButton(Operator, XboxController.Button.kStart.value);
+    // private final JoystickButton AlignReef = new JoystickButton(Operator, XboxController.Button.kBack.value);
 
 
     /*Button Box Buttons */
@@ -114,6 +114,16 @@ public class RobotContainer {
             )
         );
 
+        // m_ArmRotationSubsystem.setDefaultCommand(
+        //     new SetArmTo(m_ArmRotationSubsystem, Constants.ArmRotator.HomeRotation, "Home", false)
+        // );
+        // m_CarrigeSubsystem.setDefaultCommand(
+        //     new SetCarrigeTo(m_CarrigeSubsystem, Constants.Carrige.HomePosition, "Home", false)
+        // );
+        // m_ElevatorSubsystem.setDefaultCommand(
+        //     new SetElevatorTo(m_ElevatorSubsystem, Elevator.HomePosition)
+        // );
+
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
@@ -133,15 +143,15 @@ public class RobotContainer {
         resetGyro.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         
-        AlignReef.whileTrue(new AlignReef(5, drivetrain));
+        //AlignReef.whileTrue(new AlignReef(5, drivetrain));
 
         /*Joystick Buttons */
         ElevatorUp.whileTrue(new SetElevator(0.4, m_ElevatorSubsystem));
         ElevatorDown.whileTrue(new SetElevator(-0.4, m_ElevatorSubsystem));
         CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
         CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.4, "Button"));
-        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, 1, "Button"));
-        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -1, "Button"));
+        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, .6, "Button"));
+        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -.6, "Button"));
         HeadIntake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, -0.5), new RunIntake(m_intakeSubsytem, -1, "Button")));
         HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 10, "button")));
         IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));

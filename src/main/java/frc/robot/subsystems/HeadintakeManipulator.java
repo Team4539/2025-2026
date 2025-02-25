@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,6 +11,7 @@ public class HeadintakeManipulator extends SubsystemBase {
 
     public HeadintakeManipulator() {
         m_headIntakeMotor = new TalonFX(17);
+        m_headIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
         m_speed = 0;
     }
 
