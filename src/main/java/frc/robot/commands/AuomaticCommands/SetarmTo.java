@@ -27,12 +27,12 @@ public class SetArmTo extends Command {
         m_setpoint = setpoint;
         
         // Adjusted PID values for smoother control
-        pidController = new PIDController(0.04, 0.0005, 0.01);
+        pidController = new PIDController(0.055, 0, 0.01);
         
         // Further reduced acceleration for smoother transitions
         constraints = new TrapezoidProfile.Constraints(
-            45.0,  // Max velocity
-            15.0   // Reduced acceleration
+            150.0,  // Max velocity
+            80.0   // Max acceleration
         );
     }
 
@@ -57,11 +57,27 @@ public void execute() {
     
     // Adjusted FF value based on observed behavior
     double gravityFF = 0.095 * Math.cos(Math.toRadians(angle));
-    output += gravityFF;
+    double velocityFF = 0.01 * currentState.velocity;
+    double accelFF = 0.0025 *profile.calculate(elapsedTime +.02, startState, endState).velocity;
     
-    // More gradual output limiting
-    double maxOutput = 0.45;
-    fixedOutput = Math.min(Math.max(output, -maxOutput), maxOutput);
+    // In execute()
+    if (Math.abs(currentState.position - endState.position) < 10.0) {
+        // Near target, start reducing velocity requirement
+        double slowdownFactor = Math.abs(currentState.position - endState.position) / 10.0;
+        velocityFF *= slowdownFactor;
+    }
+    
+    output += gravityFF + velocityFF + accelFF;
+    
+    // Direction-specific output limits
+    double maxOutputUp = 1.0;   // When moving up
+    double maxOutputDown = 0.8; // When moving down
+
+    if (output > 0) {
+        fixedOutput = Math.min(output, maxOutputUp);
+    } else {
+        fixedOutput = Math.max(output, -maxOutputDown);
+    }
     
     m_arm.SetArm(-fixedOutput, m_command);
     
@@ -71,12 +87,13 @@ public void execute() {
     SmartDashboard.putNumber("Current Angle", angle);
     SmartDashboard.putNumber("Output", fixedOutput);
     SmartDashboard.putNumber("Feed Forward", gravityFF);
+    SmartDashboard.putNumber("Velocity FF", velocityFF);
 
 }
 
     public void periodic() {
         double angle = m_arm.GetArmRotation();
-        double gravityFF = 0.095 * Math.cos(Math.toRadians(angle));
+        double gravityFF = 0.12 * Math.cos(Math.toRadians(angle));
         SmartDashboard.putNumber("Profile Position", currentState.position);
         SmartDashboard.putNumber("Profile Velocity", currentState.velocity);
         SmartDashboard.putNumber("Current Angle", angle);
@@ -94,7 +111,7 @@ public void execute() {
     public boolean isFinished() {
     double elapsedTime = System.currentTimeMillis() / 1000.0 - startTime;
     return profile.isFinished(elapsedTime) 
-        && Math.abs(m_arm.GetArmRotation() - m_setpoint) < 2.0  // Increased tolerance
+        && Math.abs(m_arm.GetArmRotation() - m_setpoint) < .5  // Increased tolerance
         && Math.abs(currentState.velocity) < 0.5;  // Add velocity check
 }
 }

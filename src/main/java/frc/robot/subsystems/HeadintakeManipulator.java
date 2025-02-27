@@ -7,11 +7,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HeadintakeManipulator extends SubsystemBase {
     private TalonFX m_headIntakeMotor;
+    private TalonFXConfiguration m_headIntakeConfig;
     private double m_speed;
 
     public HeadintakeManipulator() {
         m_headIntakeMotor = new TalonFX(Constants.HeadMechanisms.HeadManipulatorMotorID);
-        m_headIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
+        m_headIntakeConfig = new TalonFXConfiguration();
+        m_headIntakeConfig.MotorOutput.NeutralMode = com.ctre.phoenix6.signals.NeutralModeValue.Brake;
+        m_headIntakeMotor.getConfigurator().apply(m_headIntakeConfig);
         m_speed = 0;
     }
 

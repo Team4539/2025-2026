@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Set;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -158,12 +160,21 @@ public class RobotContainer {
         HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 10, "button")));
         IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));
         IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.4, "Button"));
-        TestButton1.whileTrue(new ParallelCommandGroup(
-            new SetElevatorTo(m_ElevatorSubsystem, 2.689697265625),
-            new SetCarrigeTo(m_CarrigeSubsystem, 2.469482421875, "cause i can"),
-            new SetArmTo(m_ArmRotationSubsystem, 16, "Home", false)
-        ));
-
+        TestButton1.onTrue(new ParallelCommandGroup(   //Arm Staging to Clear the reef while moving
+            new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
+            new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+            new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
+        ).withTimeout(5));
+        // TestButton1.whileTrue(new ParallelCommandGroup(   //To pass of the coral to the head (eg Stage 2 the intake process)
+        //     new SetElevatorTo(m_ElevatorSubsystem, 2.689697265625),
+        //     new SetCarrigeTo(m_CarrigeSubsystem, 2.469482421875, "cause i can"),
+        //     new SetArmTo(m_ArmRotationSubsystem, 15, "Home", false)
+        // ));
+        TestButton2.onTrue(new ParallelCommandGroup(   // To Allow the Intake to move (eg Stage 1 the intake process)
+            new SetElevatorTo(m_ElevatorSubsystem, 2.919677734375),
+            new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+            new SetArmTo(m_ArmRotationSubsystem, 14, "Home", false)
+        ).withTimeout(5));
         
 
 
