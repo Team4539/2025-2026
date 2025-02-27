@@ -82,8 +82,8 @@ public class RobotContainer {
     private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8);
     private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9);
     private final JoystickButton IntakeRotateOut = new JoystickButton(ButtonBox, 10);
-    private final JoystickButton IntakeIn = new JoystickButton(ButtonBox, 11);
-    private final JoystickButton IntakeOut = new JoystickButton(ButtonBox, 12);
+    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 11);
+    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 12);
     
     // Test Joystick Buttons
     // private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
@@ -148,8 +148,8 @@ public class RobotContainer {
         //AlignReef.whileTrue(new AlignReef(5, drivetrain));
 
         /*Joystick Buttons */
-        ElevatorUp.whileTrue(new SetElevator(0.4, m_ElevatorSubsystem));
-        ElevatorDown.whileTrue(new SetElevator(-0.4, m_ElevatorSubsystem));
+        ElevatorUp.whileTrue(new SetElevator(-0.4, m_ElevatorSubsystem));
+        ElevatorDown.whileTrue(new SetElevator(0.4, m_ElevatorSubsystem));
         CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
         CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.4, "Button"));
         ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, .6, "Button"));
@@ -158,8 +158,12 @@ public class RobotContainer {
         HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 10, "button")));
         IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));
         IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.4, "Button"));
-        IntakeIn.whileTrue(new SetArmTo(m_ArmRotationSubsystem, 50, "yes", false));
-        IntakeOut.whileTrue(new RunIntake(m_intakeSubsytem, -0.4, "Button"));
+        TestButton1.whileTrue(new ParallelCommandGroup(
+            new SetElevatorTo(m_ElevatorSubsystem, 2.689697265625),
+            new SetCarrigeTo(m_CarrigeSubsystem, 2.469482421875, "cause i can"),
+            new SetArmTo(m_ArmRotationSubsystem, 16, "Home", false)
+        ));
+
         
 
 

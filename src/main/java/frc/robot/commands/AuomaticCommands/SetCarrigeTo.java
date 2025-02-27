@@ -8,7 +8,7 @@ public class SetCarrigeTo extends Command {
     private final double m_setpoint;
     private final String m_command;
 
-    public SetCarrigeTo(CarrigeSubsystem subsystem, double setpoint, String command, boolean needSelection) {
+    public SetCarrigeTo(CarrigeSubsystem subsystem, double setpoint, String command) {
         addRequirements(subsystem);
         m_carrige = subsystem;
         m_setpoint = setpoint;

@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevator;
-    private final Encoder elevatorEncoder;
     private final MotionMagicVoltage m_motionMagicRequest;
     private double elevatorHeight;
     private String command = "disabled";
@@ -26,7 +25,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         elevator = new TalonFX(Constants.Elevator.ElevatorMotorID);
         elevator.getConfigurator().apply(new TalonFXConfiguration());
-        elevatorEncoder = new Encoder(Constants.Elevator.ElevatorEncoderAID, Constants.Elevator.ElevatorEncoderBID);
         m_motionMagicRequest = new MotionMagicVoltage(0);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
@@ -86,10 +84,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setElevator(double speed, String command, Boolean NeedDown) {
         this.command = command;
         if (speed != 0) {
-            elevator.set(speed);
+           if (elevatorHeight >= Constants.Elevator.ElevatorMinHeight && elevatorHeight <= Constants.Elevator.ElevatorMaxHeight) {
+               elevator.set(speed);
+           } else if (elevatorHeight < Constants.Elevator.ElevatorMinHeight) {
+               elevator.set(.1);
+               DriverStation.reportError("Elevator To low", false);
+           } else if (elevatorHeight > Constants.Elevator.ElevatorMaxHeight) {
+               elevator.set(-.1);
+                DriverStation.reportError("YOU ARE TOO HIGH", false);
+           }
         } else {
-            elevator.set(0);
-        }
+            elevator.set(0);}
     }
 
     public void stopElevator() {

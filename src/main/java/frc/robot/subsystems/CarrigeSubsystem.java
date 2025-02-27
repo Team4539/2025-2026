@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CarrigeSubsystem extends SubsystemBase {
     private final TalonFX carrige;
-    private final Encoder carrigeEncoder;
     private final MotionMagicVoltage m_motionMagicRequest;
     private double carrigeHeight;
     private String command = "disabled";
@@ -28,7 +27,6 @@ public class CarrigeSubsystem extends SubsystemBase {
     public CarrigeSubsystem() {
         carrige = new TalonFX(Constants.Carrige.CarrigeMotorID);
         carrige.getConfigurator().apply(new TalonFXConfiguration());
-        carrigeEncoder = new Encoder(Constants.Carrige.CarrigeEncoderAID, Constants.Carrige.CarrigeEncoderBID);
         m_motionMagicRequest = new MotionMagicVoltage(0);
 
         // Configure the motor for motion magic
@@ -76,7 +74,7 @@ public class CarrigeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        carrigeHeight = carrigeEncoder.getRaw();
+        carrigeHeight = carrige.getPosition().getValueAsDouble();
         if (carrigeHeight >= Constants.Carrige.CarriageUpHeight) {
             isCarrigeUp = true;
         } else {
@@ -102,10 +100,10 @@ public class CarrigeSubsystem extends SubsystemBase {
                 carrigeHeight >= Constants.Carrige.CarrigeMinHeight) {
                 carrige.set(speed);
             } else if (carrigeHeight < Constants.Carrige.CarrigeMinHeight) {
-                carrige.set(-0.1);
+                carrige.set(0.1);
                 DriverStation.reportError("Carrige Too low", false);
             } else if (carrigeHeight > Constants.Carrige.CarrigeMaxHeight) {
-                carrige.set(0.1);
+                carrige.set(-0.1);
                 DriverStation.reportError("Carrige Too high", false);
             } else {
                 carrige.set(0);

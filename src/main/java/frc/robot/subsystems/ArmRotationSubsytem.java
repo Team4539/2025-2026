@@ -19,8 +19,8 @@ public class ArmRotationSubsytem extends SubsystemBase {
 
 
     public ArmRotationSubsytem() {
-        m_armMotor = new TalonFX(16);
-        m_armEncoder = new DutyCycleEncoder(2);
+        m_armMotor = new TalonFX(Constants.ArmRotator.ArmRotatorMotorID);
+        m_armEncoder = new DutyCycleEncoder(0);
         isoutside = false;
         m_armConfig = new TalonFXConfiguration();
         m_armConfig.FutureProofConfigs = true;

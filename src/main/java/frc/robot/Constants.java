@@ -10,7 +10,7 @@ public class Constants {
         public static final int ElevatorMotorID = 14; // motor value
         public static final int ElevatorEncoderAID = 0; // DIO Port 0 
         public static final int ElevatorEncoderBID = 1; // DIO Port 1
-        public static final double ElevatorMaxHeight = -38413; // Will also be 0
+        public static final double ElevatorMaxHeight = 4.8; // Will also be 0
         public static final double ElevatorMinHeight = 0; // Tuned for our robot
 
         /*Elevator heights */
@@ -31,8 +31,8 @@ public class Constants {
         public static final int CarrigeMotorID = 13; // Placeholder value
         public static final int CarrigeEncoderAID = 3; // DIO Port 3
         public static final int CarrigeEncoderBID = 4; // DIO Port 4
-        public static final double CarrigeMaxHeight = 0; // Placeholder value
-        public static final double CarrigeMinHeight = -34996; // Placeholder value
+        public static final double CarrigeMaxHeight = 4.3; // Placeholder value
+        public static final double CarrigeMinHeight = 0; // Placeholder value
 
         /*Carrige heights */
         public static final double HomePosition = 0; // Placeholder value
@@ -80,7 +80,7 @@ public class Constants {
         public static final int AlgaeHoldSpeed = 0; // Placeholder value
     }
     public static final class Intake {
-        public static final int IntakeMotorID = 24; // Placeholder value
+        public static final int IntakeMotorID = 17; // Placeholder value
         public static final int IntakeRotatorMotorID = 6; // Placeholder value
         public static final int IntakeRotatorEncoderID = 5; // Placeholder value
         public static final double IntakeRotatorMaxAngle = -2175; // Placeholder value
