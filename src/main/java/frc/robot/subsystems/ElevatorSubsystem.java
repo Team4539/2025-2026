@@ -65,6 +65,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (!status.isOK()) {
             DriverStation.reportError("Failed to configure elevator motor: " + status.toString(), false);
         }
+        SmartDashboard.putBoolean("Elevator Enabled", status.isOK());
     }
 
     @Override

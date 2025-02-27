@@ -15,7 +15,6 @@ public class ArmRotationSubsytem extends SubsystemBase {
     DutyCycleEncoder m_armEncoder;
     public Boolean isoutside;
     public double armRotation;
-    private boolean isCarrigeUp;
     private TalonFXConfiguration m_armConfig;
 
 

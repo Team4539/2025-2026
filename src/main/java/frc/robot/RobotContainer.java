@@ -30,6 +30,7 @@ import frc.robot.commands.BaseCommands.SetCarrige;
 import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CarrigeSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -98,6 +99,7 @@ public class RobotContainer {
     private final ArmRotationSubsytem m_ArmRotationSubsystem = new ArmRotationSubsytem();
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
+    private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
     NamedCommands commands = new NamedCommands();
     
     private void configureBindings() {

@@ -2,11 +2,12 @@ package frc.robot.commands.AuomaticCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.LimeLightHelpers;
 
 public class AlignReef extends Command {
     private final SwerveRequest.RobotCentric drive =
@@ -14,6 +15,7 @@ public class AlignReef extends Command {
 
     private CommandSwerveDrivetrain m_drive;
     private int m_tag;
+    private PhotonCamera camera;
     
     // PID Controllers for alignment
     private final PIDController rotationPID;
@@ -24,6 +26,7 @@ public class AlignReef extends Command {
         addRequirements(drive_subsystem);
         m_tag = tag;
         m_drive = drive_subsystem;
+        camera = new PhotonCamera("fronapr"); // Use your actual camera name here
 
         // Configure PID controllers with gains
         rotationPID = new PIDController(0.015, 0, 0);
@@ -45,36 +48,45 @@ public class AlignReef extends Command {
 
     @Override
     public void execute() {
-        double tx = LimeLightHelpers.getTX("limelight-fronapr");
-        double ty = LimeLightHelpers.getTY("limelight-fronapr");
-        double id = LimeLightHelpers.getFiducialID("limelight-fronapr");
+        PhotonPipelineResult result = camera.getLatestResult();
 
-        if (id == m_tag) {
-            // Calculate control outputs
-            double rotationOutput = rotationPID.calculate(tx, 0) * 1.5 * Math.PI;
-            double strafeOutput = strafePID.calculate(tx, 0);
-            double forwardOutput = distancePID.calculate(ty, 0);
+        if (result.hasTargets()) {
+            var target = result.getBestTarget();
+            
+            // Check if we see the correct AprilTag
+            if (target.getFiducialId() == m_tag) {
+                // Get yaw (horizontal offset) and pitch (vertical offset)
+                double tx = target.getYaw();
+                double ty = target.getPitch();
 
-            // Apply combined movement
-            m_drive.setControl(drive
-                .withVelocityX(forwardOutput)  // Forward/backward
-                .withVelocityY(strafeOutput)   // Left/right
-                .withRotationalRate(rotationOutput*-1)); // Rotation
+                // Calculate control outputs
+                double rotationOutput = rotationPID.calculate(tx, 0) * 1.5 * Math.PI;
+                double strafeOutput = strafePID.calculate(tx, 0);
+                double forwardOutput = distancePID.calculate(ty, 0);
+
+                // Apply combined movement
+                m_drive.setControl(drive
+                    .withVelocityX(forwardOutput)  // Forward/backward
+                    .withVelocityY(strafeOutput)   // Left/right
+                    .withRotationalRate(rotationOutput*-1)); // Rotation
+            } else {
+                stopMovement();
+            }
         } else {
-            // If we don't see the correct tag, stop moving
-            m_drive.setControl(drive
-                .withVelocityX(0)
-                .withVelocityY(0)
-                .withRotationalRate(0));
+            stopMovement();
         }
     }
 
-    @Override
-    public void end(boolean interrupted) {
+    private void stopMovement() {
         m_drive.setControl(drive
             .withVelocityX(0)
             .withVelocityY(0)
             .withRotationalRate(0));
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        stopMovement();
     }
 
     @Override
