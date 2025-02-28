@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.Set;
 
+import javax.naming.PartialResultException;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -29,6 +31,7 @@ import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.commands.BaseCommands.RunIntake;
 import frc.robot.commands.BaseCommands.SetArm;
 import frc.robot.commands.BaseCommands.SetCarrige;
+import frc.robot.commands.BaseCommands.SetClimber;
 import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CarrigeSubsystem;
@@ -157,26 +160,89 @@ public class RobotContainer {
         ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, .6, "Button"));
         ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -.6, "Button"));
         HeadIntake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, -0.5), new RunIntake(m_intakeSubsytem, -1, "Button")));
-        HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 10, "button")));
+        HeadOuttake.whileTrue(new ParallelCommandGroup(new RunHeadManip(m_headManip, 0.5), new RunIntake(m_intakeSubsytem, 1, "button")));
         IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));
         IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.4, "Button"));
-        TestButton1.onTrue(new ParallelCommandGroup(   //Arm Staging to Clear the reef while moving
-            new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
-            new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
-            new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
-        ).withTimeout(5));
+        // TestButton1.onTrue(new SequentialCommandGroup(
+        //     new ParallelCommandGroup(   //Arm Staging to Clear the reef while moving
+        //         new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
+        // ).withTimeout(5)));
         // TestButton1.whileTrue(new ParallelCommandGroup(   //To pass of the coral to the head (eg Stage 2 the intake process)
         //     new SetElevatorTo(m_ElevatorSubsystem, 2.689697265625),
         //     new SetCarrigeTo(m_CarrigeSubsystem, 2.469482421875, "cause i can"),
         //     new SetArmTo(m_ArmRotationSubsystem, 15, "Home", false)
         // ));
-        TestButton2.onTrue(new ParallelCommandGroup(   // To Allow the Intake to move (eg Stage 1 the intake process)
-            new SetElevatorTo(m_ElevatorSubsystem, 2.919677734375),
-            new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
-            new SetArmTo(m_ArmRotationSubsystem, 14, "Home", false)
-        ).withTimeout(5));
-        
+        // TestButton2.onTrue(new ParallelCommandGroup(   // To Allow the Intake to move (eg Stage 1 the intake process)
+        //     new SetElevatorTo(m_ElevatorSubsystem, 2.919677734375),
+        //     new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+        //     new SetArmTo(m_ArmRotationSubsystem, 14, "Home", false)
+        // ).withTimeout(5));
+        TestButton2.whileTrue(
+            new SetClimber(m_climberSubsystem, 1)
+        );
+        TestButton1.whileTrue(
+            new SetClimber(m_climberSubsystem, -1)
+        );
 
+
+        // TestButton2.onTrue(new SequentialCommandGroup(
+        //     new ParallelCommandGroup(   // Coral L4
+        //         new SetElevatorTo(m_ElevatorSubsystem, 2.92919921875),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause")).withTimeout(5),
+        //     new ParallelCommandGroup(
+        //         new SetArmTo(m_ArmRotationSubsystem, 47.1, "coral L4", false),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, null),
+        //         new SetElevatorTo(m_ElevatorSubsystem, 2.92919921875)
+        //     ).withTimeout(1.5),
+        //     new ParallelCommandGroup(   //Arm Staging to Clear the reef while moving
+        //         new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false),
+        //         new RunHeadManip(m_headManip, .5)
+        //     ).withTimeout(1)
+            
+        // ));
+
+        // TestButton2.onTrue(new SequentialCommandGroup(
+        //     new ParallelCommandGroup(   // Coral L3
+        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 2.337646484375, "cause")).withTimeout(3),
+        //     new ParallelCommandGroup(
+        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 2.337646484375, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 48.0, "coral L4", false)).withTimeout(1),
+        //     new ParallelCommandGroup(
+        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 3.04833984375, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 60, "coral L4", false),
+        //         new RunHeadManip(m_headManip, .5)).withTimeout(.5),
+        //     new ParallelCommandGroup(   //Arm Staging to Clear the reef while moving
+        //         new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
+        // ).withTimeout(5)
+        // ));
+        // TestButton2.onTrue(new SequentialCommandGroup(
+        //     new ParallelCommandGroup(   // Coral L2
+        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 4.295654296875, "cause"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 60, "hold", false)).withTimeout(3),
+        //     new ParallelCommandGroup(
+        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 4.295654296875, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 45.3, "coral L4", false)).withTimeout(1),
+        //     // new ParallelCommandGroup(
+        //     //     new SetArmTo(m_ArmRotationSubsystem, 41.6, "Finalizing", false), 
+        //     //     new RunHeadManip(m_headManip, .5)).withTimeout(.5),
+        //     new ParallelCommandGroup(
+        //         new SetElevatorTo(m_ElevatorSubsystem, 2.919677734375),
+        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 14, "coral L4", false),
+        //         new RunHeadManip(m_headManip, .5)).withTimeout(3))
+            
+        // );
 
     }
 
