@@ -20,9 +20,9 @@ public class ArmNeedsCoral extends Command {
     {
         // brings the arm down to be ready to pick up coral
         return new ParallelCommandGroup(   // Return to safe position
-                new SetElevatorTo(elevatorSubsystem, 1.087158203125),
+                new SetElevatorTo(elevatorSubsystem, 2.919677734375),
                 new SetCarrigeTo(carrigeSubsystem, 0, "cause i can"),
-                new SetArmTo(armRotationSubsystem, 60, "Home", false)
+                new SetArmTo(armRotationSubsystem, 14, "Home", false)
             ).withTimeout(5);
     }
 }

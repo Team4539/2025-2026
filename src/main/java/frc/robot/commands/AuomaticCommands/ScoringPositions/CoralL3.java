@@ -19,15 +19,14 @@ public class CoralL3 extends Command{
         CarrigeSubsystem carrigeSubsystem,
         ArmRotationSubsytem armRotationSubsystem
     ) {
-      return new ParallelCommandGroup(
+      return new SequentialCommandGroup(
         new ParallelCommandGroup(   // Coral L3 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 0),
                 new SetCarrigeTo(carrigeSubsystem, 2.337646484375, "cause")
             ).withTimeout(3),
             new ParallelCommandGroup(   // Coral L3 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem, 2.337646484375, "cause i can"),
-                new SetArmTo(armRotationSubsystem, 48.0, "coral L4", false)
+                new SetCarrigeTo(carrigeSubsystem, 2.337646484375, "cause i can")
             ));
    }
    public static Command getOnFalsCommand(
@@ -38,6 +37,7 @@ public class CoralL3 extends Command{
    )
     {
         return new SequentialCommandGroup(
+            new SetArmTo(armRotationSubsystem, 48.0, "coral L4", false).withTimeout(1),
             new ParallelCommandGroup(   // Coral L3 - Output
                 new SetElevatorTo(elevatorSubsystem, 0),
                 new SetCarrigeTo(carrigeSubsystem, 3.04833984375, "cause i can"),

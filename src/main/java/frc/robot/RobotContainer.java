@@ -25,6 +25,8 @@ import frc.robot.commands.AuomaticCommands.AlignReef;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL2;
+import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL3;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL4;
 import frc.robot.commands.BaseCommands.RotateIntake;
 import frc.robot.commands.BaseCommands.RunHeadManip;
@@ -207,16 +209,9 @@ public class RobotContainer {
 
         // /* Coral L4 */
 
-        TestButton2.whileTrue(CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        TestButton2.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
-        
+        TestButton2.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        TestButton2.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));    
         /* Coral L3 (commented out) */
-        TestButton2.onTrue(new SequentialCommandGroup(
-            
-            
-            
-        ));
-        
         /* Coral L2 (commented out) */
         // TestButton2.onTrue(new SequentialCommandGroup(
         //     new ParallelCommandGroup(   // Coral L2 - Initial setup

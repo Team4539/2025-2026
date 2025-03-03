@@ -52,7 +52,8 @@ public class CoralL4 extends Command {
                 new SetArmTo(armRotationSubsystem, 47.1, "coral L4", false),
                 new SetCarrigeTo(carrigeSubsystem, 0, null),
                 new SetElevatorTo(elevatorSubsystem, 2.92919921875)
-            ).withTimeout(5),
+            ).withTimeout(.7),
+        new RunHeadManip(headManipSubsystem, .5).withTimeout(1),
         new ArmNeedsCoral().GoingtoCoral(elevatorSubsystem, armRotationSubsystem, carrigeSubsystem, headManipSubsystem)
         );
             
