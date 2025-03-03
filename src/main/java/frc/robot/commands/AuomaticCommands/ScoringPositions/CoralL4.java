@@ -7,6 +7,7 @@ import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
+import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmNeedsCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
@@ -47,12 +48,12 @@ public class CoralL4 extends Command {
             HeadintakeManipulator headManipSubsystem) {
                 
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(   // Coral L4 - Positioning
+            new ParallelCommandGroup(   // Coral L4 - Positioning and score than run back to a safe position
                 new SetArmTo(armRotationSubsystem, 47.1, "coral L4", false),
                 new SetCarrigeTo(carrigeSubsystem, 0, null),
                 new SetElevatorTo(elevatorSubsystem, 2.92919921875)
             ).withTimeout(5),
-        new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, headManipSubsystem, armRotationSubsystem)
+        new ArmNeedsCoral().GoingtoCoral(elevatorSubsystem, armRotationSubsystem, carrigeSubsystem, headManipSubsystem)
         );
             
     }
