@@ -1,4 +1,4 @@
-package frc.robot.commands.AuomaticCommands.NonScoring;
+package frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HeadMechanisms;
