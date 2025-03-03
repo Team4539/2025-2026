@@ -209,50 +209,30 @@ public class RobotContainer {
 
         TestButton2.whileTrue(CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
         TestButton2.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
-        // TestButton2.onTrue(new SequentialCommandGroup(
-        //     new ParallelCommandGroup(   // Coral L4 - Initial setup
-        //         new SetElevatorTo(m_ElevatorSubsystem, 2.92919921875),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause")
-        //     ).withTimeout(5),
-        //     new ParallelCommandGroup(   // Coral L4 - Positioning
-        //         new SetArmTo(m_ArmRotationSubsystem, 47.1, "coral L4", false),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, null),
-        //         new SetElevatorTo(m_ElevatorSubsystem, 2.92919921875)
-        //     ).withTimeout(1.5)
-        // ));
-        
-        TestButton2.onFalse(
-            new ParallelCommandGroup(   // Return to safe position when button released
-                new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
-                new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
-                new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false),
-                new RunHeadManip(m_headManip, .5)
-            ).withTimeout(1)
-        );
         
         /* Coral L3 (commented out) */
-        // TestButton2.onTrue(new SequentialCommandGroup(
-        //     new ParallelCommandGroup(   // Coral L3 - Initial setup
-        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 2.337646484375, "cause")
-        //     ).withTimeout(3),
-        //     new ParallelCommandGroup(   // Coral L3 - Positioning
-        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 2.337646484375, "cause i can"),
-        //         new SetArmTo(m_ArmRotationSubsystem, 48.0, "coral L4", false)
-        //     ).withTimeout(1),
-        //     new ParallelCommandGroup(   // Coral L3 - Output
-        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 3.04833984375, "cause i can"),
-        //         new SetArmTo(m_ArmRotationSubsystem, 60, "coral L4", false),
-        //         new RunHeadManip(m_headManip, .5)
-        //     ).withTimeout(.5),
-        //     new ParallelCommandGroup(   // Return to safe position
-        //         new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
-        //         new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
-        //     ).withTimeout(5)
-        // ));
+        TestButton2.onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(   // Coral L3 - Initial setup
+                new SetElevatorTo(m_ElevatorSubsystem, 0),
+                new SetCarrigeTo(m_CarrigeSubsystem, 2.337646484375, "cause")
+            ).withTimeout(3),
+            new ParallelCommandGroup(   // Coral L3 - Positioning
+                new SetElevatorTo(m_ElevatorSubsystem, 0),
+                new SetCarrigeTo(m_CarrigeSubsystem, 2.337646484375, "cause i can"),
+                new SetArmTo(m_ArmRotationSubsystem, 48.0, "coral L4", false)
+            ).withTimeout(1),
+            new ParallelCommandGroup(   // Coral L3 - Output
+                new SetElevatorTo(m_ElevatorSubsystem, 0),
+                new SetCarrigeTo(m_CarrigeSubsystem, 3.04833984375, "cause i can"),
+                new SetArmTo(m_ArmRotationSubsystem, 60, "coral L4", false),
+                new RunHeadManip(m_headManip, .5)
+            ).withTimeout(.5),
+            new ParallelCommandGroup(   // Return to safe position
+                new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
+                new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+                new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
+            ).withTimeout(5)
+        ));
         
         /* Coral L2 (commented out) */
         // TestButton2.onTrue(new SequentialCommandGroup(
