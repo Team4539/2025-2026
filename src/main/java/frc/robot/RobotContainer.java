@@ -148,9 +148,11 @@ public class RobotContainer {
 
         /* Button Box Controls */
         
-        // Elevator controls
-        ElevatorUp.whileTrue(new SetElevator(-0.4, m_ElevatorSubsystem));
-        ElevatorDown.whileTrue(new SetElevator(0.4, m_ElevatorSubsystem));
+        // Elevator controls but converted to do auton positions as of now
+        ElevatorUp.whileTrue(CoralL3.getOnTruecCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        ElevatorUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        ElevatorDown.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        ElevatorDown.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
         
         // Carriage controls
         CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
@@ -185,56 +187,9 @@ public class RobotContainer {
             ).withTimeout(5)
         ));
 
-        // TestButton1 - Pass coral to head (commented out)
-        // TestButton1.whileTrue(new ParallelCommandGroup(   // To pass off the coral to the head (Stage 2 intake process)
-        //     new SetElevatorTo(m_ElevatorSubsystem, 2.689697265625),
-        //     new SetCarrigeTo(m_CarrigeSubsystem, 2.469482421875, "cause i can"),
-        //     new SetArmTo(m_ArmRotationSubsystem, 15, "Home", false)
-        // ));
-        
-        // TestButton2 - Allow intake to move (commented out)
-        // TestButton2.onTrue(new ParallelCommandGroup(   // To Allow the Intake to move (Stage 1 intake process)
-        //     new SetElevatorTo(m_ElevatorSubsystem, 2.919677734375),
-        //     new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
-        //     new SetArmTo(m_ArmRotationSubsystem, 14, "Home", false)
-        // ).withTimeout(5));
-        
-        // TestButton2/1 - Climber controls (commented out)
-        // TestButton2.whileTrue(
-        //     new SetClimber(m_climberSubsystem, 1)
-        // );
-        // TestButton1.whileTrue(
-        //     new SetClimber(m_climberSubsystem, -1)
-        // );
-
-        // /* Coral L4 */
-
         TestButton2.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
         TestButton2.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));    
-        /* Coral L3 (commented out) */
-        /* Coral L2 (commented out) */
-        // TestButton2.onTrue(new SequentialCommandGroup(
-        //     new ParallelCommandGroup(   // Coral L2 - Initial setup
-        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 4.295654296875, "cause"),
-        //         new SetArmTo(m_ArmRotationSubsystem, 60, "hold", false)
-        //     ).withTimeout(3),
-        //     new ParallelCommandGroup(   // Coral L2 - Positioning
-        //         new SetElevatorTo(m_ElevatorSubsystem, 0),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 4.295654296875, "cause i can"),
-        //         new SetArmTo(m_ArmRotationSubsystem, 45.3, "coral L4", false)
-        //     ).withTimeout(1),
-        //     // new ParallelCommandGroup(  // Finalization (commented out)
-        //     //     new SetArmTo(m_ArmRotationSubsystem, 41.6, "Finalizing", false), 
-        //     //     new RunHeadManip(m_headManip, .5)
-        //     // ).withTimeout(.5),
-        //     new ParallelCommandGroup(   // Return to intake position
-        //         new SetElevatorTo(m_ElevatorSubsystem, 2.919677734375),
-        //         new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
-        //         new SetArmTo(m_ArmRotationSubsystem, 14, "coral L4", false),
-        //         new RunHeadManip(m_headManip, .5)
-        //     ).withTimeout(3)
-        // ));
+
     }
 
     public RobotContainer() {

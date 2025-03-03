@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
-import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
@@ -48,13 +47,6 @@ public class CoralL2 extends Command {
                 
         return new SequentialCommandGroup(
             new SetArmTo(armRotationSubsystem, 45.3, "coral L2", false).withTimeout(1),
-
-            // Optional finalization step (currently commented out in the original code)
-            // new ParallelCommandGroup(
-            //     new SetArmTo(armRotationSubsystem, 41.6, "Finalizing", false), 
-            //     new RunHeadManip(headManipSubsystem, .5)
-            // ).withTimeout(.5),
-            
             new ParallelCommandGroup(   // Return to intake position
                 new SetElevatorTo(elevatorSubsystem, 2.919677734375),
                 new SetCarrigeTo(carrigeSubsystem, 0, "cause i can"),
