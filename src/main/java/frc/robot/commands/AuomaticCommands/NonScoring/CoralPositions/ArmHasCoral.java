@@ -1,7 +1,6 @@
 package frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.HeadMechanisms;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
