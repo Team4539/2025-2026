@@ -1,12 +1,12 @@
 package frc.robot.commands.AuomaticCommands.ScoringPositions;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
-import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmNeedsCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
@@ -23,6 +23,7 @@ public class CoralL4 extends Command {
             ElevatorSubsystem elevatorSubsystem,
             CarrigeSubsystem carrigeSubsystem,
             ArmRotationSubsytem armRotationSubsystem) {
+        SmartDashboard.putBoolean("CoralL4", true);
         
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Initial setup
@@ -46,7 +47,7 @@ public class CoralL4 extends Command {
             CarrigeSubsystem carrigeSubsystem,
             ArmRotationSubsytem armRotationSubsystem,
             HeadintakeManipulator headManipSubsystem) {
-                
+
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Positioning and score than run back to a safe position
                 new SetArmTo(armRotationSubsystem, 47.1, "coral L4", false),

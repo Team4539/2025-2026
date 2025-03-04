@@ -2,9 +2,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.Set;
-import javax.naming.PartialResultException;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -20,8 +17,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants.Elevator;
-import frc.robot.commands.AuomaticCommands.AlignReef;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
@@ -33,8 +28,6 @@ import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.commands.BaseCommands.RunIntake;
 import frc.robot.commands.BaseCommands.SetArm;
 import frc.robot.commands.BaseCommands.SetCarrige;
-import frc.robot.commands.BaseCommands.SetClimber;
-import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CarrigeSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -43,6 +36,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.HeadintakeManipulator;
+@SuppressWarnings("unused")
 
 public class RobotContainer {
     // Speed constants
@@ -187,8 +181,8 @@ public class RobotContainer {
             ).withTimeout(5)
         ));
 
-        TestButton2.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        TestButton2.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));    
+        TestButton2.whileTrue(CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        TestButton2.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));   
 
     }
 

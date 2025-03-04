@@ -1,5 +1,6 @@
 package frc.robot.commands.AuomaticCommands.ScoringPositions;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,6 +22,7 @@ public class CoralL2 extends Command {
             ElevatorSubsystem elevatorSubsystem,
             CarrigeSubsystem carrigeSubsystem,
             ArmRotationSubsytem armRotationSubsystem) {
+        SmartDashboard.putBoolean("CoralL2", true);
         
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L2 - Initial setup
@@ -44,7 +46,7 @@ public class CoralL2 extends Command {
             ArmRotationSubsytem armRotationSubsystem,
             HeadintakeManipulator headManipSubsystem) {
                 
-                
+        SmartDashboard.putBoolean("CoralL2", false);
         return new SequentialCommandGroup(
             new SetArmTo(armRotationSubsystem, 45.3, "coral L2", false).withTimeout(1),
             new ParallelCommandGroup(   // Return to intake position

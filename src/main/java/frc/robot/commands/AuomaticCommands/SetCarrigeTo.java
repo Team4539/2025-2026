@@ -6,13 +6,11 @@ import frc.robot.subsystems.CarrigeSubsystem;
 public class SetCarrigeTo extends Command {
     private final CarrigeSubsystem m_carrige;
     private final double m_setpoint;
-    private final String m_command;
 
     public SetCarrigeTo(CarrigeSubsystem subsystem, double setpoint, String command) {
         addRequirements(subsystem);
         m_carrige = subsystem;
         m_setpoint = setpoint;
-        m_command = command != null ? command : "Disabled";
     }
 
     @Override
