@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmNeedsCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
@@ -27,13 +28,13 @@ public class CoralL4 extends Command {
         
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Initial setup
-                new SetElevatorTo(elevatorSubsystem, 2.92919921875),
+                new SetElevatorTo(elevatorSubsystem, 4.478271484375),
                 new SetCarrigeTo(carrigeSubsystem, 0, "cause")
             ).withTimeout(5),
             new ParallelCommandGroup(   // Coral L4 - Positioning
-                new SetArmTo(armRotationSubsystem, 55.8, "coral L4", false),
+                new SetArmTo(armRotationSubsystem, 53.35, "coral L4", false),
                 new SetCarrigeTo(carrigeSubsystem, 0, null),
-                new SetElevatorTo(elevatorSubsystem, 2.92919921875)
+                new SetElevatorTo(elevatorSubsystem, 4.478271484375)
             ).withTimeout(5)
             
         );
@@ -50,12 +51,13 @@ public class CoralL4 extends Command {
 
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Positioning and score than run back to a safe position
-                new SetArmTo(armRotationSubsystem, 47.1, "coral L4", false),
-                new SetCarrigeTo(carrigeSubsystem, 0, null),
-                new SetElevatorTo(elevatorSubsystem, 2.92919921875)
+                new SetArmTo(armRotationSubsystem, 43.9, "coral L4", false),
+                //new SetCarrigeTo(carrigeSubsystem, 0.43701171875, null),
+                new SetElevatorTo(elevatorSubsystem, 4.478271484375)
             ).withTimeout(.7),
+        new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),
         new RunHeadManip(headManipSubsystem, .5).withTimeout(1),
-        new ArmNeedsCoral().GoingtoCoral(elevatorSubsystem, armRotationSubsystem, carrigeSubsystem, headManipSubsystem)
+        new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, headManipSubsystem, armRotationSubsystem)
         );
             
     }

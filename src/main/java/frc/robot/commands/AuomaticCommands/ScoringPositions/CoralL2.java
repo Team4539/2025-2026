@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
@@ -27,12 +28,12 @@ public class CoralL2 extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L2 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem, 4.295654296875, "cause"),
+                new SetCarrigeTo(carrigeSubsystem,3.49462890625, "cause"),
                 new SetArmTo(armRotationSubsystem, 60, "hold", false)
             ).withTimeout(3),
             new ParallelCommandGroup(   // Coral L2 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem, 4.295654296875, "cause i can")
+                new SetCarrigeTo(carrigeSubsystem, 3.49462890625, "cause i can")
             ).withTimeout(1)
         );
     }
@@ -49,12 +50,6 @@ public class CoralL2 extends Command {
         SmartDashboard.putBoolean("CoralL2", false);
         return new SequentialCommandGroup(
             new SetArmTo(armRotationSubsystem, 45.3, "coral L2", false).withTimeout(1),
-            new ParallelCommandGroup(   // Return to intake position
-                new SetElevatorTo(elevatorSubsystem, 2.919677734375),
-                new SetCarrigeTo(carrigeSubsystem, 0, "cause i can"),
-                new SetArmTo(armRotationSubsystem, 14, "Home", false),
-                new RunHeadManip(headManipSubsystem, .5)
-            ).withTimeout(3)
-        );
+            new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, headManipSubsystem, armRotationSubsystem));
     }
 }
