@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.security.AlgorithmConstraints;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -16,12 +18,17 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AuomaticCommands.AlignReef;
+import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L2Algaegrab;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.ToggleIntake;
+import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmGettingCoral;
+import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL1;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL2;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL3;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL4;
@@ -53,7 +60,7 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final XboxController Driver = new XboxController(0);
     private final XboxController Operator = new XboxController(1);
-    private final Joystick ButtonBox = new Joystick(3);
+    private final Joystick ButtonBox = new Joystick(2);
     
     // Drive requests
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -65,30 +72,29 @@ public class RobotContainer {
     // Driver buttons
     private final JoystickButton resetGyro = new JoystickButton(Driver, XboxController.Button.kY.value);
     private final JoystickButton AntiTipper = new JoystickButton(Driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton CoralDestucker = new JoystickButton(Driver, XboxController.Button.kX.value);
 
-    // Co-driver buttons (commented out)
-    // private final JoystickButton coralL4 = new JoystickButton(Operator, XboxController.Button.kY.value);
-    // private final JoystickButton coralL3 = new JoystickButton(Operator, XboxController.Button.kX.value);
-    // private final JoystickButton coralL2 = new JoystickButton(Operator, XboxController.Button.kB.value);
-    // private final JoystickButton home = new JoystickButton(Operator, XboxController.Button.kA.value);
-    // private final JoystickButton IntakeAlgae = new JoystickButton(Operator, XboxController.Button.kRightBumper.value);
-    // private final JoystickButton OutTakeAlgae = new JoystickButton(Operator, XboxController.Button.kLeftBumper.value);
-    // private final JoystickButton CoralStation = new JoystickButton(Operator, XboxController.Button.kStart.value);
-    // private final JoystickButton AlignReef = new JoystickButton(Operator, XboxController.Button.kBack.value);
+   // operator Xbox buttons
+    private final JoystickButton DecideArmButton = new JoystickButton(Operator, XboxController.Button.kA.value);
+    private final JoystickButton DecideCarrigeButton = new JoystickButton(Operator, XboxController.Button.kB.value);
+    private final JoystickButton DecideElevatorButton = new JoystickButton(Operator, XboxController.Button.kX.value);
+    private final JoystickButton DecideClimberButton = new JoystickButton(Operator, XboxController.Button.kY.value); 
 
     // Button Box Buttons
-    private final JoystickButton ElevatorUp = new JoystickButton(ButtonBox, 1);
-    private final JoystickButton ElevatorDown = new JoystickButton(ButtonBox, 2);
-    private final JoystickButton CarrigeUp = new JoystickButton(ButtonBox, 3);
-    private final JoystickButton CarrigeDown = new JoystickButton(ButtonBox, 4);
-    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 6);
-    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 5);
-    private final JoystickButton HeadIntake = new JoystickButton(ButtonBox, 7);
-    private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8);
-    private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9);
-    private final JoystickButton IntakeRotateOut = new JoystickButton(ButtonBox, 10);
-    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 11);
-    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 12);
+    private final JoystickButton ElevatorUp = new JoystickButton(ButtonBox, 1);  // A1
+    private final JoystickButton ElevatorDown = new JoystickButton(ButtonBox, 2); // Barge
+    private final JoystickButton CarrigeUp = new JoystickButton(ButtonBox, 3); // proc
+    private final JoystickButton CarrigeDown = new JoystickButton(ButtonBox, 4); //gtround alg
+    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 6); // L3
+    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 5); // L4
+    private final JoystickButton HeadIntake = new JoystickButton(ButtonBox, 7); // L2
+    private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8); // L1
+    private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9); // hand
+    private final JoystickButton IntakeRotateOut = new JoystickButton(ButtonBox, 10); // intake
+    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 11); // Left
+    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 12); // Right
+    private final POVButton alageA2 = new POVButton(ButtonBox, 0); // Up A2
+
     
     // Test Joystick Buttons (commented out)
     // private final JoystickButton selectElecatorCommand = new JoystickButton(testJoystick, 8); // 1 is the trigger button
@@ -140,6 +146,17 @@ public class RobotContainer {
 
         // Telemetry registration
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        DecideArmButton.whileTrue(
+           new SetArm(m_ArmRotationSubsystem, Operator.getLeftY(), "Button")
+        );
+
+        CoralDestucker.whileTrue(
+            new RunIntake(m_intakeSubsytem, -.2, "Destuck")
+        );
+        CoralDestucker.onFalse(
+            new RunIntake(m_intakeSubsytem, .2, "Destruck").withTimeout(.5)
+        );
         
         // Align with reef (commented out)
         // AlignReef.whileTrue(new AlignReef(5, drivetrain));
@@ -149,50 +166,77 @@ public class RobotContainer {
         // Elevator controls but converted to do auton positions as of now
 
         //ElevatorUp.whileTrue(new AlignReef(5, drivetrain));
-        ElevatorUp.whileTrue(CoralL3.getOnTruecCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        ElevatorUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
-        ElevatorDown.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        ElevatorDown.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        // ElevatorUp.whileTrue(CoralL3.getOnTruecCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        // ElevatorUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        // ElevatorDown.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        // ElevatorDown.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
         
-        // Carriage controls
-        CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
-        CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.4, "Button"));
+        // // Carriage controls
+        // CarrigeUp.whileTrue(new SetCarrige(m_CarrigeSubsystem, -0.4, "Button"));
+        // CarrigeDown.whileTrue(new SetCarrige(m_CarrigeSubsystem, 0.4, "Button"));
         
-        // Arm controls
-        ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, .6, "Button"));
-        ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -.6, "Button"));
+        // // Arm controls
+        // ArmUp.whileTrue(new SetArm(m_ArmRotationSubsystem, .6, "Button"));
+        // ArmDown.whileTrue(new SetArm(m_ArmRotationSubsystem, -.6, "Button"));
         
-        // Head intake/outtake
-        HeadIntake.whileTrue(new ParallelCommandGroup(
-            new RunHeadManip(m_headManip, 1.2),
-            new RunIntake(m_intakeSubsytem, -1, "Button")
-        ));
-        HeadOuttake.whileTrue(new ParallelCommandGroup(
-            new RunHeadManip(m_headManip, -1.2),
-            new RunIntake(m_intakeSubsytem, 1, "button")
-        ));
+        // // Head intake/outtake
+        // HeadIntake.whileTrue(new ParallelCommandGroup(
+        //     new RunHeadManip(m_headManip, 1.2),
+        //     new RunIntake(m_intakeSubsytem, -1, "Button")
+        // ));
+        // HeadOuttake.whileTrue(new ParallelCommandGroup(Q
+        //     new RunHeadManip(m_headManip, -1.2),
+        //     new RunIntake(m_intakeSubsytem, 1, "button")
+        // ));
         
-        // Intake rotation
-        IntakeRotateIn.onTrue(new ToggleIntake(m_intakeSubsytem));
-        IntakeRotateOut.whileTrue(new SequentialCommandGroup(
-            new RunIntake(m_intakeSubsytem, 1, "button")
-            //new RunIntake(m_intakeSubsytem, 1, "button")
-        ));
+        // // Intake rotation
+        IntakeRotateOut.whileTrue(
+            new SequentialCommandGroup(
+                new RotateIntaketo(m_intakeSubsytem, .4, "intake out", false).withTimeout(3),
+                new RunIntake(m_intakeSubsytem, 1, "Button")
+            )
+        );
+        IntakeRotateOut.onFalse(
+            new RotateIntaketo(m_intakeSubsytem, .98, "Back", false).withTimeout(5)
+        );
         
+        IntakeRotateIn.onTrue(
+            ArmGettingCoral.Handoff(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_intakeSubsytem)
+        );
         
+        ArmDown.whileTrue(
+            CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L4
+        ArmDown.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+
+        ArmUp.whileTrue(
+            CoralL3.getOnTruecCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L3
+        ArmUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        HeadIntake.onTrue(
+            CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L2
+        HeadIntake.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        HeadOuttake.onTrue(
+            CoralL1.OntrueCommadn(m_intakeSubsytem)); // L1
+        HeadOuttake.onFalse(CoralL1.OnFalseCommand(m_intakeSubsytem));
+        
+        alageA2.whileTrue(L2Algaegrab.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
         /* Arm Staging Commands */
         
-        // TestButton1 - Arm staging to clear reef
-        TestButton1.onTrue(new SequentialCommandGroup(
-            new ParallelCommandGroup(   // Arm staging to clear the reef while moving
-                new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
-                new SetCarrigeTo(m_CarrigeSubsystem,  0, "cause i can"),
-                new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
-            ).withTimeout(5)
-        ));
+        TestButton1.whileTrue(
+            new AlignReef(5, drivetrain, m_photonVision)
+        );
+    
 
-        TestButton2.whileTrue(CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        TestButton2.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));   
+        // TestButton1 - Arm staging to clear reef
+        // TestButton1.onTrue(new SequentialCommandGroup(
+        //     new ParallelCommandGroup(   // Arm staging to clear the reef while moving
+        //         new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
+        //         new SetCarrigeTo(m_CarrigeSubsystem,  0, "cause i can"),
+        //         new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
+        //     ).withTimeout(5)
+        // ));
+
+        // TestButton2.whileTrue(CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        // TestButton2.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));   
 
     }
 

@@ -3,6 +3,7 @@ package frc.robot.commands.AuomaticCommands.ScoringPositions;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
@@ -28,13 +29,13 @@ public class CoralL4 extends Command {
         
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Initial setup
-                new SetElevatorTo(elevatorSubsystem, 4.478271484375),
-                new SetCarrigeTo(carrigeSubsystem, 0, "cause")
+                new SetElevatorTo(elevatorSubsystem, 4.403564453125),
+                new SetCarrigeTo(carrigeSubsystem, 0.844970703125, "cause")
             ).withTimeout(5),
             new ParallelCommandGroup(   // Coral L4 - Positioning
-                new SetArmTo(armRotationSubsystem, 53.35, "coral L4", false),
-                new SetCarrigeTo(carrigeSubsystem, 0, null),
-                new SetElevatorTo(elevatorSubsystem, 4.478271484375)
+                new SetArmTo(armRotationSubsystem, 57.3, "coral L4", false),
+                new SetCarrigeTo(carrigeSubsystem, 0.844970703125, null),
+                new SetElevatorTo(elevatorSubsystem, 4.403564453125)
             ).withTimeout(5)
             
         );
@@ -56,7 +57,9 @@ public class CoralL4 extends Command {
             ).withTimeout(.7),
         new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),
         new RunHeadManip(headManipSubsystem, -.2).withTimeout(1),
-        new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, headManipSubsystem, armRotationSubsystem)
+        new ParallelRaceGroup(
+            new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, armRotationSubsystem), 
+            new RunHeadManip(headManipSubsystem, -.5))
         );
             
     }

@@ -26,7 +26,7 @@ public class SetArmTo extends Command {
         m_setpoint = setpoint;
         
         // Adjusted PID values for smoother control
-        pidController = new PIDController(0.055, 0, 0.01);
+        pidController = new PIDController(0.085, 0, 0.01);
         
         // Further reduced acceleration for smoother transitions
         constraints = new TrapezoidProfile.Constraints(

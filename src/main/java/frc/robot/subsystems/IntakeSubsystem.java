@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,13 +14,14 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor;
     private final TalonFX intakeRotatorMotor;
-    private final Encoder intakeRotatorEncoder;
     private final Ultrasonic intakeUltrasonic;
     private double intakeRotatorPosition;
     private String intakeRotatorCommand;
     private String intakeCommand;
     private boolean isIntakeMoving;
     private double IntakeDistance;
+    private double intakerotation;
+    private DutyCycleEncoder m_intakeEncoder;
 
     @SuppressWarnings("static-access")
     public IntakeSubsystem() {
@@ -25,21 +29,22 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
         intakeRotatorMotor = new TalonFX(Constants.Intake.IntakeRotatorMotorID);
         intakeRotatorMotor.getConfigurator().apply(new TalonFXConfiguration());
-        intakeRotatorEncoder = new Encoder(Constants.Intake.IntakeRotatorEncoderID, 6);
         intakeRotatorCommand = "Disabled";
         intakeCommand = "Disabled";
         isIntakeMoving = false;
         intakeUltrasonic = new Ultrasonic(9, 8); 
         intakeUltrasonic.setAutomaticMode(true);
+        m_intakeEncoder = new DutyCycleEncoder(1);
     }
 
     public void periodic() {
-        intakeRotatorPosition = intakeRotatorEncoder.get();
         IntakeDistance = intakeUltrasonic.getRangeInches();
+        intakerotation = m_intakeEncoder.get();
         SmartDashboard.putNumber("Intake Rotator Position", intakeRotatorPosition);
         SmartDashboard.putString("Intake Rotator Command", intakeRotatorCommand);
         SmartDashboard.putString("Intake Command", intakeCommand);
         SmartDashboard.putNumber("intakeDistance", IntakeDistance);
+        SmartDashboard.putNumber("Intake Encoder", m_intakeEncoder.get());
         
         if (intakeCommand != "Disabled" || intakeRotatorCommand != "Disabled") {
             isIntakeMoving = true;
@@ -61,18 +66,20 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void rotateIntake(double speed, String command) {
         intakeRotatorCommand = command;
-        double currentAngle = intakeRotatorEncoder.get();
-        if (currentAngle <= Constants.Intake.IntakeRotatorMinAngle && currentAngle >= Constants.Intake.IntakeRotatorMaxAngle) {
+        double currentAngle = m_intakeEncoder.get();
+        if (currentAngle >= Constants.Intake.IntakeRotatorMinAngle && currentAngle <= Constants.Intake.IntakeRotatorMaxAngle) {
             intakeRotatorMotor.set(speed);}
-         else if (currentAngle > Constants.Intake.IntakeRotatorMinAngle & speed < 0)
+         else if (currentAngle < Constants.Intake.IntakeRotatorMinAngle & speed > 0)
             intakeRotatorMotor.set(speed);
          else if (currentAngle > Constants.Intake.IntakeRotatorMinAngle) {
             intakeRotatorMotor.set(-0.1);
-        } else if (currentAngle < Constants.Intake.IntakeRotatorMaxAngle & speed > 0) {
+            DriverStation.reportError("i am too low ", false);
+        } else if (currentAngle < Constants.Intake.IntakeRotatorMaxAngle & speed < 0) {
             intakeRotatorMotor.set(speed);
         }
         else if (currentAngle < Constants.Intake.IntakeRotatorMaxAngle) {
             intakeRotatorMotor.set(0.1);
+            DriverStation.reportError("i am too high", false);
         // } else {
             stopRotator();
         }
@@ -83,7 +90,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getRotatorPosition() {
-        return intakeRotatorEncoder.get();
+        return m_intakeEncoder.get();
     }
     public boolean isIntakeMoving() {
         return isIntakeMoving;

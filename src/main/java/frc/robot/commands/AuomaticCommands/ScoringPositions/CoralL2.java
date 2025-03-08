@@ -51,6 +51,6 @@ public class CoralL2 extends Command {
         SmartDashboard.putBoolean("CoralL2", false);
         return new SequentialCommandGroup(
             new SetArmTo(armRotationSubsystem, 45.3, "coral L2", false).withTimeout(1),
-            new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, headManipSubsystem, armRotationSubsystem));
+            new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, armRotationSubsystem));
     }
 }

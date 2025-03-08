@@ -191,7 +191,7 @@ public class AlignReef extends Command {
                 m_drive.setControl(drive
                      .withVelocityX(forwardOutput) // Forward/backward
                      .withVelocityY(-strafeOutput)   // Left/right
-                     .withRotationalRate(rotationOutput*-1)); // Rotation
+                     .withRotationalRate(rotationOutput)); // Rotation
             }
         }
         
