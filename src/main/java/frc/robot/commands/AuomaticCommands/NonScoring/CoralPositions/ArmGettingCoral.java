@@ -1,5 +1,5 @@
 package frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions;
 
-public class ArmGettingCoral {
+public class ArmGettingCoral{
     
 }

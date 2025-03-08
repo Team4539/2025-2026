@@ -21,7 +21,7 @@ public class ArmHasCoral extends Command {
                 new SetElevatorTo(elevatorSubsystem, 1.087158203125),
                 new SetCarrigeTo(carrigeSubsystem, 0, "cause i can"),
                 new SetArmTo(armRotationSubsystem, 60, "Home", false),
-                new RunHeadManip(headManipSubsystem, .5).withTimeout(.5)
+                new RunHeadManip(headManipSubsystem, -.5).withTimeout(.5)
             ).withTimeout(2);
     }
 }

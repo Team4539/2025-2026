@@ -26,12 +26,12 @@ public class AlignReef extends Command {
         addRequirements(drive_subsystem);
         m_tag = tag;
         m_drive = drive_subsystem;
-        camera = new PhotonCamera("fronapr"); // Use your actual camera name here
+        camera = new PhotonCamera("Global_Shutter_Camera"); // Use your actual camera name here
 
         // Configure PID controllers with gains
-        rotationPID = new PIDController(0.015, 0, 0);
-        strafePID = new PIDController(0.015, 0, 0);
-        distancePID = new PIDController(0.1, 0, 0);
+        rotationPID = new PIDController(0.03, 0, 0);
+        strafePID = new PIDController(0.5, 0, 0);
+        distancePID = new PIDController(1, 0, 0);
 
         // Set tolerances for when we consider ourselves "aligned"
         rotationPID.setTolerance(1.0);
@@ -56,18 +56,20 @@ public class AlignReef extends Command {
             // Check if we see the correct AprilTag
             if (target.getFiducialId() == m_tag) {
                 // Get yaw (horizontal offset) and pitch (vertical offset)
-                double tx = target.getYaw();
-                double ty = target.getPitch();
+                var pose = target.getBestCameraToTarget();
+                double ty = pose.getY(); // determins if i need to move forward or backward
+                double tx = pose.getX(); // determines if i need to move left or right
+                double tYaw = pose.getRotation().getZ(); // determines if i need to rotate
 
                 // Calculate control outputs
-                double rotationOutput = rotationPID.calculate(tx, 0) * 1.5 * Math.PI;
-                double strafeOutput = strafePID.calculate(tx, 0);
+                double rotationOutput = rotationPID.calculate(tYaw, 3) * 1.5 * Math.PI;
+                double strafeOutput = strafePID.calculate(tx, 2);
                 double forwardOutput = distancePID.calculate(ty, 0);
 
                 // Apply combined movement
                 m_drive.setControl(drive
-                    .withVelocityX(forwardOutput)  // Forward/backward
-                    .withVelocityY(strafeOutput)   // Left/right
+                     .withVelocityX(forwardOutput) // Forward/backward
+                     .withVelocityY(-strafeOutput)   // Left/right
                     .withRotationalRate(rotationOutput*-1)); // Rotation
             } else {
                 stopMovement();

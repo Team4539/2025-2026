@@ -19,6 +19,7 @@ public class HeadintakeManipulator extends SubsystemBase {
         m_headIntakeMotor = new TalonFX(Constants.HeadMechanisms.HeadManipulatorMotorID);
         m_headIntakeConfig = new TalonFXConfiguration();
         m_headIntakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        m_headIntakeConfig.MotorOutput.Inverted = com.ctre.phoenix6.signals.InvertedValue.Clockwise_Positive;
         
         // Apply configuration with retry mechanism
         StatusCode status = StatusCode.StatusCodeNotInitialized;

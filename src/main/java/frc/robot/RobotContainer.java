@@ -17,9 +17,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AuomaticCommands.AlignReef;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.ToggleIntake;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL2;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL3;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL4;
@@ -34,6 +36,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.HeadintakeManipulator;
 @SuppressWarnings("unused")
@@ -99,6 +102,7 @@ public class RobotContainer {
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+    private final PhotonVision m_photonVision = new PhotonVision("Global_Shutter_Camera");
     NamedCommands commands = new NamedCommands();
     
     private void configureBindings() {
@@ -143,6 +147,8 @@ public class RobotContainer {
         /* Button Box Controls */
         
         // Elevator controls but converted to do auton positions as of now
+
+        //ElevatorUp.whileTrue(new AlignReef(5, drivetrain));
         ElevatorUp.whileTrue(CoralL3.getOnTruecCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
         ElevatorUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
         ElevatorDown.whileTrue(CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
@@ -158,17 +164,21 @@ public class RobotContainer {
         
         // Head intake/outtake
         HeadIntake.whileTrue(new ParallelCommandGroup(
-            new RunHeadManip(m_headManip, -0.5),
+            new RunHeadManip(m_headManip, 1.2),
             new RunIntake(m_intakeSubsytem, -1, "Button")
         ));
         HeadOuttake.whileTrue(new ParallelCommandGroup(
-            new RunHeadManip(m_headManip, 0.5),
+            new RunHeadManip(m_headManip, -1.2),
             new RunIntake(m_intakeSubsytem, 1, "button")
         ));
         
         // Intake rotation
-        IntakeRotateIn.whileTrue(new RotateIntake(m_intakeSubsytem, 0.4, "Button"));
-        IntakeRotateOut.whileTrue(new RotateIntake(m_intakeSubsytem, -0.4, "Button"));
+        IntakeRotateIn.onTrue(new ToggleIntake(m_intakeSubsytem));
+        IntakeRotateOut.whileTrue(new SequentialCommandGroup(
+            new RunIntake(m_intakeSubsytem, 1, "button")
+            //new RunIntake(m_intakeSubsytem, 1, "button")
+        ));
+        
         
         /* Arm Staging Commands */
         
@@ -176,7 +186,7 @@ public class RobotContainer {
         TestButton1.onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(   // Arm staging to clear the reef while moving
                 new SetElevatorTo(m_ElevatorSubsystem, 1.087158203125),
-                new SetCarrigeTo(m_CarrigeSubsystem, 0, "cause i can"),
+                new SetCarrigeTo(m_CarrigeSubsystem,  0, "cause i can"),
                 new SetArmTo(m_ArmRotationSubsystem, 60, "Home", false)
             ).withTimeout(5)
         ));
@@ -192,6 +202,7 @@ public class RobotContainer {
 
         configureBindings();
     }
+
 
     public Command getAutonomousCommand() {
         return m_chooser.getSelected();

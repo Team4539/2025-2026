@@ -52,11 +52,10 @@ public class CoralL4 extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Positioning and score than run back to a safe position
                 new SetArmTo(armRotationSubsystem, 43.9, "coral L4", false),
-                //new SetCarrigeTo(carrigeSubsystem, 0.43701171875, null),
                 new SetElevatorTo(elevatorSubsystem, 4.478271484375)
             ).withTimeout(.7),
         new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),
-        new RunHeadManip(headManipSubsystem, .5).withTimeout(1),
+        new RunHeadManip(headManipSubsystem, -.2).withTimeout(1),
         new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, headManipSubsystem, armRotationSubsystem)
         );
             
