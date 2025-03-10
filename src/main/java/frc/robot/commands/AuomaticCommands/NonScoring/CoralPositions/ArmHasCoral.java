@@ -12,7 +12,7 @@ import frc.robot.subsystems.HeadintakeManipulator;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class ArmHasCoral extends Command {
-    public Command ArmupCommand (
+    public static Command ArmupCommand (
         ElevatorSubsystem elevatorSubsystem,
         CarrigeSubsystem carrigeSubsystem,
         ArmRotationSubsytem armRotationSubsystem) {

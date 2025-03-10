@@ -3,12 +3,14 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.security.AlgorithmConstraints;
+import java.util.jar.Attributes.Name;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -28,6 +30,7 @@ import frc.robot.commands.AuomaticCommands.SetElevatorTo;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L2Algaegrab;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.ToggleIntake;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmGettingCoral;
+import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL1;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL2;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL3;
@@ -110,24 +113,25 @@ public class RobotContainer {
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
     private final PhotonVision m_photonVision = new PhotonVision("Global_Shutter_Camera");
     NamedCommands commands = new NamedCommands();
+
     
     private void configureBindings() {
+        // Remove the NamedCommands registration from here
+        // NamedCommands.registerCommand("ArmUp", ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(4));
 
         // Drivetrain default command - execute periodically
         drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed)      // Drive forward with negative Y
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed)       // Drive left with negative X
-                    .withRotationalRate(joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X
-            )
-        );
+            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.01) * MaxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), 0.01) * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), 0.01) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+      ).ignoringDisable(true));
 
         // Anti-tipper - drive at half speed
         AntiTipper.whileTrue(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-joystick.getLeftY() * MaxSpeed/4)      // Half speed forward
                     .withVelocityY(-joystick.getLeftX() * MaxSpeed/4)       // Half speed left
-                    .withRotationalRate(joystick.getRightX() * MaxAngularRate/4) // Half angular rate
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/4) // Half angular rate
             )
         );
 
@@ -239,14 +243,31 @@ public class RobotContainer {
         // TestButton2.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));   
 
     }
-
     public RobotContainer() {
-        m_chooser = AutoBuilder.buildAutoChooser("default");
+        // Register named commands right after subsystem initialization
+        // but before auto chooser creation
+        registerNamedCommands();
+        
+        m_chooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto mode", m_chooser);
-
         configureBindings();
     }
+    
+    private void registerNamedCommands() {
+        // Register all named commands here
+        NamedCommands.registerCommand("ArmUp", 
+            ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
+        NamedCommands.registerCommand("CoralL1Start", 
+            CoralL1.OntrueCommadn(m_intakeSubsytem).withTimeout(2));
+        NamedCommands.registerCommand("CoralL1Finsih", 
+            CoralL1.OnFalseCommand(m_intakeSubsytem));
+        NamedCommands.registerCommand("L4Prep", 
+            CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        NamedCommands.registerCommand("L4Finish",
+            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
 
+        // Add any other named commands here
+    }
 
     public Command getAutonomousCommand() {
         return m_chooser.getSelected();

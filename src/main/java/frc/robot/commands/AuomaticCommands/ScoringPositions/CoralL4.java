@@ -31,12 +31,12 @@ public class CoralL4 extends Command {
             new ParallelCommandGroup(   // Coral L4 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 4.403564453125),
                 new SetCarrigeTo(carrigeSubsystem, 0.844970703125, "cause")
-            ).withTimeout(5),
+            ).withTimeout(1),
             new ParallelCommandGroup(   // Coral L4 - Positioning
                 new SetArmTo(armRotationSubsystem, 57.3, "coral L4", false),
                 new SetCarrigeTo(carrigeSubsystem, 0.844970703125, null),
                 new SetElevatorTo(elevatorSubsystem, 4.403564453125)
-            ).withTimeout(5)
+            )
             
         );
     }

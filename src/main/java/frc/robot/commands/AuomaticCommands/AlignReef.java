@@ -1,15 +1,12 @@
 package frc.robot.commands.AuomaticCommands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -30,47 +27,80 @@ public class AlignReef extends Command {
     private final PIDController strafePID;
     private final PIDController distancePID;
     
-    // Parameters for distance driving
-    private double targetDistance;
-    private boolean driveToDistance = false;
-    private double driveSpeed = 0.3; // Speed to drive when approaching the reef
-    private long lastTargetTimestamp = 0;
-    private static final long TARGET_TIMEOUT_MS = 1000; // Increased time to continue after losing target
+    // Target alignment values
+    private double targetArea = 4.011176215277778; // Default target area value (0-100)
+    private double xSetpoint = -3.7165481251427535;  // Target horizontal position (0 = centered)
+    private double rotSetpoint = 0.0; // Target rotation angle (0 = straight)
     
-    // April tag and odometry correlation variables
-    private Pose2d lastAprilTagPose = null;
-    private Pose2d lastOdometryPose = null;
-    private double tagToOdometryRatio = 1.0; // Correction factor between tag and odometry
-    private LinearFilter tagCorrectionFilter = LinearFilter.movingAverage(5); // Smooth correction factor
-    private double estimatedDistanceToTravel = 0;
-    private double distanceTraveledWhenTargetLost = 0;
+    // Status tracking
+    private boolean tagVisible = false;
+    private double currentX = 0.0;
+    private double currentArea = 0.0;
+    private double currentRotation = 0.0;
+    private double lastRawRotation = 0.0;
+    private double accumulatedRotation = 0.0; // Tracks continuous rotation
+    private boolean firstMeasurement = true;
+    
+    // Filtering to reduce noise
+    private MedianFilter rotationFilter = new MedianFilter(5); // Filter out spikes
+    
+    // PID tuning parameters
+    private double rotationP = 0.03;
+    private double rotationI = 0.0;
+    private double rotationD = 0.0;
+    
+    private double strafeP = 0.001;
+    private double strafeI = 0.0;
+    private double strafeD = 0.0;
+    
+    private double distanceP = .5;
+    private double distanceI = 0.0;
+    private double distanceD = 0.0;
+    
+    // Mode selection
+    private boolean useParallelAlignment = true; // Set to true to keep orientation parallel to tag
 
-    // Pose tracking variables
-    private Pose2d startingPose;
-    private Pose2d targetPose;
-    private boolean targetPoseEstablished = false;
-    
+    /**
+     * Creates a command that aligns to an AprilTag with the default settings.
+     * 
+     * @param tag The AprilTag ID to target
+     * @param drive_subsystem The drivetrain to use
+     * @param vision The vision subsystem
+     */
     public AlignReef(int tag, CommandSwerveDrivetrain drive_subsystem, PhotonVision vision) {
-        this(tag, drive_subsystem, vision, 0); // Default constructor with no distance
+        this(tag, drive_subsystem, vision, 4.0); // Default target area
     }
     
-    public AlignReef(int tag, CommandSwerveDrivetrain drive_subsystem, PhotonVision vision, double distanceMeters) {
+    /**
+     * Creates a command that aligns to an AprilTag and drives to a specific area.
+     * 
+     * @param tag The AprilTag ID to target
+     * @param drive_subsystem The drivetrain to use
+     * @param vision The vision subsystem
+     * @param targetArea The target area to achieve (0-100)
+     */
+    public AlignReef(int tag, CommandSwerveDrivetrain drive_subsystem, PhotonVision vision, double targetArea) {
         addRequirements(drive_subsystem);
         m_tag = tag;
         m_drive = drive_subsystem;
         m_vision = vision;
-        targetDistance = distanceMeters;
-        driveToDistance = (distanceMeters > 0);
+        this.targetArea = targetArea;
 
-        // Configure PID controllers with gains
-        rotationPID = new PIDController(0.03, 0, 0);
-        strafePID = new PIDController(0.5, 0, 0);
-        distancePID = new PIDController(1, 0, 0);
+        // Configure PID controllers
+        rotationPID = new PIDController(rotationP, rotationI, rotationD);
+        strafePID = new PIDController(strafeP, strafeI, strafeD);
+        distancePID = new PIDController(distanceP, distanceI, distanceD);
 
         // Set tolerances for when we consider ourselves "aligned"
-        rotationPID.setTolerance(1.0);
+        rotationPID.setTolerance(5.0);
         strafePID.setTolerance(1.0);
         distancePID.setTolerance(0.5);
+        
+        // Enable continuous input for rotation PID controller to handle 180/-180 wraparound
+        rotationPID.enableContinuousInput(-180, 180);
+        
+        // Make the command configurable from the dashboard
+        SmartDashboard.putData("AlignReef", this);
     }
 
     @Override
@@ -79,202 +109,142 @@ public class AlignReef extends Command {
         strafePID.reset();
         distancePID.reset();
         
-        // Record starting position
-        startingPose = m_drive.getState().Pose;
-        targetPoseEstablished = false;
-        targetPose = null;
+        // Set PID setpoints
+        rotationPID.setSetpoint(rotSetpoint);
+        strafePID.setSetpoint(xSetpoint);
+        distancePID.setSetpoint(targetArea);
         
-        // Reset tag correlation tracking
-        lastAprilTagPose = null;
-        lastOdometryPose = null;
-        tagToOdometryRatio = 1.0;
-        tagCorrectionFilter.reset();
+        firstMeasurement = true;
+        accumulatedRotation = 0;
+        tagVisible = false;
+        rotationFilter.reset();
+    }
+
+    /**
+     * Handles angle wraparound for smooth rotation control
+     * @param newAngle The new angle measurement in degrees
+     * @return A filtered angle value that handles wraparound
+     */
+    private double handleAngleWraparound(double newAngle) {
+        if (firstMeasurement) {
+            lastRawRotation = newAngle;
+            accumulatedRotation = newAngle;
+            firstMeasurement = false;
+            return newAngle;
+        }
         
-        lastTargetTimestamp = System.currentTimeMillis();
-        estimatedDistanceToTravel = 0;
-        distanceTraveledWhenTargetLost = 0;
+        // Calculate the difference, considering the wraparound
+        double diff = newAngle - lastRawRotation;
+        
+        // Handle wraparound cases
+        if (diff > 180) {
+            diff -= 360;
+        } else if (diff < -180) {
+            diff += 360;
+        }
+        
+        // Update accumulated rotation
+        accumulatedRotation += diff;
+        
+        // Save the current raw rotation for next comparison
+        lastRawRotation = newAngle;
+        
+        // Apply median filter to smooth out any jumps
+        double filtered = rotationFilter.calculate(accumulatedRotation);
+        
+        // Log values for debugging
+        SmartDashboard.putNumber("Target/AccumulatedRotation", accumulatedRotation);
+        SmartDashboard.putNumber("Target/FilteredRotation", filtered);
+        
+        return filtered;
+    }
+    
+    /**
+     * Alternative approach: track robot parallel to tag
+     * @param yaw The yaw angle to the tag (in degrees)
+     * @return Control output for rotation
+     */
+    private double calculateParallelRotation(double yaw) {
+        // For parallel alignment, we want to adjust based on the yaw (X position)
+        // The more off-center the tag is, the more we need to rotate
+        return -rotationPID.calculate(yaw, xSetpoint);
     }
 
     @Override
     public void execute() {
         PhotonPipelineResult result = m_vision.getLatestResult();
-        boolean targetFound = false;
-        Pose2d currentPose = m_drive.getState().Pose;
-
+        tagVisible = false;
+        
         if (result.hasTargets()) {
             var target = result.getBestTarget();
             
             // Check if we see the correct AprilTag
             if (target.getFiducialId() == m_tag) {
-                targetFound = true;
-                lastTargetTimestamp = System.currentTimeMillis();
+                tagVisible = true;
                 
-                // Get pose information from the target
-                var pose = target.getBestCameraToTarget();
-                double ty = pose.getY(); // forward/backward
-                double tx = pose.getX(); // left/right
-                double tYaw = pose.getRotation().getY(); // rotation
+                // Use the 3D pose for more accurate measurements
+                var transform3d = target.getBestCameraToTarget();
+                Pose3d pose3d = new Pose3d().plus(transform3d);
                 
-                // Store the current tag-based pose
-                Pose2d newAprilTagPose = new Pose2d(
-                    new Translation2d(ty, tx),
-                    new Rotation2d(tYaw)
-                );
+                // Extract target metrics
+                currentX = target.getYaw();          // Horizontal offset in degrees
+                currentArea = target.getArea();      // Target area as percentage
                 
-                // Update correlation between tag movement and odometry
-                if (lastAprilTagPose != null && lastOdometryPose != null) {
-                    // Calculate how much the tag position has changed
-                    double tagDeltaX = newAprilTagPose.getX() - lastAprilTagPose.getX();
-                    double tagDeltaY = newAprilTagPose.getY() - lastAprilTagPose.getY();
-                    double tagDistance = Math.sqrt(tagDeltaX*tagDeltaX + tagDeltaY*tagDeltaY);
-                    
-                    // Calculate how much odometry has changed
-                    double odomDeltaX = currentPose.getX() - lastOdometryPose.getX();
-                    double odomDeltaY = currentPose.getY() - lastOdometryPose.getY();
-                    double odomDistance = Math.sqrt(odomDeltaX*odomDeltaX + odomDeltaY*odomDeltaY);
-                    
-                    // Update the ratio if we've moved enough to get a meaningful reading
-                    if (odomDistance > 0.02) {  // Only update if we've moved at least 2cm
-                        double newRatio = tagDistance / odomDistance;
-                        if (newRatio > 0.1 && newRatio < 10) { // Sanity check on ratio
-                            tagToOdometryRatio = tagCorrectionFilter.calculate(newRatio);
-                        }
-                    }
-                    
-                    // If driving to distance, update estimated distance based on tag data
-                    if (driveToDistance && targetDistance > 0) {
-                        // How much distance remains according to tag
-                        estimatedDistanceToTravel = ty * tagToOdometryRatio;
-                    }
+                // Get raw rotation and handle wraparound
+                double rawRotation = Math.toDegrees(pose3d.getRotation().getZ());
+                
+                // Track continuous rotation value
+                if (useParallelAlignment) {
+                    // When in parallel mode, we use the tag's yaw directly for rotation
+                    currentRotation = currentX;
+                } else {
+                    // When in absolute mode, we track continuous rotation
+                    currentRotation = handleAngleWraparound(rawRotation);
                 }
-                
-                // Store current poses for next iteration
-                lastAprilTagPose = newAprilTagPose;
-                lastOdometryPose = currentPose;
-                
-                // Continuously update the target pose whenever we see the tag
-                // Create a transform based on camera data
-                Transform2d targetTransform = new Transform2d(
-                    new Translation2d(ty, tx),  
-                    new Rotation2d(tYaw)
-                );
-                
-                // Apply transform to get target pose
-                targetPose = currentPose.transformBy(targetTransform);
-                targetPoseEstablished = true;
                 
                 // Log data for debugging
-                SmartDashboard.putNumber("Target/TX", tx);
-                SmartDashboard.putNumber("Target/TY", ty);
-                SmartDashboard.putNumber("Target/TYaw", tYaw);
-                SmartDashboard.putNumber("Target/TagToOdometryRatio", tagToOdometryRatio);
+                SmartDashboard.putNumber("Target/X", currentX);
+                SmartDashboard.putNumber("Target/Area", currentArea);
+                SmartDashboard.putNumber("Target/RawRotation", rawRotation);
                 
                 // Calculate control outputs
-                double rotationOutput = rotationPID.calculate(tYaw, 3) * 1.5 * Math.PI;
-                double strafeOutput = strafePID.calculate(tx, 2);
-                
-                double forwardOutput;
-                if (driveToDistance) {
-                    // PID control based on distance to target
-                    forwardOutput = distancePID.calculate(ty, targetDistance);
-                    // Clamp output to ensure minimum speed
-                    if (forwardOutput > 0) {
-                        forwardOutput = Math.max(forwardOutput, driveSpeed);
-                    } else {
-                        forwardOutput = Math.min(forwardOutput, -driveSpeed);
-                    }
+                double rotationOutput;
+                if (useParallelAlignment) {
+                    // For parallel alignment, we adjust based on the tag's position
+                    rotationOutput = calculateParallelRotation(currentX);
                 } else {
-                    forwardOutput = distancePID.calculate(ty, 0);
+                    // For absolute alignment, we use the continuous rotation tracking
+                    rotationOutput = rotationPID.calculate(currentRotation);
                 }
+                
+                double strafeOutput = strafePID.calculate(currentX);
+                double forwardOutput = distancePID.calculate(currentArea);
+                
+                // Apply speed limits
+                rotationOutput = Math.max(-Math.PI, Math.min(Math.PI, rotationOutput));
+                strafeOutput = Math.max(-0.5, Math.min(0.5, strafeOutput));
+                forwardOutput = Math.max(-0.5, Math.min(0.5, forwardOutput));
 
                 // Apply combined movement
                 m_drive.setControl(drive
-                     .withVelocityX(forwardOutput) // Forward/backward
-                     .withVelocityY(-strafeOutput)   // Left/right
-                     .withRotationalRate(rotationOutput)); // Rotation
+                     .withVelocityY(-forwardOutput)  // Forward/backward based on area
+                     .withVelocityX(strafeOutput) // Left/right based on X
+                     .withRotationalRate(-rotationOutput)); // Rotation based on selected mode
             }
-        }
-        
-        // If target not found but we have an established target pose
-        if (!targetFound && targetPoseEstablished) {
-            if (System.currentTimeMillis() - lastTargetTimestamp < TARGET_TIMEOUT_MS) {
-                // First time we lost the target, record current traveled distance
-                if (lastAprilTagPose != null) {
-                    distanceTraveledWhenTargetLost = getDistanceTraveled();
-                    lastAprilTagPose = null; // Mark that we're now in "lost target" mode
-                }
-                
-                // Calculate how much we should continue based on estimated distance
-                double remainingDistance = 0;
-                
-                if (driveToDistance) {
-                    // Calculate remaining distance based on our correlation model
-                    double currentTraveledDistance = getDistanceTraveled();
-                    double distanceSinceTargetLost = currentTraveledDistance - distanceTraveledWhenTargetLost;
-                    remainingDistance = estimatedDistanceToTravel - (distanceSinceTargetLost * tagToOdometryRatio);
-                    
-                    // If we're past the expected distance, stop
-                    if (remainingDistance <= 0) {
-                        stopMovement();
-                        return;
-                    }
-                }
-                
-                // Use odometry to continue navigating toward the target
-                // Calculate vector to target
-                double dx = targetPose.getX() - currentPose.getX();
-                double dy = targetPose.getY() - currentPose.getY();
-                double distance = Math.sqrt(dx*dx + dy*dy);
-                
-                // Calculate angle to target in robot-centric frame
-                double angleToTarget = Math.atan2(dy, dx) - currentPose.getRotation().getRadians();
-                
-                // Calculate robot-centric movement commands with correction factor
-                double forwardSpeed = driveSpeed * Math.cos(angleToTarget);
-                double strafeSpeed = driveSpeed * Math.sin(angleToTarget);
-                
-                // Calculate rotation to maintain heading toward target
-                double targetHeading = Math.atan2(dy, dx);
-                double rotationSpeed = rotationPID.calculate(
-                    currentPose.getRotation().getRadians(),
-                    targetHeading
-                );
-                
-                // Apply movement
-                m_drive.setControl(drive
-                    .withVelocityX(forwardSpeed)
-                    .withVelocityY(strafeSpeed)
-                    .withRotationalRate(rotationSpeed));
-                    
-                // Log data for debugging
-                SmartDashboard.putNumber("Target/Distance", distance);
-                SmartDashboard.putNumber("Target/RemainingDistance", remainingDistance);
-                SmartDashboard.putNumber("Target/AngleToTarget", Math.toDegrees(angleToTarget));
-                SmartDashboard.putNumber("Target/DistanceSinceLost", 
-                                         getDistanceTraveled() - distanceTraveledWhenTargetLost);
-            } else {
-                stopMovement();
-            }
-        } else if (!targetFound) {
+        } else {
+            // If we don't see the tag, stop
             stopMovement();
         }
         
-        // Always update distance traveled on SmartDashboard
-        SmartDashboard.putNumber("Target/DistanceTraveled", getDistanceTraveled());
-        SmartDashboard.putBoolean("Target/HasTarget", targetFound);
-        SmartDashboard.putBoolean("Target/PoseEstablished", targetPoseEstablished);
+        // Update SmartDashboard
+        SmartDashboard.putBoolean("Target/HasTarget", tagVisible);
+        SmartDashboard.putBoolean("Target/AtSetpoint", isAtSetpoint());
+        SmartDashboard.putBoolean("Target/ParallelMode", useParallelAlignment);
     }
 
-    /**
-     * Calculates the distance traveled using drivetrain odometry
-     */
-    private double getDistanceTraveled() {
-        Pose2d currentPose = m_drive.getState().Pose;
-        double dx = currentPose.getX() - startingPose.getX();
-        double dy = currentPose.getY() - startingPose.getY();
-        
-        // Calculate Euclidean distance from starting point
-        return Math.sqrt(dx*dx + dy*dy);
+    private boolean isAtSetpoint() {
+        return strafePID.atSetpoint() && distancePID.atSetpoint() && 
+               (useParallelAlignment ? Math.abs(currentX - xSetpoint) < 3.0 : rotationPID.atSetpoint());
     }
 
     private void stopMovement() {
@@ -291,23 +261,51 @@ public class AlignReef extends Command {
 
     @Override
     public boolean isFinished() {
-        // Regular alignment mode: finished when aligned
-        if (!driveToDistance) {
-            return rotationPID.atSetpoint() && 
-                   strafePID.atSetpoint() && 
-                   distancePID.atSetpoint();
-        } 
-        // Distance driving mode: finished when distance reached or target lost for too long
-        else {
-            double currentDistance = getDistanceTraveled();
-            
-            return (targetDistance > 0 && currentDistance >= targetDistance) || 
-                   (!targetPoseEstablished && System.currentTimeMillis() - lastTargetTimestamp > TARGET_TIMEOUT_MS);
-        }
+        // Command finishes when we're aligned with the target
+        return isAtSetpoint();
     }
-
+    
     @Override
-    public boolean runsWhenDisabled() {
-        return false;
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("AlignReef");
+        
+        // Target setpoints
+        builder.addDoubleProperty("xSetpoint", () -> this.xSetpoint, (val) -> {
+            this.xSetpoint = val;
+            this.strafePID.setSetpoint(xSetpoint);
+        });
+        builder.addDoubleProperty("targetArea", () -> this.targetArea, (val) -> {
+            this.targetArea = val;
+            this.distancePID.setSetpoint(targetArea);
+        });
+        builder.addDoubleProperty("rotSetpoint", () -> this.rotSetpoint, (val) -> {
+            this.rotSetpoint = val;
+            this.rotationPID.setSetpoint(rotSetpoint);
+        });
+        
+        // Current values
+        builder.addDoubleProperty("currentX", () -> this.currentX, null);
+        builder.addDoubleProperty("currentArea", () -> this.currentArea, null);
+        builder.addDoubleProperty("currentRotation", () -> this.currentRotation, null);
+        builder.addDoubleProperty("accumulatedRotation", () -> this.accumulatedRotation, null);
+        
+        // Status
+        builder.addBooleanProperty("tagVisible", () -> this.tagVisible, null);
+        builder.addBooleanProperty("aligned", () -> isAtSetpoint(), null);
+        builder.addBooleanProperty("parallelMode", () -> this.useParallelAlignment, (val) -> this.useParallelAlignment = val);
+        
+        // PID tuning parameters
+        builder.addDoubleProperty("rotationP", () -> this.rotationP, (val) -> {
+            this.rotationP = val;
+            rotationPID.setP(this.rotationP);
+        });
+        builder.addDoubleProperty("strafeP", () -> this.strafeP, (val) -> {
+            this.strafeP = val;
+            strafePID.setP(this.strafeP);
+        });
+        builder.addDoubleProperty("distanceP", () -> this.distanceP, (val) -> {
+            this.distanceP = val;
+            distancePID.setP(this.distanceP);
+        });
     }
 }
