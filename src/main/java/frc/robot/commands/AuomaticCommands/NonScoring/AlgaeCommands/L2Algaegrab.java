@@ -33,9 +33,10 @@ public class L2Algaegrab extends Command {
                 new SetCarrigeTo(m_CarrigeSubsystem, 0.0751953125, "A2"),
                 new SetElevatorTo(m_ElevatorSubsystem, 3.7578125),
                 new RunHeadManip(manipulator, 1)
-            ).withTimeout(2)
+            )
         );
     }
     
 
 }
+

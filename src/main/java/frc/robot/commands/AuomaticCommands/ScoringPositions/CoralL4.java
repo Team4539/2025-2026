@@ -30,7 +30,9 @@ public class CoralL4 extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 4.403564453125),
-                new SetCarrigeTo(carrigeSubsystem, 0.844970703125, "cause")
+                new SetCarrigeTo(carrigeSubsystem, 0.844970703125, "cause"),
+                new SetArmTo(armRotationSubsystem, 57.3, "coral L4", false)
+
             ).withTimeout(1),
             new ParallelCommandGroup(   // Coral L4 - Positioning
                 new SetArmTo(armRotationSubsystem, 57.3, "coral L4", false),

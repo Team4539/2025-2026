@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,6 +28,7 @@ import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L1AlgaePickup;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L2Algaegrab;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.ToggleIntake;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmGettingCoral;
@@ -111,7 +113,7 @@ public class RobotContainer {
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-    private final PhotonVision m_photonVision = new PhotonVision("Global_Shutter_Camera");
+    private final PhotonVision m_photonVision = new PhotonVision("Microsoft_LifeCam_HD-3000");
     NamedCommands commands = new NamedCommands();
 
     
@@ -121,9 +123,9 @@ public class RobotContainer {
 
         // Drivetrain default command - execute periodically
         drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.01) * MaxSpeed)
-                .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), 0.01) * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), 0.01) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.03) * MaxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), 0.03) * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), 0.03) * MaxAngularRate) // Drive counterclockwise with negative X (left)
       ).ignoringDisable(true));
 
         // Anti-tipper - drive at half speed
@@ -196,12 +198,12 @@ public class RobotContainer {
         // // Intake rotation
         IntakeRotateOut.whileTrue(
             new SequentialCommandGroup(
-                new RotateIntaketo(m_intakeSubsytem, .4, "intake out", false).withTimeout(3),
+                    new RotateIntaketo(m_intakeSubsytem, .4, "intake out", false).withTimeout(2),
                 new RunIntake(m_intakeSubsytem, 1, "Button")
             )
         );
         IntakeRotateOut.onFalse(
-            new RotateIntaketo(m_intakeSubsytem, .98, "Back", false).withTimeout(5)
+                new RotateIntaketo(m_intakeSubsytem, .98, "Back", false).withTimeout(5)
         );
         
         IntakeRotateIn.onTrue(
@@ -225,9 +227,12 @@ public class RobotContainer {
         alageA2.whileTrue(L2Algaegrab.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
         /* Arm Staging Commands */
         
+        ElevatorUp.whileTrue(L1AlgaePickup.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
+
         TestButton1.whileTrue(
             new AlignReef(5, drivetrain, m_photonVision)
         );
+
     
 
         // TestButton1 - Arm staging to clear reef

@@ -28,8 +28,8 @@ public class AlignReef extends Command {
     private final PIDController distancePID;
     
     // Target alignment values
-    private double targetArea = 4.011176215277778; // Default target area value (0-100)
-    private double xSetpoint = -3.7165481251427535;  // Target horizontal position (0 = centered)
+    private double targetArea = 4.4097656249999995; // Default target area value (0-100)
+    private double xSetpoint = 4.4097656249999995;  // Target horizontal position (0 = centered)
     private double rotSetpoint = 0.0; // Target rotation angle (0 = straight)
     
     // Status tracking
@@ -165,9 +165,9 @@ public class AlignReef extends Command {
      * @return Control output for rotation
      */
     private double calculateParallelRotation(double yaw) {
-        // For parallel alignment, we want to adjust based on the yaw (X position)
-        // The more off-center the tag is, the more we need to rotate
-        return -rotationPID.calculate(yaw, xSetpoint);
+        // For true parallelism, we need to use the tag's rotation rather than its yaw
+        // We use the camera's measured rotation value relative to the tag
+        return rotationPID.calculate(currentRotation, 0); // We want rotation to be 0 for parallel
     }
 
     @Override
@@ -190,33 +190,17 @@ public class AlignReef extends Command {
                 currentX = target.getYaw();          // Horizontal offset in degrees
                 currentArea = target.getArea();      // Target area as percentage
                 
-                // Get raw rotation and handle wraparound
-                double rawRotation = Math.toDegrees(pose3d.getRotation().getZ());
-                
-                // Track continuous rotation value
-                if (useParallelAlignment) {
-                    // When in parallel mode, we use the tag's yaw directly for rotation
-                    currentRotation = currentX;
-                } else {
-                    // When in absolute mode, we track continuous rotation
-                    currentRotation = handleAngleWraparound(rawRotation);
-                }
+                // For true parallelism, we use the skew of the tag
+                // The skew will be 0 when we're parallel to the tag
+                currentRotation = target.getSkew();
                 
                 // Log data for debugging
                 SmartDashboard.putNumber("Target/X", currentX);
                 SmartDashboard.putNumber("Target/Area", currentArea);
-                SmartDashboard.putNumber("Target/RawRotation", rawRotation);
+                SmartDashboard.putNumber("Target/Skew", currentRotation);
                 
                 // Calculate control outputs
-                double rotationOutput;
-                if (useParallelAlignment) {
-                    // For parallel alignment, we adjust based on the tag's position
-                    rotationOutput = calculateParallelRotation(currentX);
-                } else {
-                    // For absolute alignment, we use the continuous rotation tracking
-                    rotationOutput = rotationPID.calculate(currentRotation);
-                }
-                
+                double rotationOutput = rotationPID.calculate(currentRotation, 0); // Target skew of 0 for parallel
                 double strafeOutput = strafePID.calculate(currentX);
                 double forwardOutput = distancePID.calculate(currentArea);
                 
@@ -229,7 +213,7 @@ public class AlignReef extends Command {
                 m_drive.setControl(drive
                      .withVelocityY(-forwardOutput)  // Forward/backward based on area
                      .withVelocityX(strafeOutput) // Left/right based on X
-                     .withRotationalRate(-rotationOutput)); // Rotation based on selected mode
+                     .withRotationalRate(-rotationOutput)); // Rotation based on skew
             }
         } else {
             // If we don't see the tag, stop

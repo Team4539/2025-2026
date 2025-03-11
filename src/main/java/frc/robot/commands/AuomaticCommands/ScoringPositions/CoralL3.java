@@ -24,6 +24,7 @@ public class CoralL3 extends Command{
       return new SequentialCommandGroup(
         new ParallelCommandGroup(   // Coral L3 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 0),
+                new SetArmTo(armRotationSubsystem, 56.2, "L3", false),
                 new SetCarrigeTo(carrigeSubsystem, 1.25244140625, "cause")
             ).withTimeout(3),
             new ParallelCommandGroup(   // Coral L3 - Positioning
@@ -41,7 +42,7 @@ public class CoralL3 extends Command{
     {
         SmartDashboard.putBoolean("CoralL3", false);
         return new SequentialCommandGroup(
-            new SetArmTo(armRotationSubsystem, 48.0, "coral L4", false).withTimeout(1),
+            new SetArmTo(armRotationSubsystem, 48.0, "coral ", false).withTimeout(1),
             new ParallelCommandGroup(   // Coral L3 - Output
                 new SetElevatorTo(elevatorSubsystem, 0),
                 new SetCarrigeTo(carrigeSubsystem, 1.061279296875, "cause i can"),

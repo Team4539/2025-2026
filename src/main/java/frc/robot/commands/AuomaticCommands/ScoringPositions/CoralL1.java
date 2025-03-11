@@ -15,7 +15,7 @@ public class CoralL1 extends Command {
         return new SequentialCommandGroup(
             new RotateIntaketo(m_IntakeSubsystem, 0.8, "L1", false).withTimeout(2),
             //new RotateIntake(m_IntakeSubsystem, -.1,  "L1").withTimeout(1), 
-            new RunIntake(m_IntakeSubsystem, -.5, "L!")
+            new RunIntake(m_IntakeSubsystem, -.4, "L!")
         );
 
     }

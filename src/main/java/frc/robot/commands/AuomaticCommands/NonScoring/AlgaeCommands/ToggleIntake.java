@@ -31,12 +31,17 @@ public class ToggleIntake extends Command {
     public void execute() {
         if (m_isToggling) {
             // Handle the rotation transition
+
             if (m_isExtended) {
                 // Rotate intake out
                 m_intakeSubsystem.rotateIntake(-ROTATE_SPEED, "extend");
+                m_intakeSubsystem.rotateIntake(0, "stop"); // Stop rotation
+
             } else {
                 // Rotate intake in
                 m_intakeSubsystem.rotateIntake(ROTATE_SPEED, "retract");
+                m_intakeSubsystem.rotateIntake(0, "stop"); // Stop rotation
+
             }
             
             // Check if we're done with the toggle animation
