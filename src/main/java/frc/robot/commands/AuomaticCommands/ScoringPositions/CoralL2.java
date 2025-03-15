@@ -29,12 +29,12 @@ public class CoralL2 extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L2 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem,3.49462890625, "cause"),
-                new SetArmTo(armRotationSubsystem, 60, "hold", false)
+                new SetCarrigeTo(carrigeSubsystem,3.3837890625, "cause"),
+                new SetArmTo(armRotationSubsystem, 54, "hold", false)
             ).withTimeout(3),
             new ParallelCommandGroup(   // Coral L2 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem, 3.49462890625, "cause i can")
+                new SetCarrigeTo(carrigeSubsystem, 3.3837890625, "cause i can")
             ).withTimeout(1)
         );
     }
@@ -50,7 +50,8 @@ public class CoralL2 extends Command {
                 
         SmartDashboard.putBoolean("CoralL2", false);
         return new SequentialCommandGroup(
-            new SetArmTo(armRotationSubsystem, 45.3, "coral L2", false).withTimeout(1),
+            new SetArmTo(armRotationSubsystem, 41.3, "coral L2", false).withTimeout(1),
+            new RunHeadManip(headManipSubsystem, -.4).withTimeout(5),
             new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, armRotationSubsystem));
     }
 }

@@ -28,18 +28,12 @@ public class CoralL4 extends Command {
         SmartDashboard.putBoolean("CoralL4", true);
         
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(   // Coral L4 - Initial setup
-                new SetElevatorTo(elevatorSubsystem, 4.403564453125),
-                new SetCarrigeTo(carrigeSubsystem, 0.844970703125, "cause"),
-                new SetArmTo(armRotationSubsystem, 57.3, "coral L4", false)
+            new ParallelCommandGroup(   // Coral L4 - Initial setupZ
+                new SetElevatorTo(elevatorSubsystem, 4.305419921875),
+                new SetCarrigeTo(carrigeSubsystem, 1.27001953125, "cause"),
+                new SetArmTo(armRotationSubsystem, 60.0, "coral L4", false)
 
-            ).withTimeout(1),
-            new ParallelCommandGroup(   // Coral L4 - Positioning
-                new SetArmTo(armRotationSubsystem, 57.3, "coral L4", false),
-                new SetCarrigeTo(carrigeSubsystem, 0.844970703125, null),
-                new SetElevatorTo(elevatorSubsystem, 4.403564453125)
             )
-            
         );
     }
     
@@ -54,7 +48,7 @@ public class CoralL4 extends Command {
 
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Positioning and score than run back to a safe position
-                new SetArmTo(armRotationSubsystem, 43.9, "coral L4", false),
+                new SetArmTo(armRotationSubsystem, 39.9, "coral L4", false),
                 new SetElevatorTo(elevatorSubsystem, 4.478271484375)
             ).withTimeout(.7),
         new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),

@@ -23,15 +23,12 @@ public class L1AlgaePickup extends Command {
     ){
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new SetCarrigeTo(m_CarrigeSubsystem, 0.079833984375, "A2"),
-                new SetElevatorTo(m_ElevatorSubsystem, 1.84228515625)
-            ).withTimeout(2),
-            new ParallelCommandGroup(
                 new SetArmTo(m_ArmRotationSubsytem, 36.7, "A2", false),
-                new SetCarrigeTo(m_CarrigeSubsystem, 0.079833984375, "A2"),
-                new SetElevatorTo(m_ElevatorSubsystem, 1.84228515625),
+                new SetCarrigeTo(m_CarrigeSubsystem, 0.3271484375, "A2"),
+                new SetElevatorTo(m_ElevatorSubsystem, 1.5228515625),
                 new RunHeadManip(manipulator, 1)
             )
         );
 }
 }
+

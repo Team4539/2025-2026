@@ -42,11 +42,11 @@ public class CoralL3 extends Command{
     {
         SmartDashboard.putBoolean("CoralL3", false);
         return new SequentialCommandGroup(
-            new SetArmTo(armRotationSubsystem, 48.0, "coral ", false).withTimeout(1),
+            new SetArmTo(armRotationSubsystem, 44.0, "coral ", false).withTimeout(1),
             new ParallelCommandGroup(   // Coral L3 - Output
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem, 1.061279296875, "cause i can"),
-                new SetArmTo(armRotationSubsystem, 60, "coral L4", false),
+                new SetCarrigeTo(carrigeSubsystem, 0.861279296875, "cause i can"),
+                new SetArmTo(armRotationSubsystem, 56, "coral L4", false),
                 new RunHeadManip(headManipSubsystem, -.5)
             ).withTimeout(1),
         new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, armRotationSubsystem));

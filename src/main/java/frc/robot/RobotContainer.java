@@ -28,20 +28,25 @@ import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.NonScoring.Defense;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L1AlgaePickup;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L2Algaegrab;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.ToggleIntake;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmGettingCoral;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
+import frc.robot.commands.AuomaticCommands.ScoringPositions.Barge;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL1;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL2;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL3;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL4;
+import frc.robot.commands.AuomaticCommands.ScoringPositions.processor;
 import frc.robot.commands.BaseCommands.RotateIntake;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.commands.BaseCommands.RunIntake;
 import frc.robot.commands.BaseCommands.SetArm;
 import frc.robot.commands.BaseCommands.SetCarrige;
+import frc.robot.commands.BaseCommands.SetClimber;
+import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CarrigeSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -64,8 +69,8 @@ public class RobotContainer {
     // Controllers
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final XboxController Driver = new XboxController(0);
-    private final XboxController Operator = new XboxController(1);
-    private final Joystick ButtonBox = new Joystick(2);
+    //private final XboxController Operator = new XboxController(1);
+    private final Joystick ButtonBox = new Joystick(1);
     
     // Drive requests
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -77,27 +82,32 @@ public class RobotContainer {
     // Driver buttons
     private final JoystickButton resetGyro = new JoystickButton(Driver, XboxController.Button.kY.value);
     private final JoystickButton AntiTipper = new JoystickButton(Driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton CoralDestucker = new JoystickButton(Driver, XboxController.Button.kX.value);
+    //private final JoystickButton CoralDestucker = new JoystickButton(Driver, XboxController.Button.kX.value);
+    private final JoystickButton AlignReef = new JoystickButton(Driver, XboxController.Button.kB.value);
+    private final JoystickButton ClimbUp = new JoystickButton(Driver, XboxController.Button.kStart.value);
+    private final JoystickButton ClimbDown = new JoystickButton(Driver, XboxController.Button.kBack.value);
+    private final JoystickButton Defender = new JoystickButton(Driver, XboxController.Button.kX.value);
 
-   // operator Xbox buttons
-    private final JoystickButton DecideArmButton = new JoystickButton(Operator, XboxController.Button.kA.value);
-    private final JoystickButton DecideCarrigeButton = new JoystickButton(Operator, XboxController.Button.kB.value);
-    private final JoystickButton DecideElevatorButton = new JoystickButton(Operator, XboxController.Button.kX.value);
-    private final JoystickButton DecideClimberButton = new JoystickButton(Operator, XboxController.Button.kY.value); 
+
+//    // operator Xbox buttons
+//     private final JoystickButton DecideArmButton = new JoystickButton(Operator, XboxController.Button.kA.value);
+//     private final JoystickButton DecideCarrigeButton = new JoystickButton(Operator, XboxController.Button.kB.value);
+//     private final JoystickButton DecideElevatorButton = new JoystickButton(Operator, XboxController.Button.kX.value);
+//     private final JoystickButton DecideClimberButton = new JoystickButton(Operator, XboxController.Button.kY.value); 
 
     // Button Box Buttons
-    private final JoystickButton ElevatorUp = new JoystickButton(ButtonBox, 1);  // A1
-    private final JoystickButton ElevatorDown = new JoystickButton(ButtonBox, 2); // Barge
-    private final JoystickButton CarrigeUp = new JoystickButton(ButtonBox, 3); // proc
-    private final JoystickButton CarrigeDown = new JoystickButton(ButtonBox, 4); //gtround alg
-    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 6); // L3
-    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 5); // L4
+    private final JoystickButton ElevatorUp = new JoystickButton(ButtonBox, 2);  // A1
+    private final JoystickButton ElevatorDown = new JoystickButton(ButtonBox, 1); // Barge
+    private final JoystickButton CarrigeUp = new JoystickButton(ButtonBox, 4); // proc
+    private final JoystickButton CarrigeDown = new JoystickButton(ButtonBox, 3); //gtround alg  // now A2
+    private final JoystickButton ArmUp = new JoystickButton(ButtonBox, 5); // L3
+    private final JoystickButton ArmDown = new JoystickButton(ButtonBox, 6); // L4
     private final JoystickButton HeadIntake = new JoystickButton(ButtonBox, 7); // L2
     private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8); // L1
     private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9); // hand
     private final JoystickButton IntakeRotateOut = new JoystickButton(ButtonBox, 10); // intake
-    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 11); // Left
-    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 12); // Right
+    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 11); // Left  // in?
+    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 12); // Right // out?
     private final POVButton alageA2 = new POVButton(ButtonBox, 0); // Up A2
 
     
@@ -113,9 +123,15 @@ public class RobotContainer {
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-    private final PhotonVision m_photonVision = new PhotonVision("Microsoft_LifeCam_HD-3000");
+    //private final PhotonVision m_photonVision = new PhotonVision("Microsoft_LifeCam_HD-3000");
     NamedCommands commands = new NamedCommands();
 
+    public Command getTestDriveCommand() {
+        return drivetrain.applyRequest(() -> 
+            drive.withVelocityX(0.3 * MaxSpeed) // 30% forward speed
+                .withVelocityY(0) 
+                .withRotationalRate(0));
+    }
     
     private void configureBindings() {
         // Remove the NamedCommands registration from here
@@ -123,12 +139,12 @@ public class RobotContainer {
 
         // Drivetrain default command - execute periodically
         drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.03) * MaxSpeed)
-                .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), 0.03) * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), 0.03) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.01) * MaxSpeed*.5)
+                .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), 0.01) * MaxSpeed*.5) // Drive left with negative X (left)
+                .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), 0.01) * MaxAngularRate*.5) // Drive counterclockwise with negative X (left)
       ).ignoringDisable(true));
 
-        // Anti-tipper - drive at half speed
+        // Anti-tipper - drive at half speed 
         AntiTipper.whileTrue(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-joystick.getLeftY() * MaxSpeed/4)      // Half speed forward
@@ -153,17 +169,35 @@ public class RobotContainer {
         // Telemetry registration
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        DecideArmButton.whileTrue(
-           new SetArm(m_ArmRotationSubsystem, Operator.getLeftY(), "Button")
-        );
+        ClimbUp.whileTrue(new SetClimber(m_climberSubsystem, 1));
 
-        CoralDestucker.whileTrue(
-            new RunIntake(m_intakeSubsytem, -.2, "Destuck")
-        );
-        CoralDestucker.onFalse(
-            new RunIntake(m_intakeSubsytem, .2, "Destruck").withTimeout(.5)
-        );
-        
+        ClimbDown.whileTrue(new SetClimber(m_climberSubsystem, -1));
+
+        // DecideArmButton.whileTrue(
+        //    new SetArm(m_ArmRotationSubsystem, Operator.getLeftY(), "Button")
+        // );
+
+        // CoralDestucker.whileTrue(
+        //     new RunIntake(m_intakeSubsytem, -.1, "Destuck")
+        // );
+        // CoralDestucker.onFalse(
+        //     new RunIntake(m_intakeSubsytem, .2, "Destruck").withTimeout(.5)
+        // );
+
+       // CarrigeUp.whileTrue(getAutonomousCommand())
+       CarrigeUp.onTrue(
+        processor.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)
+       );
+
+       ElevatorDown.onTrue(
+        ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)
+       );
+
+       AlignReef.whileTrue(Barge.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+
+        Defender.onTrue(Defense.Handoff(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_intakeSubsytem));
+       // Sam: Try new AlignReef(5, drivetrain, m_photonVision, TARGETAREA) and mess around with the value
+      // AlignReef.whileTrue(new AlignReef(5, drivetrain, m_photonVision));
         // Align with reef (commented out)
         // AlignReef.whileTrue(new AlignReef(5, drivetrain));
 
@@ -221,16 +255,19 @@ public class RobotContainer {
             CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L2
         HeadIntake.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
         HeadOuttake.onTrue(
-            CoralL1.OntrueCommadn(m_intakeSubsytem)); // L1
+            CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem)); // L1
         HeadOuttake.onFalse(CoralL1.OnFalseCommand(m_intakeSubsytem));
         
-        alageA2.whileTrue(L2Algaegrab.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
+        CarrigeDown.whileTrue(L2Algaegrab.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
         /* Arm Staging Commands */
         
         ElevatorUp.whileTrue(L1AlgaePickup.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
 
         TestButton1.whileTrue(
-            new AlignReef(5, drivetrain, m_photonVision)
+            new RunHeadManip(m_headManip, -1)
+        );
+        TestButton2.whileTrue(
+            new RunHeadManip(m_headManip, 1)
         );
 
     
@@ -263,7 +300,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ArmUp", 
             ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
         NamedCommands.registerCommand("CoralL1Start", 
-            CoralL1.OntrueCommadn(m_intakeSubsytem).withTimeout(2));
+            CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem).withTimeout(2));
         NamedCommands.registerCommand("CoralL1Finsih", 
             CoralL1.OnFalseCommand(m_intakeSubsytem));
         NamedCommands.registerCommand("L4Prep", 

@@ -5,21 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "ArmUp"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Straight"
+            "pathName": "Left Straight"
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "CoralL1Start"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralL1Start"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {

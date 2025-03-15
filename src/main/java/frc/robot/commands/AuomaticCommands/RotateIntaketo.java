@@ -48,7 +48,7 @@ public class RotateIntaketo extends Command {
         double output = m_pidController.calculate(currentPosition, m_setpoint);
         
         // Limit output to reasonable values
-        output = Math.min(Math.max(output, -0.6), 0.6);
+        output = Math.min(Math.max(output, -0.45), 0.45);
         
         // Apply calculated output to the intake rotator
         m_intake.rotateIntake(output, m_command);

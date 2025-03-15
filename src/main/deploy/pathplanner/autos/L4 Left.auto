@@ -17,29 +17,16 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "L4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4Prep"
-                }
-              }
-            ]
+            "pathName": "L4 left"
           }
         },
         {
@@ -62,22 +49,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4Finish"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "L4 back"
-                }
-              }
-            ]
+            "pathName": "L4LEftBAck"
           }
         }
       ]

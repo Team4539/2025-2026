@@ -19,7 +19,7 @@ public class ArmHasCoral extends Command {
             return new ParallelCommandGroup(   // Return to safe position when button released
                 new SetElevatorTo(elevatorSubsystem, 2.640380859375),
                 new SetCarrigeTo(carrigeSubsystem, 0, "cause i can"),
-                new SetArmTo(armRotationSubsystem, 15.2, "Home", false)
+                new SetArmTo(armRotationSubsystem, 11.2, "Home", false)
             ).withTimeout(2);
     }
 }

@@ -87,6 +87,8 @@ public class Robot extends TimedRobot {
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
     Elastic.selectTab("DEBUG");
+    Command testDriveCommand = m_robotContainer.getTestDriveCommand();
+    testDriveCommand.schedule();
   }
 
   @Override
