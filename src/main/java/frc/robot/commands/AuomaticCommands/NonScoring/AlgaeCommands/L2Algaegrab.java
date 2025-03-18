@@ -33,6 +33,4 @@ public class L2Algaegrab extends Command {
         );
     }
     
-
 }
-
