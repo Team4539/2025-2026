@@ -27,8 +27,8 @@ public class SetIntakeRotation extends Command {
     public void execute() {
         double angle = m_intake.getRotatorPosition();
         double output = pidController.calculate(angle, m_setpoint) / 1000;
-        if (output > 1) {
-            fixedOutput = 1;
+        if (output > .3) {
+            fixedOutput = .3;
         } else {
             fixedOutput = output;
         }

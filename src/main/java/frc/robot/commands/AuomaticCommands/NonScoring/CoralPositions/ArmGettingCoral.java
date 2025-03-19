@@ -29,9 +29,9 @@ public class ArmGettingCoral extends Command{
     {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new SetArmTo(m_ArmRotationSubsystem, 13.9, "Handoff", false),
-                new SetCarrigeTo(m_CarriageSubsystem, 0.655517578125, "Handoff"),
-                new SetElevatorTo(m_ElevatorSubsystem, 1)).withTimeout(2),
+                new SetArmTo(m_ArmRotationSubsystem, 15.9, "Handoff", false),
+                new SetCarrigeTo(m_CarriageSubsystem, 0, "Handoff"),
+                new SetElevatorTo(m_ElevatorSubsystem, 0.95166015625)).withTimeout(2),
             new ParallelCommandGroup(
                 new RunHeadManip(m_HeadIntakeManipulator, 1),
                 new RunIntake(m_IntakeSubsystem, -.2, "Handoff")

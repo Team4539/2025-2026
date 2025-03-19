@@ -52,6 +52,7 @@ public class RotateIntaketo extends Command {
         
         // Apply calculated output to the intake rotator
         m_intake.rotateIntake(output, m_command);
+        m_intake.runIntake(.05, m_command);
         
         // Debug info
         SmartDashboard.putNumber("Intake Target Position", m_setpoint);
@@ -63,6 +64,7 @@ public class RotateIntaketo extends Command {
     public void end(boolean interrupted) {
         // Stop the intake rotator when the command ends
         m_intake.stopRotator();
+        m_intake.runIntake(0, "NO");
     }
     
     @Override

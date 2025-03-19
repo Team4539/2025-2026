@@ -237,7 +237,7 @@ public class RobotContainer {
             )
         );
         IntakeRotateOut.onFalse(
-                new RotateIntaketo(m_intakeSubsytem, .98, "Back", false).withTimeout(5)
+                new RotateIntaketo(m_intakeSubsytem, .94, "Back", false).withTimeout(5)
         );
         
         IntakeRotateIn.onTrue(
