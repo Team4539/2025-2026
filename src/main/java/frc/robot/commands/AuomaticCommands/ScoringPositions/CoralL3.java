@@ -23,10 +23,10 @@ public class CoralL3 extends Command{
     SmartDashboard.putBoolean("CoralL3", true);
       return new SequentialCommandGroup(
         new ParallelCommandGroup(   // Coral L3 - Initial setup
-                new SetElevatorTo(elevatorSubsystem, 0),
-                new SetArmTo(armRotationSubsystem, 56.2, "L3", false),
-                new SetCarrigeTo(carrigeSubsystem, 1.25244140625, "cause")
-            ).withTimeout(3),
+               // new SetElevatorTo(elevatorSubsystem, 0),
+                new SetArmTo(armRotationSubsystem, 56.2, "L3", false)
+              //  new SetCarrigeTo(carrigeSubsystem, 1.25244140625, "cause")
+            ).withTimeout(.5),
             new ParallelCommandGroup(   // Coral L3 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 0),
                 new SetArmTo(armRotationSubsystem, 56.2, "L3", false),

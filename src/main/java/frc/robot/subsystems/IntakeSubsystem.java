@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -22,11 +23,14 @@ public class IntakeSubsystem extends SubsystemBase {
     private double IntakeDistance;
     private double intakerotation;
     private DutyCycleEncoder m_intakeEncoder;
+    private TalonFXConfiguration m_intakeconfig;
 
     @SuppressWarnings("static-access")
     public IntakeSubsystem() {
         intakeMotor = new TalonFX(Constants.Intake.IntakeMotorID);
-        intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
+        m_intakeconfig = new TalonFXConfiguration();
+        m_intakeconfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        intakeMotor.getConfigurator().apply(m_intakeconfig);
         intakeRotatorMotor = new TalonFX(Constants.Intake.IntakeRotatorMotorID);
         intakeRotatorMotor.getConfigurator().apply(new TalonFXConfiguration());
         intakeRotatorCommand = "Disabled";

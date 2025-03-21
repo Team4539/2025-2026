@@ -31,7 +31,7 @@ public class ArmGettingCoral extends Command{
             new ParallelCommandGroup(
                 new SetArmTo(m_ArmRotationSubsystem, 15.9, "Handoff", false),
                 new SetCarrigeTo(m_CarriageSubsystem, 0, "Handoff"),
-                new SetElevatorTo(m_ElevatorSubsystem, 0.95166015625)).withTimeout(2),
+                new SetElevatorTo(m_ElevatorSubsystem, 0.70263671875)).withTimeout(1),
             new ParallelCommandGroup(
                 new RunHeadManip(m_HeadIntakeManipulator, 1),
                 new RunIntake(m_IntakeSubsystem, -.2, "Handoff")

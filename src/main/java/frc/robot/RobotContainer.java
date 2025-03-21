@@ -106,8 +106,8 @@ public class RobotContainer {
     private final JoystickButton HeadOuttake = new JoystickButton(ButtonBox, 8); // L1
     private final JoystickButton IntakeRotateIn = new JoystickButton(ButtonBox, 9); // hand
     private final JoystickButton IntakeRotateOut = new JoystickButton(ButtonBox, 10); // intake
-    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 11); // Left  // in?
-    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 12); // Right // out?
+    private final JoystickButton TestButton1 = new JoystickButton(ButtonBox, 12); // Left  // in?
+    private final JoystickButton TestButton2 = new JoystickButton(ButtonBox, 11); // Right // out?
     private final POVButton alageA2 = new POVButton(ButtonBox, 0); // Up A2
 
     
@@ -123,7 +123,7 @@ public class RobotContainer {
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-    //private final PhotonVision m_photonVision = new PhotonVision("Microsoft_LifeCam_HD-3000");
+   // private final PhotonVision m_photonVision = new PhotonVision("Arducam OV9782 USB Camera");
     NamedCommands commands = new NamedCommands();
 
     public Command getTestDriveCommand() {
@@ -237,7 +237,7 @@ public class RobotContainer {
             )
         );
         IntakeRotateOut.onFalse(
-                new RotateIntaketo(m_intakeSubsytem, .94, "Back", false).withTimeout(5)
+                new RotateIntaketo(m_intakeSubsytem, .959, "Back", false).withTimeout(3)
         );
         
         IntakeRotateIn.onTrue(

@@ -28,10 +28,10 @@ public class CoralL2 extends Command {
         
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L2 - Initial setup
-                new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem,3.3837890625, "cause"),
+                //new SetElevatorTo(elevatorSubsystem, 0),
+                //new SetCarrigeTo(carrigeSubsystem,3.3837890625, "cause"),
                 new SetArmTo(armRotationSubsystem, 54, "hold", false)
-            ).withTimeout(3),
+            ).withTimeout(.5),
             new ParallelCommandGroup(   // Coral L2 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 0),
                 new SetCarrigeTo(carrigeSubsystem, 3.3837890625, "cause i can")

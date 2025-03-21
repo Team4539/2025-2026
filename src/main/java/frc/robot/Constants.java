@@ -53,8 +53,8 @@ public class Constants {
         public static final class ArmRotator {
         public static final int ArmRotatorMotorID = 15; // Placeholder value
         public static final int ArmRotatorEncoderID = 2; // DIO Port 2
-        public static final double ArmRotatorMaxAngle = 60.2; // Placeholder value
-        public static final double ArmRotatorMinAngle = 16.1; // Placeholder value
+        public static final double ArmRotatorMaxAngle = 66.2; // Placeholder value
+        public static final double ArmRotatorMinAngle = 14.1; // Placeholder value
         public static final double HeadSAFE = 44; // THIS IS CLEAR OF THE Elevator
         public static final double HeadPastSAFE = 92; // this is where wheel can hit swerve module
         public static final double RotationPerDegree = 225; // it takes this many rotation to move 1 degree
@@ -83,7 +83,7 @@ public class Constants {
         public static final int IntakeMotorID = 17; // Placeholder value
         public static final int IntakeRotatorMotorID = 6; // Placeholder value
         public static final int IntakeRotatorEncoderID = 5; // Placeholder value
-        public static final double IntakeRotatorMaxAngle = .94; // Placeholder value
+        public static final double IntakeRotatorMaxAngle = .98; // Placeholder value
         public static final double IntakeRotatorMinAngle = .4; // Placeholder value
         public static final double InsideRotation = 0; // Placeholder value
         public static final double OutsideRotation = 0; // Placeholder value
