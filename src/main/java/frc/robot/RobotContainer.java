@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.*;
 import java.security.AlgorithmConstraints;
 import java.util.jar.Attributes.Name;
 
+import org.photonvision.PhotonCamera;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -23,12 +25,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.reefAlignHorizontal;
-import frc.robot.commands.AuomaticCommands.AlignReef;
+import frc.robot.commands.AuomaticCommands.reefAlignRotation;
 import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.reefAlignHorizontal;
 import frc.robot.commands.AuomaticCommands.NonScoring.Defense;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L1AlgaePickup;
 import frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands.L2Algaegrab;
@@ -126,6 +128,7 @@ public class RobotContainer {
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
 
     private final PhotonVision m_colorVision = new PhotonVision("Arducam_OV9782_USB_Camera");
+    private final PhotonCamera m_aprilTagCamera = new PhotonCamera("Global_Shutter_Camera");
 
     NamedCommands commands = new NamedCommands();
 
@@ -273,10 +276,11 @@ public class RobotContainer {
         */
 
         TestButton1.onTrue(new reefAlignHorizontal(drivetrain, m_colorVision));
+        TestButton2.whileTrue(new reefAlignRotation(drivetrain, m_aprilTagCamera));
         
-        TestButton2.whileTrue(
+        /*TestButton2.whileTrue(
             new RunHeadManip(m_headManip, 1)
-        );
+        );*/
 
     
 
