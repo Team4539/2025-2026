@@ -88,9 +88,9 @@ public class RobotContainer {
     private final JoystickButton resetGyro = new JoystickButton(Driver, XboxController.Button.kY.value);
     private final JoystickButton AntiTipper = new JoystickButton(Driver, XboxController.Button.kRightBumper.value);
     //private final JoystickButton CoralDestucker = new JoystickButton(Driver, XboxController.Button.kX.value);
-    private final JoystickButton AlignReef = new JoystickButton(Driver, XboxController.Button.kB.value);
-    private final JoystickButton ClimbUp = new JoystickButton(Driver, XboxController.Button.kStart.value);
-    private final JoystickButton ClimbDown = new JoystickButton(Driver, XboxController.Button.kBack.value);
+    private final JoystickButton AlignColor = new JoystickButton(Driver, XboxController.Button.kB.value);
+    private final JoystickButton AlignTAg = new JoystickButton(Driver, XboxController.Button.kStart.value);
+    private final JoystickButton AlignReef = new JoystickButton(Driver, XboxController.Button.kBack.value);
     private final JoystickButton Defender = new JoystickButton(Driver, XboxController.Button.kX.value);
 
 
@@ -177,9 +177,9 @@ public class RobotContainer {
         // Telemetry registration
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        ClimbUp.whileTrue(new SetClimber(m_climberSubsystem, 1));
+       AlignColor.whileTrue(new reefAlignHorizontal(drivetrain, m_colorVision));
 
-        ClimbDown.whileTrue(new SetClimber(m_climberSubsystem, -1));
+       AlignTAg.whileTrue(new reefAlignRotation(drivetrain, m_aprilTagCamera));
 
         // DecideArmButton.whileTrue(
         //    new SetArm(m_ArmRotationSubsystem, Operator.getLeftY(), "Button")
@@ -271,33 +271,33 @@ public class RobotContainer {
         
         ElevatorUp.whileTrue(L1AlgaePickup.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
 
-        /*
+        
         TestButton1.whileTrue(
             new RunHeadManip(m_headManip, -1)
         );
-        */
+        
 
-        TestButton1.onTrue(
-            new SequentialCommandGroup(
-                new reefAlignRotation(drivetrain, m_aprilTagCamera).withTimeout(5),
-                Commands.startEnd(
-                    () -> drivetrain.setControl(drive
-                            .withVelocityY(0.3)
-                            .withVelocityX(0.0)
-                            .withRotationalRate(0.0)),
-                    () -> drivetrain.setControl(drive
-                            .withVelocityY(0.0)
-                            .withVelocityX(0.0)
-                            .withRotationalRate(0.0)),
-                    drivetrain
-                ).withTimeout(0.5),
-                new reefAlignHorizontal(drivetrain, m_colorVision)
-                )
-            );
+        // TestButton1.onTrue(
+        //     new SequentialCommandGroup(
+        //         new reefAlignRotation(drivetrain, m_aprilTagCamera).withTimeout(5),
+        //         Commands.startEnd(
+        //             () -> drivetrain.setControl(drive
+        //                     .withVelocityY(0.3)
+        //                     .withVelocityX(0.0)
+        //                     .withRotationalRate(0.0)),
+        //             () -> drivetrain.setControl(drive
+        //                     .withVelocityY(0.0)
+        //                     .withVelocityX(0.0)
+        //                     .withRotationalRate(0.0)),
+        //             drivetrain
+        //         ).withTimeout(0.5),
+        //         new reefAlignHorizontal(drivetrain, m_colorVision)
+        //         )
+        //     );
 
-        /*TestButton2.whileTrue(
+        TestButton2.whileTrue(
             new RunHeadManip(m_headManip, 1)
-        );*/
+        );
 
     
 
@@ -327,9 +327,9 @@ public class RobotContainer {
     private void registerNamedCommands() {
         // Register all named commands here
 
-        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_colorVision, m_aprilTagCamera));
+        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera));
         
-        /*NamedCommands.registerCommand("ArmUp", 
+        NamedCommands.registerCommand("ArmUp", 
             ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
         NamedCommands.registerCommand("CoralL1Start", 
             CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem).withTimeout(2));
@@ -338,7 +338,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("L4Prep", 
             CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
         NamedCommands.registerCommand("L4Finish",
-            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));*/
+            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
 
         // Add any other named commands here
     }

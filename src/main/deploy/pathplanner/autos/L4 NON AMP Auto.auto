@@ -5,19 +5,19 @@
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "New Path"
+                  "pathName": "L4 NonAmp"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 0.001
+                  "name": "L4Prep"
                 }
               }
             ]

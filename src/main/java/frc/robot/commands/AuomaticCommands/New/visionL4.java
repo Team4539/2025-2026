@@ -15,20 +15,29 @@ import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HeadintakeManipulator;
 import frc.robot.subsystems.PhotonVision;
 
 public class visionL4 
 {
-    public static Command run(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevator, CarrigeSubsystem carriage, ArmRotationSubsytem armRotation, PhotonVision vision, PhotonCamera camera)
+    public static Command run(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevator, CarrigeSubsystem carriage, ArmRotationSubsytem armRotation, HeadintakeManipulator head, PhotonVision vision, PhotonCamera camera)
     {
-        return Commands.parallel(
-            CoralL4.getOnTrueCommand(elevator, carriage, armRotation),
-            Commands.sequence(
-                new WaitCommand(2),
-                new reefAlignRotation(drivetrain, camera).withTimeout(5),
-                new drive(0.0, 0.3, 0.0, drivetrain).withTimeout(1),
-                new reefAlignHorizontal(drivetrain, vision)
-            )
+        return Commands.sequence(
+            Commands.parallel(
+                CoralL4.getOnTrueCommand(elevator, carriage, armRotation),
+                Commands.sequence(
+                    //new WaitCommand(2),
+                    new reefAlignRotation(drivetrain, camera).withTimeout(2),
+                    new reefAlignHorizontal(drivetrain, vision)
+                )
+            ).withTimeout(10),
+            Commands.parallel(
+                CoralL4.getOnFalseCommand(elevator, carriage, armRotation, head),
+                Commands.sequence(
+                    new WaitCommand(1),
+                    new drive(0, 0.3, 0, drivetrain).withTimeout(2)
+                    )
+                )
         );
     }
 }

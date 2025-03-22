@@ -5,25 +5,19 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Left Straight"
-          }
-        },
-        {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "CoralL1Start"
+                  "pathName": "L4 center"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "L4Prep"
                 }
               }
             ]
@@ -32,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "CoralL1Finsih"
+            "name": "L4 Coral Auto"
           }
         }
       ]
