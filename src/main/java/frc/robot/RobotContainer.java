@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.reefAlignHorizontal;
 import frc.robot.commands.AuomaticCommands.AlignReef;
 import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
@@ -123,7 +124,9 @@ public class RobotContainer {
     private final IntakeSubsystem m_intakeSubsytem = new IntakeSubsystem();
     private final HeadintakeManipulator m_headManip = new HeadintakeManipulator();
     private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-   // private final PhotonVision m_photonVision = new PhotonVision("Arducam OV9782 USB Camera");
+
+    private final PhotonVision m_colorVision = new PhotonVision("Arducam_OV9782_USB_Camera");
+
     NamedCommands commands = new NamedCommands();
 
     public Command getTestDriveCommand() {
@@ -263,9 +266,14 @@ public class RobotContainer {
         
         ElevatorUp.whileTrue(L1AlgaePickup.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
 
+        /*
         TestButton1.whileTrue(
             new RunHeadManip(m_headManip, -1)
         );
+        */
+
+        TestButton1.onTrue(new reefAlignHorizontal(drivetrain, m_colorVision));
+        
         TestButton2.whileTrue(
             new RunHeadManip(m_headManip, 1)
         );
