@@ -19,7 +19,7 @@ public class reefAlignHorizontal extends Command
 
     public reefAlignHorizontal(CommandSwerveDrivetrain subsystem, PhotonVision vision) 
     {
-        addRequirements(m_subsystem);
+        addRequirements(subsystem);
         m_subsystem = subsystem;
         m_vision = vision;
     }
