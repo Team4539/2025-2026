@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    Elastic.selectTab("Teleop");
+    //Elastic.selectTab("Teleop");
     SignalLogger.stop();
   }
 
@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // Shuffleboard.startRecording();
-    Elastic.selectTab("Autonomous");
+    //Elastic.selectTab("Autonomous");
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     // Shuffleboard.startRecording();
-    Elastic.selectTab("Teleop");
+    //Elastic.selectTab("Teleop");
   }
 
   @Override
@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    Elastic.selectTab("DEBUG");
+    //Elastic.selectTab("DEBUG");
     Command testDriveCommand = m_robotContainer.getTestDriveCommand();
     testDriveCommand.schedule();
   }
