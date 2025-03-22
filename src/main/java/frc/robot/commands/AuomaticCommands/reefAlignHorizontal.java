@@ -14,7 +14,7 @@ public class reefAlignHorizontal extends Command
     private PhotonVision m_vision;
 
     private double VISION_kP = 0.01;     // TODO: Requires Testing
-    private double GOAL_THRESHOLD = 0.1; // TODO: Requires Testing
+    private double GOAL_THRESHOLD = -10;
 
     private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
@@ -76,7 +76,7 @@ public class reefAlignHorizontal extends Command
 
         if (result != null) 
         {
-            return Math.abs(result.getYaw()) < GOAL_THRESHOLD; 
+            return Math.abs(result.getYaw()) < Math.abs(GOAL_THRESHOLD); 
         }
 
         return false;

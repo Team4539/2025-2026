@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AuomaticCommands.reefAlignRotation;
+import frc.robot.commands.AuomaticCommands.New.visionL4;
 import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
@@ -275,9 +277,24 @@ public class RobotContainer {
         );
         */
 
-        TestButton1.onTrue(new reefAlignHorizontal(drivetrain, m_colorVision));
-        TestButton2.whileTrue(new reefAlignRotation(drivetrain, m_aprilTagCamera));
-        
+        TestButton1.onTrue(
+            new SequentialCommandGroup(
+                new reefAlignRotation(drivetrain, m_aprilTagCamera).withTimeout(5),
+                Commands.startEnd(
+                    () -> drivetrain.setControl(drive
+                            .withVelocityY(0.3)
+                            .withVelocityX(0.0)
+                            .withRotationalRate(0.0)),
+                    () -> drivetrain.setControl(drive
+                            .withVelocityY(0.0)
+                            .withVelocityX(0.0)
+                            .withRotationalRate(0.0)),
+                    drivetrain
+                ).withTimeout(0.5),
+                new reefAlignHorizontal(drivetrain, m_colorVision)
+                )
+            );
+
         /*TestButton2.whileTrue(
             new RunHeadManip(m_headManip, 1)
         );*/
@@ -309,7 +326,10 @@ public class RobotContainer {
     
     private void registerNamedCommands() {
         // Register all named commands here
-        NamedCommands.registerCommand("ArmUp", 
+
+        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_colorVision, m_aprilTagCamera));
+        
+        /*NamedCommands.registerCommand("ArmUp", 
             ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
         NamedCommands.registerCommand("CoralL1Start", 
             CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem).withTimeout(2));
@@ -318,7 +338,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("L4Prep", 
             CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
         NamedCommands.registerCommand("L4Finish",
-            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));*/
 
         // Add any other named commands here
     }

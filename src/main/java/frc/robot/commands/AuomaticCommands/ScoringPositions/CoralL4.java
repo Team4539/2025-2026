@@ -1,5 +1,7 @@
 package frc.robot.commands.AuomaticCommands.ScoringPositions;
 
+import javax.naming.PartialResultException;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -28,7 +30,10 @@ public class CoralL4 extends Command {
         SmartDashboard.putBoolean("CoralL4", true);
         
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(   // Coral L4 - Initial setupZ
+            new ParallelCommandGroup(
+                new SetElevatorTo(elevatorSubsystem, 4.305419921875),
+                new SetCarrigeTo(carrigeSubsystem, 1.27001953125, "L4")).withTimeout(1),
+            new ParallelCommandGroup(   // Coral L4 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 4.305419921875),
                 new SetCarrigeTo(carrigeSubsystem, 1.27001953125, "cause"),
                 new SetArmTo(armRotationSubsystem, 60.0, "coral L4", false)

@@ -20,10 +20,10 @@ public class reefAlignRotation extends Command
     private CommandSwerveDrivetrain m_subsystem;
     private PhotonCamera m_camera;
 
-    private double VISION_TURN_kP = 0.01;                           // TODO: Requires Testing
-    private double VISION_STRAFE_kP = 0.01;                         // TODO: Requires Testing
+    private double VISION_TURN_kP = 0.02;                           // TODO: Requires Testing
+    private double VISION_STRAFE_kP = 0.02;                         // TODO: Requires Testing
     private double VISION_DES_ANGLE_deg = 0.0;                      // Goal Rotation in radians
-    private double VISION_DES_RANGE_m = 1.25 + Units.inchesToMeters(25);                       // TODO: Requires Testing; Goal Distance in meters + Distance between camera and bumpers
+    private double VISION_DES_RANGE_m = 0;                          // TODO: Requires Testing; Goal Distance in meters
     private double kMaxAngularSpeed = 4.0;                          // in meters
     private double kMaxLinearSpeed = 4.0;                           // in meters
     private List<Integer> allowed_apritags = Arrays.asList(5); // TODO: Add additional April Tags
@@ -64,7 +64,7 @@ public class reefAlignRotation extends Command
                     {
                         targetYaw = target.getYaw();
                         targetRange = PhotonUtils.calculateDistanceToTargetMeters(
-                            Units.inchesToMeters(11),           // Camera height in meters
+                            Units.inchesToMeters(18.5),           // Camera height in meters
                             Units.inchesToMeters(8.75),         // https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/Apriltag_Images_and_User_Guide.pdf
                             Units.degreesToRadians(0.0),      // The pitch of the camera from the horizontal plane in radians. Positive values up.
                             Units.degreesToRadians(target.getPitch())
