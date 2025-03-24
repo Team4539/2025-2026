@@ -2,6 +2,8 @@ package frc.robot.commands.AuomaticCommands.ScoringPositions;
 
 import javax.naming.PartialResultException;
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -10,11 +12,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.New.drive;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmNeedsCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadintakeManipulator;
 
@@ -49,18 +53,18 @@ public class CoralL4 extends Command {
             ElevatorSubsystem elevatorSubsystem,
             CarrigeSubsystem carrigeSubsystem,
             ArmRotationSubsytem armRotationSubsystem,
-            HeadintakeManipulator headManipSubsystem) {
+            HeadintakeManipulator headManipSubsystem,
+            CommandSwerveDrivetrain m_SwerveDrivetrain) {
 
         return new SequentialCommandGroup(
             new ParallelCommandGroup(   // Coral L4 - Positioning and score than run back to a safe position
-                new SetArmTo(armRotationSubsystem, 39.9, "coral L4", false),
+                new SetArmTo(armRotationSubsystem, 53.5, "coral L4", false),
                 new SetElevatorTo(elevatorSubsystem, 4.478271484375)
             ).withTimeout(.7),
         new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),
-        new RunHeadManip(headManipSubsystem, -.2).withTimeout(1),
         new ParallelRaceGroup(
-            new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, armRotationSubsystem), 
-            new RunHeadManip(headManipSubsystem, -.5))
+            new RunHeadManip(headManipSubsystem, -.2).withTimeout(1),
+            new drive(0, .5, 0, m_SwerveDrivetrain).withTimeout(1))
         );
             
     }

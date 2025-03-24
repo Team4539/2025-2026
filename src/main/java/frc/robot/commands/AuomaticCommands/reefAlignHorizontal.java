@@ -13,8 +13,8 @@ public class reefAlignHorizontal extends Command
     private CommandSwerveDrivetrain m_subsystem;
     private PhotonVision m_vision;
 
-    private double VISION_kP = 0.01;     // TODO: Requires Testing
-    private double GOAL_THRESHOLD = -10;
+    private double VISION_kP = 0.03;     // TODO: Requires Testing
+    private double GOAL_THRESHOLD = -7;
 
     private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
@@ -51,11 +51,13 @@ public class reefAlignHorizontal extends Command
             speed = -targetYaw * VISION_kP;
             SmartDashboard.putNumber("Horizontal Speed", speed);
         }
-
+        SmartDashboard.putBoolean("Aligned?", isFinished());
         m_subsystem.setControl(
-            drive.withVelocityY(0.0)
+            drive.withVelocityY(0)
                  .withVelocityX(speed)
+
                  .withRotationalRate(0.0)
+                 
         );
     }
 
@@ -67,6 +69,8 @@ public class reefAlignHorizontal extends Command
             .withVelocityX(0.0)
             .withRotationalRate(0.0)
         );
+        SmartDashboard.putBoolean("Aligned?", isFinished());
+
     }
 
     @Override

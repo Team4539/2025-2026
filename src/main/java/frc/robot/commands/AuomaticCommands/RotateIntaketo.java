@@ -52,8 +52,9 @@ public class RotateIntaketo extends Command {
         
         // Apply calculated output to the intake rotator
         m_intake.rotateIntake(output, m_command);
-        m_intake.runIntake(1, m_command);
-        
+        if (output != Math.abs(output))
+            m_intake.runIntake(1, m_command); 
+        else m_intake.stopIntake();      
         // Debug info
         SmartDashboard.putNumber("Intake Target Position", m_setpoint);
         SmartDashboard.putNumber("Intake PID Output", output);

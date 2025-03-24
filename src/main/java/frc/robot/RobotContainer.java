@@ -254,14 +254,14 @@ public class RobotContainer {
         
         ArmDown.whileTrue(
             CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L4
-        ArmDown.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        ArmDown.onFalse(CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
 
         ArmUp.whileTrue(
             CoralL3.getOnTruecCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L3
-        ArmUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        ArmUp.onFalse(CoralL3.getOnFalsCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
         HeadIntake.onTrue(
             CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L2
-        HeadIntake.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        HeadIntake.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
         HeadOuttake.onTrue(
             CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem)); // L1
         HeadOuttake.onFalse(CoralL1.OnFalseCommand(m_intakeSubsytem));
@@ -327,18 +327,18 @@ public class RobotContainer {
     private void registerNamedCommands() {
         // Register all named commands here
 
-        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera));
+        // NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera));
         
-        NamedCommands.registerCommand("ArmUp", 
-            ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
-        NamedCommands.registerCommand("CoralL1Start", 
-            CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem).withTimeout(2));
-        NamedCommands.registerCommand("CoralL1Finsih", 
-            CoralL1.OnFalseCommand(m_intakeSubsytem));
-        NamedCommands.registerCommand("L4Prep", 
-            CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        NamedCommands.registerCommand("L4Finish",
-            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip));
+        // NamedCommands.registerCommand("ArmUp", 
+        //     ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
+        // NamedCommands.registerCommand("CoralL1Start", 
+        //     CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem).withTimeout(2));
+        // NamedCommands.registerCommand("CoralL1Finsih", 
+        //     CoralL1.OnFalseCommand(m_intakeSubsytem));
+        // NamedCommands.registerCommand("L4Prep", 
+        //     CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        // NamedCommands.registerCommand("L4Finish",
+        //     CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
 
         // Add any other named commands here
     }

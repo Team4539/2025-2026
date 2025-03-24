@@ -2,15 +2,18 @@ package frc.robot.commands.AuomaticCommands.ScoringPositions;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.New.drive;
 import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadintakeManipulator;
 
@@ -27,15 +30,16 @@ public class CoralL2 extends Command {
         SmartDashboard.putBoolean("CoralL2", true);
         
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(   // Coral L2 - Initial setup
-                //new SetElevatorTo(elevatorSubsystem, 0),
-                //new SetCarrigeTo(carrigeSubsystem,3.3837890625, "cause"),
-                new SetArmTo(armRotationSubsystem, 54, "hold", false)
-            ).withTimeout(.5),
-            new ParallelCommandGroup(   // Coral L2 - Positioning
+            new ParallelCommandGroup(
+                new SetArmTo(armRotationSubsystem, 60.4, "hold", false),
+                new SequentialCommandGroup(
+                    Commands.waitSeconds(.5),
+                new ParallelCommandGroup(   // Coral L2 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 0),
-                new SetCarrigeTo(carrigeSubsystem, 3.3837890625, "cause i can")
-            ).withTimeout(1)
+                new SetCarrigeTo(carrigeSubsystem, 4.03564453125, "cause i can"))
+            )
+            
+            )
         );
     }
     
@@ -46,12 +50,14 @@ public class CoralL2 extends Command {
             ElevatorSubsystem elevatorSubsystem,
             CarrigeSubsystem carrigeSubsystem,
             ArmRotationSubsytem armRotationSubsystem,
-            HeadintakeManipulator headManipSubsystem) {
+            HeadintakeManipulator headManipSubsystem, 
+            CommandSwerveDrivetrain drive) {
                 
         SmartDashboard.putBoolean("CoralL2", false);
         return new SequentialCommandGroup(
-            new SetArmTo(armRotationSubsystem, 41.3, "coral L2", false).withTimeout(1),
-            new RunHeadManip(headManipSubsystem, -.4).withTimeout(5),
-            new ArmHasCoral().ArmupCommand(elevatorSubsystem, carrigeSubsystem, armRotationSubsystem));
+            new SetArmTo(armRotationSubsystem, 53.2, "coral L2", false).withTimeout(1),
+            new ParallelCommandGroup(new RunHeadManip(headManipSubsystem, -.4).withTimeout(5),
+            new drive(0, .5, 0, drive)).withTimeout(1));
+            
     }
 }
