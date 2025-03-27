@@ -19,7 +19,7 @@ public class Barge {
         return 
             new ParallelCommandGroup(   // Coral L4 - Positioning
                 new SetArmTo(armRotationSubsystem, 63.1, "coral L4", false),
-                new SetCarrigeTo(carrigeSubsystem,0 , null),
+                new SetCarrigeTo(carrigeSubsystem,-4.3 , null),
                 new SetElevatorTo(elevatorSubsystem, 4.8)
             );
 }}

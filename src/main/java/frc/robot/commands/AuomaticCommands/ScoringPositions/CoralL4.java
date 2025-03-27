@@ -36,10 +36,10 @@ public class CoralL4 extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 new SetElevatorTo(elevatorSubsystem, 4.305419921875),
-                new SetCarrigeTo(carrigeSubsystem, 1.27001953125, "L4")).withTimeout(1),
+                new SetCarrigeTo(carrigeSubsystem, -3.03, "L4")).withTimeout(1),
             new ParallelCommandGroup(   // Coral L4 - Initial setup
                 new SetElevatorTo(elevatorSubsystem, 4.305419921875),
-                new SetCarrigeTo(carrigeSubsystem, 1.27001953125, "cause"),
+                new SetCarrigeTo(carrigeSubsystem, -3.03, "cause"),
                 new SetArmTo(armRotationSubsystem, 60.0, "coral L4", false)
 
             )
@@ -61,7 +61,7 @@ public class CoralL4 extends Command {
                 new SetArmTo(armRotationSubsystem, 51.5, "coral L4", false),
                 new SetElevatorTo(elevatorSubsystem, 4.478271484375)
             ).withTimeout(.7),
-        new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),
+        new SetCarrigeTo(carrigeSubsystem, -3.16, null).withTimeout(.5),
         new ParallelRaceGroup(
             new RunHeadManip(headManipSubsystem, -1).withTimeout(1),
             new drive(0, .5, 0, m_SwerveDrivetrain).withTimeout(1))

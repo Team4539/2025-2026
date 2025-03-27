@@ -39,7 +39,7 @@ public class CoralL1 extends Command {
                     Commands.waitSeconds(.5),
                 new ParallelCommandGroup(   // Coral L2 - Positioning
                 new SetElevatorTo(elevatorSubsystem, 2.548095703125),
-                new SetCarrigeTo(carrigeSubsystem,0 , "cause i can"))
+                new SetCarrigeTo(carrigeSubsystem,-4.3 , "cause i can"))
             )
             
             )

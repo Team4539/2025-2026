@@ -31,8 +31,8 @@ public class Constants {
         public static final int CarrigeMotorID = 13; // Placeholder value
         public static final int CarrigeEncoderAID = 3; // DIO Port 3
         public static final int CarrigeEncoderBID = 4; // DIO Port 4
-        public static final double CarrigeMaxHeight = 4.3; // Placeholder value
-        public static final double CarrigeMinHeight = 0; // Placeholder value
+        public static final double CarrigeMaxHeight = 0; // Placeholder value
+        public static final double CarrigeMinHeight = -4.3; // Placeholder value
 
         /*Carrige heights */
         public static final double HomePosition = 0; // Placeholder value

@@ -26,8 +26,8 @@ public class L2Algaegrab extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 new SetArmTo(m_ArmRotationSubsytem, 37.7, "A2", false),
-                new SetCarrigeTo(m_CarrigeSubsystem, 0.0751953125, "A2"),
-                new SetElevatorTo(m_ElevatorSubsystem, 3.7578125),
+                new SetCarrigeTo(m_CarrigeSubsystem, -4.3, "A2"),
+                new SetElevatorTo(m_ElevatorSubsystem, 4.019287109375),
                 new RunHeadManip(manipulator, 1)
             )
         );

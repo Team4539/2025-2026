@@ -19,10 +19,10 @@ public class ArmHasCoral extends Command {
         ArmRotationSubsytem armRotationSubsystem) {
             return new SequentialCommandGroup(new ParallelCommandGroup(   // Return to safe position when button released
                 new SetElevatorTo(elevatorSubsystem, 2.640380859375),
-                new SetCarrigeTo(carrigeSubsystem, 0, "cause i can")).withTimeout(1),
+                new SetCarrigeTo(carrigeSubsystem, -4.3, "cause i can")).withTimeout(1),
                 //new SetArmTo(armRotationSubsystem, 11.2, "Home", false)),
                 new ParallelCommandGroup( new SetElevatorTo(elevatorSubsystem, 2.640380859375),
-                new SetCarrigeTo(carrigeSubsystem, 0, "cause i can"),
+                new SetCarrigeTo(carrigeSubsystem, -4.3, "cause i can"),
                 new SetArmTo(armRotationSubsystem, 16.2, "Home", false)).withTimeout(3)
             );
     }

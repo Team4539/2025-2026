@@ -28,7 +28,7 @@ public class Defense extends Command {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 new SetArmTo(m_ArmRotationSubsystem, 13.9, "Handoff", false),
-                new SetCarrigeTo(m_CarriageSubsystem, 0.655517578125, "Handoff"),
+                new SetCarrigeTo(m_CarriageSubsystem, -4.3, "Handoff"),
                 new SetElevatorTo(m_ElevatorSubsystem, 1)).withTimeout(2),
             new ParallelCommandGroup(
                 new RunHeadManip(m_HeadIntakeManipulator, 1),

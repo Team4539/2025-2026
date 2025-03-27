@@ -339,6 +339,11 @@ public class RobotContainer {
             CoralL1.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(2));
         NamedCommands.registerCommand("L4Prep", 
             CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        NamedCommands.registerCommand(
+            "Handoff", new ParallelCommandGroup(
+                //new RunHeadManip(m_headManip, 1),
+                new RunIntake(m_intakeSubsytem, -1, "ne")
+            ));
         // NamedCommands.registerCommand("L4Finish",
         //     CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
 
