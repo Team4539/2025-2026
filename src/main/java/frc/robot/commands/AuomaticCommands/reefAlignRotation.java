@@ -22,11 +22,12 @@ public class reefAlignRotation extends Command
 
     private double VISION_TURN_kP = 0.03;                           // TODO: Requires Testing
     private double VISION_STRAFE_kP = 0.03;                         // TODO: Requires Testing
+    
     private double VISION_DES_ANGLE_deg = 0.0;                      // Goal Rotation in radians
     private double VISION_DES_RANGE_m = -1;                          // TODO: Requires Testing; Goal Distance in meters
     private double kMaxAngularSpeed = 4.0;                          // in meters
     private double kMaxLinearSpeed = 4.0;                           // in meters
-    private List<Integer> allowed_apritags = Arrays.asList(5); // TODO: Add additional April Tags
+    private List<Integer> allowed_apritags = Arrays.asList(6,7,8,9,10,11,17,18,19,20,21,22); 
 
     private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
