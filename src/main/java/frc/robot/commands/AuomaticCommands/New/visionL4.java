@@ -16,11 +16,12 @@ import frc.robot.subsystems.CarrigeSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HeadintakeManipulator;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PhotonVision;
 
 public class visionL4 
 {
-    public static Command run(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevator, CarrigeSubsystem carriage, ArmRotationSubsytem armRotation, HeadintakeManipulator head, PhotonVision vision, PhotonCamera camera)
+    public static Command run(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevator, CarrigeSubsystem carriage, ArmRotationSubsytem armRotation, HeadintakeManipulator head, PhotonVision vision, PhotonCamera camera, IntakeSubsystem intake)
     {
         return Commands.sequence(
             Commands.parallel(

@@ -203,8 +203,10 @@ public class RobotContainer {
 
        AlignReef.whileTrue(Barge.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
        AlignReef.whileFalse(Commands.runOnce(() -> SmartDashboard.putBoolean("Aligned?", false)));
+        
 
-        Defender.onTrue(Defense.Handoff(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_intakeSubsytem));
+       Defender.whileTrue(Barge.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        //Defender.onTrue(Defense.Handoff(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_intakeSubsytem));
        // Sam: Try new AlignReef(5, drivetrain, m_photonVision, TARGETAREA) and mess around with the value
       // AlignReef.whileTrue(new AlignReef(5, drivetrain, m_photonVision));
         // Align with reef (commented out)
@@ -327,7 +329,7 @@ public class RobotContainer {
     private void registerNamedCommands() {
         // Register all named commands here
 
-        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera));
+        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera, m_intakeSubsytem));
         
         NamedCommands.registerCommand("ArmUp", 
             ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
@@ -337,8 +339,8 @@ public class RobotContainer {
             CoralL1.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(2));
         NamedCommands.registerCommand("L4Prep", 
             CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        NamedCommands.registerCommand("L4Finish",
-            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
+        // NamedCommands.registerCommand("L4Finish",
+        //     CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
 
         // Add any other named commands here
     }

@@ -5,19 +5,19 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4Prep"
-                }
-              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "L4 non Proc Front"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4Prep"
                 }
               }
             ]
