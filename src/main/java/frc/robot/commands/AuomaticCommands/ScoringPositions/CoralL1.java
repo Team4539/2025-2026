@@ -1,39 +1,50 @@
 package frc.robot.commands.AuomaticCommands.ScoringPositions;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AuomaticCommands.RotateIntaketo;
+import frc.robot.commands.AuomaticCommands.SetArmTo;
+import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
+import frc.robot.commands.AuomaticCommands.New.drive;
 import frc.robot.commands.BaseCommands.RotateIntake;
+import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.commands.BaseCommands.RunIntake;
 import frc.robot.commands.BaseCommands.SetElevator;
+import frc.robot.subsystems.ArmRotationSubsytem;
+import frc.robot.subsystems.CarrigeSubsystem;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HeadintakeManipulator;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class CoralL1 extends Command {
 
-    public static SequentialCommandGroup OntrueCommadn(
-        IntakeSubsystem m_IntakeSubsystem,
-        ElevatorSubsystem m_ElevatorSubsystem
-    ) {
-        return new SequentialCommandGroup(
+    public static Command getOnTrueCommand(
+            ElevatorSubsystem elevatorSubsystem,
+            
+            CarrigeSubsystem carrigeSubsystem,
+            ArmRotationSubsytem armRotationSubsystem) {
+        SmartDashboard.putBoolean("CoralL2", true);
+        
+        return new ParallelCommandGroup(
+            new SetArmTo(armRotationSubsystem, 30, "hold", false),
+         new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new RotateIntaketo(m_IntakeSubsystem, 0.8, "L1", false),
-                new SetElevatorTo(m_ElevatorSubsystem, 3.480224609375)).withTimeout(3),
-                
-
-            //new RotateIntake(m_IntakeSubsystem, -.1,  "L1").withTimeout(1), 
-            new RunIntake(m_IntakeSubsystem, -.4, "L!"));
-
+                new SequentialCommandGroup(
+                    Commands.waitSeconds(.5),
+                new ParallelCommandGroup(   // Coral L2 - Positioning
+                new SetElevatorTo(elevatorSubsystem, 2.548095703125),
+                new SetCarrigeTo(carrigeSubsystem,0 , "cause i can"))
+            )
+            
+            )
+        ));
     }
-
-    public static SequentialCommandGroup OnFalseCommand(
-        IntakeSubsystem m_IntakeSubsystem
-    ) {
-        return new SequentialCommandGroup(
-            new RotateIntaketo(m_IntakeSubsystem, .98, "L1", false).withTimeout(2),
-            new RunIntake(m_IntakeSubsystem, 0, "L1")
-        );
-    }
+    
+    
 }

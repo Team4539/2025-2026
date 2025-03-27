@@ -32,11 +32,7 @@ public class visionL4
                 )
             ).withTimeout(10),
             Commands.parallel(
-                CoralL4.getOnFalseCommand(elevator, carriage, armRotation, head, drivetrain),
-                Commands.sequence(
-                    new WaitCommand(1),
-                    new drive(0, 0.3, 0, drivetrain).withTimeout(2)
-                    )
+                CoralL4.getOnFalseCommand(elevator, carriage, armRotation, head, drivetrain)
                 )
         );
     }

@@ -63,7 +63,7 @@ public class CoralL4 extends Command {
             ).withTimeout(.7),
         new SetCarrigeTo(carrigeSubsystem, 1.14599609375, null).withTimeout(.5),
         new ParallelRaceGroup(
-            new RunHeadManip(headManipSubsystem, -.2).withTimeout(1),
+            new RunHeadManip(headManipSubsystem, -1).withTimeout(1),
             new drive(0, .5, 0, m_SwerveDrivetrain).withTimeout(1))
         );
             

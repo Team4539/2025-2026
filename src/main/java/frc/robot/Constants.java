@@ -84,7 +84,7 @@ public class Constants {
         public static final int IntakeRotatorMotorID = 6; // Placeholder value
         public static final int IntakeRotatorEncoderID = 5; // Placeholder value
         public static final double IntakeRotatorMaxAngle = .98; // Placeholder value
-        public static final double IntakeRotatorMinAngle = .4; // Placeholder value
+        public static final double IntakeRotatorMinAngle = .35; // Placeholder value
         public static final double InsideRotation = 0; // Placeholder value
         public static final double OutsideRotation = 0; // Placeholder value
     }

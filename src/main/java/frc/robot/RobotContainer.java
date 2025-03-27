@@ -202,6 +202,7 @@ public class RobotContainer {
        );
 
        AlignReef.whileTrue(Barge.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+       AlignReef.whileFalse(Commands.runOnce(() -> SmartDashboard.putBoolean("Aligned?", false)));
 
         Defender.onTrue(Defense.Handoff(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_intakeSubsytem));
        // Sam: Try new AlignReef(5, drivetrain, m_photonVision, TARGETAREA) and mess around with the value
@@ -240,7 +241,7 @@ public class RobotContainer {
         // // Intake rotation
         IntakeRotateOut.whileTrue(
             new SequentialCommandGroup(
-                    new RotateIntaketo(m_intakeSubsytem, .4, "intake out", false).withTimeout(2),
+                    new RotateIntaketo(m_intakeSubsytem, .35, "intake out", false).withTimeout(2),
                 new RunIntake(m_intakeSubsytem, 1, "Button")
             )
         );
@@ -263,8 +264,7 @@ public class RobotContainer {
             CoralL2.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L2
         HeadIntake.onFalse(CoralL2.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
         HeadOuttake.onTrue(
-            CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem)); // L1
-        HeadOuttake.onFalse(CoralL1.OnFalseCommand(m_intakeSubsytem));
+            CoralL1.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem)); // L1
         
         CarrigeDown.whileTrue(L2Algaegrab.onTrueCommand(m_ElevatorSubsystem, m_ArmRotationSubsystem, m_CarrigeSubsystem, m_headManip));
         /* Arm Staging Commands */
@@ -327,18 +327,18 @@ public class RobotContainer {
     private void registerNamedCommands() {
         // Register all named commands here
 
-        // NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera));
+        NamedCommands.registerCommand("L4 Coral Auto", visionL4.run(drivetrain, m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_colorVision, m_aprilTagCamera));
         
-        // NamedCommands.registerCommand("ArmUp", 
-        //     ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
-        // NamedCommands.registerCommand("CoralL1Start", 
-        //     CoralL1.OntrueCommadn(m_intakeSubsytem, m_ElevatorSubsystem).withTimeout(2));
-        // NamedCommands.registerCommand("CoralL1Finsih", 
-        //     CoralL1.OnFalseCommand(m_intakeSubsytem));
-        // NamedCommands.registerCommand("L4Prep", 
-        //     CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
-        // NamedCommands.registerCommand("L4Finish",
-        //     CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
+        NamedCommands.registerCommand("ArmUp", 
+            ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(1));
+        NamedCommands.registerCommand("CoralL1Start", 
+            CoralL1.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(2));
+        NamedCommands.registerCommand("CoralL1Finsih", 
+            CoralL1.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(2));
+        NamedCommands.registerCommand("L4Prep", 
+            CoralL4.getOnTrueCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem));
+        NamedCommands.registerCommand("L4Finish",
+            CoralL4.getOnFalseCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, drivetrain));
 
         // Add any other named commands here
     }

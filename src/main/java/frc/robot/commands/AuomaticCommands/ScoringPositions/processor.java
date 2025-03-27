@@ -22,7 +22,7 @@ public class processor extends Command {
         return 
             new ParallelCommandGroup(   // Coral L4 - Positioning
                 new SetArmTo(armRotationSubsystem, 36.7, "coral L4", false),
-                new SetCarrigeTo(carrigeSubsystem, 2.310791015625, null),
+                new SetCarrigeTo(carrigeSubsystem, 1.720703125, null),
                 new SetElevatorTo(elevatorSubsystem, 0)
             ).withTimeout(2);
             
