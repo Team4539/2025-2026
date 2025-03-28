@@ -136,7 +136,7 @@ public class RobotContainer {
 
     public Command getTestDriveCommand() {
         return drivetrain.applyRequest(() -> 
-            drive.withVelocityX(0.3 * MaxSpeed) // 30% forward speed
+            drive.withVelocityX(0. * MaxSpeed) // 30% forward speed
                 .withVelocityY(0) 
                 .withRotationalRate(0));
     }
