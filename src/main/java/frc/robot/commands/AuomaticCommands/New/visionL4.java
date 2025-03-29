@@ -1,13 +1,8 @@
 package frc.robot.commands.AuomaticCommands.New;
 
 import org.photonvision.PhotonCamera;
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AuomaticCommands.reefAlignHorizontal;
 import frc.robot.commands.AuomaticCommands.reefAlignRotation;
 import frc.robot.commands.AuomaticCommands.ScoringPositions.CoralL4;

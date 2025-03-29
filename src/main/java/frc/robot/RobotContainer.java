@@ -142,6 +142,7 @@ public class RobotContainer {
                 .withRotationalRate(0));
     }
     
+    @SuppressWarnings("static-access")
     private void configureBindings() {
         // Remove the NamedCommands registration from here
         // NamedCommands.registerCommand("ArmUp", ArmHasCoral.ArmupCommand(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem).withTimeout(4));

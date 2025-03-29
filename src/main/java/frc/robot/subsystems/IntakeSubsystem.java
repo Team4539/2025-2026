@@ -6,7 +6,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +20,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private String intakeCommand;
     private boolean isIntakeMoving;
     private double IntakeDistance;
-    private double intakerotation;
     private DutyCycleEncoder m_intakeEncoder;
     private TalonFXConfiguration m_intakeconfig;
 
@@ -43,7 +41,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic() {
         IntakeDistance = intakeUltrasonic.getRangeInches();
-        intakerotation = m_intakeEncoder.get();
         SmartDashboard.putNumber("Intake Rotator Position", intakeRotatorPosition);
         SmartDashboard.putString("Intake Rotator Command", intakeRotatorCommand);
         SmartDashboard.putString("Intake Command", intakeCommand);

@@ -9,7 +9,6 @@ import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
 import frc.robot.commands.AuomaticCommands.New.drive;
-import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;

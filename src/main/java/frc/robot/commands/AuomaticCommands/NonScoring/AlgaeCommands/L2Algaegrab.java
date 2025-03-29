@@ -3,8 +3,6 @@ package frc.robot.commands.AuomaticCommands.NonScoring.AlgaeCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.Carrige;
-import frc.robot.Constants.HeadMechanisms;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.commands.AuomaticCommands.SetArmTo;

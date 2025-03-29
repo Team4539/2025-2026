@@ -4,11 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
-import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.HeadintakeManipulator;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 

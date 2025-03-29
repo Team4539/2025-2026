@@ -5,22 +5,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.AuomaticCommands.RotateIntaketo;
 import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
-import frc.robot.commands.AuomaticCommands.New.drive;
-import frc.robot.commands.BaseCommands.RotateIntake;
-import frc.robot.commands.BaseCommands.RunHeadManip;
-import frc.robot.commands.BaseCommands.RunIntake;
-import frc.robot.commands.BaseCommands.SetElevator;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.HeadintakeManipulator;
-import frc.robot.subsystems.IntakeSubsystem;
+
 
 public class CoralL1 extends Command {
 

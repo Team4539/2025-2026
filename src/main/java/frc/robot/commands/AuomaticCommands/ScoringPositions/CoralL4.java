@@ -1,9 +1,4 @@
 package frc.robot.commands.AuomaticCommands.ScoringPositions;
-
-import javax.naming.PartialResultException;
-
-import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -13,8 +8,6 @@ import frc.robot.commands.AuomaticCommands.SetArmTo;
 import frc.robot.commands.AuomaticCommands.SetCarrigeTo;
 import frc.robot.commands.AuomaticCommands.SetElevatorTo;
 import frc.robot.commands.AuomaticCommands.New.drive;
-import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmHasCoral;
-import frc.robot.commands.AuomaticCommands.NonScoring.CoralPositions.ArmNeedsCoral;
 import frc.robot.commands.BaseCommands.RunHeadManip;
 import frc.robot.subsystems.ArmRotationSubsytem;
 import frc.robot.subsystems.CarrigeSubsystem;

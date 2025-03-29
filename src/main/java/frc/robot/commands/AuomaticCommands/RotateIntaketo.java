@@ -10,7 +10,6 @@ public class RotateIntaketo extends Command {
     private final double m_setpoint;
     private final String m_command;
     private final PIDController m_pidController;
-    private final boolean m_needSelection;
     
     /**
      * Creates a command to rotate the intake to a specific angle using PID control.
@@ -24,7 +23,6 @@ public class RotateIntaketo extends Command {
         m_intake = intake;
         m_setpoint = setpoint;
         m_command = command;
-        m_needSelection = needSelection;
         
         // Configure PID controller
         m_pidController = new PIDController(3, 0.0, 0.05);
