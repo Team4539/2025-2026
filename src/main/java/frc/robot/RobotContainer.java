@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import java.security.AlgorithmConstraints;
 import java.util.jar.Attributes.Name;
 
+import org.dyn4j.exception.SameObjectException;
 import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -147,19 +148,22 @@ public class RobotContainer {
 
         // Drivetrain default command - execute periodically
         drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.01) * MaxSpeed*.5)
+            drivetrain.applyRequest(() -> drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), 0.01) * MaxSpeed*.5) // no longer multiplied by .5
                 .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), 0.01) * MaxSpeed*.5) // Drive left with negative X (left)
                 .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), 0.01) * MaxAngularRate*.5) // Drive counterclockwise with negative X (left)
       ).ignoringDisable(true));
 
         // Anti-tipper - drive at half speed 
-        AntiTipper.whileTrue(
+        AntiTipper.onTrue(
+            new ParallelCommandGroup(
+            new Defense().Handoff(m_ElevatorSubsystem, m_CarrigeSubsystem, m_ArmRotationSubsystem, m_headManip, m_intakeSubsytem),
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed/4)      // Half speed forward
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed/4)       // Half speed left
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate/4) // Half angular rate
-            )
-        );
+                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed)      // Half speed forward
+                    .withVelocityY(-joystick.getLeftX() * MaxSpeed)       // Half speed left
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate))     
+            ));
+            
+        
 
         // Joystick brake and point controls
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -179,7 +183,7 @@ public class RobotContainer {
 
        AlignColor.whileTrue(new reefAlignHorizontal(drivetrain, m_colorVision));
 
-       AlignTAg.whileTrue(new reefAlignRotation(drivetrain, m_aprilTagCamera));
+       AlignTAg.whileTrue(new RunIntake(m_intakeSubsytem, 1, "MAN"));
 
         // DecideArmButton.whileTrue(
         //    new SetArm(m_ArmRotationSubsystem, Operator.getLeftY(), "Button")

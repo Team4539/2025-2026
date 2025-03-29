@@ -1,5 +1,6 @@
 package frc.robot.commands.AuomaticCommands.NonScoring;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -25,15 +26,12 @@ public class Defense extends Command {
         IntakeSubsystem m_IntakeSubsystem 
     )
     {
+        SmartDashboard.putBoolean("Crazy mode", true);
         return new SequentialCommandGroup(
+            new SetArmTo(m_ArmRotationSubsystem, 64, "Handoff", false).withTimeout(1),
             new ParallelCommandGroup(
-                new SetArmTo(m_ArmRotationSubsystem, 13.9, "Handoff", false),
-                new SetCarrigeTo(m_CarriageSubsystem, -4.3, "Handoff"),
-                new SetElevatorTo(m_ElevatorSubsystem, 1)).withTimeout(2),
-            new ParallelCommandGroup(
-                new RunHeadManip(m_HeadIntakeManipulator, 1),
-                new RunIntake(m_IntakeSubsystem, -.2, "Handoff")
-            ).withTimeout(1)
-        );
+                new SetArmTo(m_ArmRotationSubsystem, 64, "Handoff", false),
+                new SetCarrigeTo(m_CarriageSubsystem, 0, "Handoff"),
+                new SetElevatorTo(m_ElevatorSubsystem, 0).withTimeout(2)));
     }
 }
