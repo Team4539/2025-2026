@@ -22,7 +22,6 @@ public class visionL4
             Commands.parallel(
                 CoralL4.getOnTrueCommand(elevator, carriage, armRotation),
                 Commands.sequence(
-                    //new WaitCommand(2),
                     new reefAlignRotation(drivetrain, camera).withTimeout(2),
                     new reefAlignHorizontal(drivetrain, vision)
                 )
